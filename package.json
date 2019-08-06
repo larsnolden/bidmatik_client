@@ -8,6 +8,7 @@
     "apollo-boost": "^0.4.3",
     "apollo-cache-inmemory": "^1.6.2",
     "graphql": "^14.4.2",
+    "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-apollo": "^2.5.8",
     "react-dom": "^16.8.6",
@@ -27,7 +28,10 @@
     "settings": {
       "import/resolver": {
         "node": {
-          "moduleDirectory": ["node_modules", "src/"]
+          "moduleDirectory": [
+            "node_modules",
+            "src/"
+          ]
         }
       }
     }
