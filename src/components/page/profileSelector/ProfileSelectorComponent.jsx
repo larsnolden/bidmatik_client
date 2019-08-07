@@ -26,6 +26,8 @@ const Container = styled.div`
   &:focus {
     outline:0;
   }
+  border-radius: 30px 30px 10px 10px;
+  box-shadow: ${props => props.showShadow ? '0px 1px 3px rgba(0, 0, 0, 0.2)' : 'none'};
 `;
 
 const Profile = styled.div`
@@ -107,7 +109,7 @@ const ProfileSelectorComponent = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <Container tabIndex="0" onBlur={() => setIsOpen(false)}>
+    <Container tabIndex="0" onBlur={() => setIsOpen(false)} showShadow={isOpen}>
       <SelectedProfile onClick={() => setIsOpen(!isOpen)} hideBottomCornerRaidus={isOpen}>
         <Flag selected>
           <FlagIcon src={flags[activeProfileCountry]} />
