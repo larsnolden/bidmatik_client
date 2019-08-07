@@ -16,16 +16,28 @@ const Column = styled.div`
   flex-direction: column;
   flex-grow: 1;
   max-width: 1323px;
+  position: relative;
+  margin-right: 29px;
 `;
 
 const UserSettings = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  padding: 29px 29px 0 0;
+  position: absolute;
+  margin: 29px 0 0 0;
+  right: 0
 `;
 
-export default () => (
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 95px 0 0 165px;
+`;
+
+export default ({ 
+  children
+}) => (
   <Container>
     <Navigation />
     <Column>
@@ -33,6 +45,9 @@ export default () => (
         <ProfileSelector />
         <AccountMenu />
       </UserSettings>
+      <Content>
+        { children }
+      </Content>
     </Column>
   </Container>
 );

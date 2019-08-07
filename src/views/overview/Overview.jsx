@@ -1,8 +1,9 @@
 import React from 'react';
-import PageComponent from 'components/page/PageComponent';
+import Page from 'components/page/Page';
+import PerformancePanel from 'components/performancePanel/PerformancePanel';
 
 export default () => (
-  <PageComponent>
-    Overview
-  </PageComponent>
+  <Page>
+    <PerformancePanel />
+  </Page>
 );
