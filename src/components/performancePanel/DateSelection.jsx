@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import styled from '@emotion/styled';
+import propTypes from 'prop-types';
+import momentPropTypes from 'react-moment-proptypes';
 
 import Chevron from 'components/Chevron';
 import 'react-dates/initialize';
@@ -67,18 +69,14 @@ const Calendar = styled.div`
   }
 `;
 
-const DateSelection = ({ handleDateRangeChange }) => {
-  const [selectedDates, setSelectedDates] = useState({
-    from: moment(moment.now()).subtract(60, 'days'),
-    to: moment(moment.now()),
-  });
-
+const DateSelection = ({ dateRange, handleDateRangeChange }) => {
   const [focusedInput, setFocusedInput] = useState('startDate');
   const [showCalendar, setShowCalendar] = useState(false);
 
   const handleShowCalendarChange = (state) => {
-    console.log(selectedDates.from, selectedDates.to)
-    if (selectedDates.from.isBefore(selectedDates.to)) setShowCalendar(state);
+    if (dateRange.from.isBefore(dateRange.to)) {
+      setShowCalendar(state);
+    }
   };
 
   return (
@@ -92,7 +90,7 @@ const DateSelection = ({ handleDateRangeChange }) => {
           }}
         >
           <ChevronStyled id="date_selector" color="#BCCCDC" width={10} height={8} />
-          <Date id="date_selector">{moment(selectedDates.from).format('D MMM YYYY')}</Date>
+          <Date id="date_selector">{moment(dateRange.from).format('D MMM YYYY')}</Date>
         </DateSelector>
         <To>
           TO
@@ -105,22 +103,26 @@ const DateSelection = ({ handleDateRangeChange }) => {
           }}
         >
           <ChevronStyled id="date_selector" color="#BCCCDC" width={10} height={8} />
-          <Date id="date_selector">{moment(selectedDates.to).format('D MMM YYYY')}</Date>
+          <Date id="date_selector">{moment(dateRange.to).format('D MMM YYYY')}</Date>
         </DateSelector>
       </Dates>
       <Calendar>
         {
           showCalendar && (
             <DayPickerRangeController
-              startDate={selectedDates.from}
-              endDate={selectedDates.to}
+              startDate={dateRange.from}
+              endDate={dateRange.to}
               onDatesChange={
-                ({ startDate, endDate }) => setSelectedDates({ from: moment(startDate), to: moment(endDate) })
+                ({ startDate, endDate }) => {
+                  //  auto close when new date range detected
+                  if (startDate.isBefore(endDate) && endDate !== dateRange.to) setShowCalendar(false);
+                  handleDateRangeChange({ from: moment(startDate), to: moment(endDate) })
+                }
               }
+              keepOpenOnDateSelect={false}
               focusedInput={focusedInput}
               onFocusChange={focus => setFocusedInput(focus || 'startDate')}
               onOutsideClick={(click) => {
-                console.log(click.target.id)
                 if (click.target.id !== 'date_selector') handleShowCalendarChange(false);
               }}
               numberOfMonths={2}
@@ -131,6 +133,22 @@ const DateSelection = ({ handleDateRangeChange }) => {
       </Calendar>
     </Container>
   );
+};
+
+DateSelection.defaultProps = {
+  dateRange: {
+    from: moment(),
+    to: moment(),
+  },
+  handleDateRangeChange: () => { },
+};
+
+DateSelection.propTypes = {
+  dateRange: propTypes.objectOf({
+    from: momentPropTypes.momentObj,
+    to: momentPropTypes.momentObj,
+  }),
+  handleDateRangeChange: propTypes.func,
 };
 
 export default DateSelection;
