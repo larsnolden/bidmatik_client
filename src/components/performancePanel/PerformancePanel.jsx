@@ -7,13 +7,6 @@ import MetricSelector from './MetricSelector';
 import {
   ACOS,
   REVENUE,
-  CLICKS,
-  SPEND,
-  BLENDEDACOS,
-  TOTALREVENUE,
-  IMPRESSIONS,
-  PRIMARY,
-  SECONDARY,
 } from './constants';
 
 
