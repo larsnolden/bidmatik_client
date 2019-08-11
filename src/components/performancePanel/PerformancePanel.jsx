@@ -1,43 +1,63 @@
-import React, { useState } from 'react';
-import styled from '@emotion/styled';
-import moment from 'moment';
+import { compose, withProps, branch, renderComponent} from 'recompose';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
+import * as R from 'ramda';
 
-import DateSelection from './DateSelection';
-import MetricSelector from './MetricSelector';
-import {
-  ACOS,
-  REVENUE,
-} from './constants';
+import PerformancePanelComponent from './PerformancePanelComponent';
 
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+const GET_ALL_CAMPAIGNS = gql`
+  query {
+    campaigns{
+      id
+      name
+      type
+      targeting
+      budget
+      impressions
+      clicks
+      ctr
+      spend
+      cpc
+      orders
+      sales
+      acos
+      portfolio
+    }
+  }
 `;
 
-const PeformancePanel = () => {
-  const [selectedDates, setSelectedDates] = useState({
-    from: moment(moment.now()).subtract(60, 'days'),
-    to: moment(moment.now()),
-  });
+const addSummedProps = withProps(({ data }) => {
+  const { campaigns } = data;
+  const reduced = {
+    acos: R.pipe(R.map(R.prop('acos')), R.mean)(campaigns),
+    budget: R.pipe(R.map(R.prop('budget')), R.sum)(campaigns),
+    clicks: R.pipe(R.map(R.prop('clicks')), R.sum)(campaigns),
+    cpc: R.pipe(R.map(R.prop('cpc')), R.mean)(campaigns),
+    ctr: R.pipe(R.map(R.prop('ctr')), R.mean)(campaigns),
+    impressions: R.pipe(R.map(R.prop('impressions')), R.sum)(campaigns),
+    orders: R.pipe(R.map(R.prop('orders')), R.sum)(campaigns),
+    sales: R.pipe(R.map(R.prop('sales')), R.sum)(campaigns),
+    spend: R.pipe(R.map(R.prop('spend')), R.sum)(campaigns),
+  };
+  return {
+    metrics: reduced,
+    loading: false,
+  };
+});
 
-  const [selectedMetrics, setSelectedMetrics] = useState({
-    primary: ACOS,
-    secondary: REVENUE,
-  });
+const waitWhileLoading = (component, propName = 'data') => branch(
+  props => props[propName] && props[propName].loading,
+  renderComponent(component),
+);
 
-  return (
-    <Container>
-      <DateSelection
-        dateRange={selectedDates}
-        handleDateRangeChange={setSelectedDates}
-      />
-      <MetricSelector
-        selectedMetrics={selectedMetrics}
-        handleMetricsChange={setSelectedMetrics}
-      />
-    </Container>
-  );
-};
+const setLoadingFalse = withProps(() => ({
+  loading: false,
+}));
 
-export default PeformancePanel;
+export default compose(
+  graphql(GET_ALL_CAMPAIGNS),
+  waitWhileLoading(PerformancePanelComponent),
+  addSummedProps,
+  setLoadingFalse,
+)(PerformancePanelComponent);

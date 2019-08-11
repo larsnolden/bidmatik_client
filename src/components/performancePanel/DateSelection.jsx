@@ -14,7 +14,6 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-
 const Dates = styled.div`
   background: #102A43;
   height: 48px;
