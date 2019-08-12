@@ -55,7 +55,7 @@ const MetricSelector = ({
   revenue,
   clicks,
   spend,
-  blendedAcos,
+  totalAcos,
   totalRevenue,
   impressions,
   selectedMetrics,
@@ -112,7 +112,7 @@ const MetricSelector = ({
       <Item onClick={() => handleSelectMetric(BLENDEDACOS)} active={isActive(BLENDEDACOS)}>
         blended acos
         <Metric active={isActive(BLENDEDACOS)} primary={isPrimary(BLENDEDACOS)}>
-          {Number(blendedAcos * 100).toFixed(2)}
+          {Number(totalAcos * 100).toFixed(2)}
           %
         </Metric>
       </Item>
@@ -133,15 +133,16 @@ const MetricSelector = ({
   );
 };
 
-//  TODO: remove test values
 MetricSelector.defaultProps = {
   acos: 0,
   revenue: 0,
   clicks: 0,
   spend: 0,
-  blendedAcos: 0,
+  totalAcos: 0,
   totalRevenue: 0,
   impressions: 0,
+  selectedMetrics: () => {},
+  handleMetricsChange: () => {},
 };
 
 MetricSelector.propTypes = {
@@ -149,9 +150,11 @@ MetricSelector.propTypes = {
   revenue: propTypes.number,
   clicks: propTypes.number,
   spend: propTypes.number,
-  blendedAcos: propTypes.number,
+  totalAcos: propTypes.number,
   totalRevenue: propTypes.number,
   impressions: propTypes.number,
+  selectedMetrics: propTypes.func,
+  handleMetricsChange: propTypes.func,
 };
 
 export default MetricSelector;

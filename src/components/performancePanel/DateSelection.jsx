@@ -68,12 +68,13 @@ const Calendar = styled.div`
   }
 `;
 
-const DateSelection = ({ dateRange, handleDateRangeChange }) => {
+const DateSelection = ({ dateFrom, dateTo, handleDateRangeChange }) => {
   const [focusedInput, setFocusedInput] = useState('startDate');
   const [showCalendar, setShowCalendar] = useState(false);
+  const [dateFromLocal, setDateFromLocal] = useState(dateFrom);
 
   const handleShowCalendarChange = (state) => {
-    if (dateRange.from.isBefore(dateRange.to)) {
+    if (dateFromLocal.isBefore(dateTo)) {
       setShowCalendar(state);
     }
   };
@@ -89,7 +90,7 @@ const DateSelection = ({ dateRange, handleDateRangeChange }) => {
           }}
         >
           <ChevronStyled id="date_selector" color="#BCCCDC" width={10} height={8} />
-          <Date id="date_selector">{moment(dateRange.from).format('D MMM YYYY')}</Date>
+          <Date id="date_selector">{moment(dateFromLocal).format('D MMM YYYY')}</Date>
         </DateSelector>
         <To>
           TO
@@ -102,20 +103,24 @@ const DateSelection = ({ dateRange, handleDateRangeChange }) => {
           }}
         >
           <ChevronStyled id="date_selector" color="#BCCCDC" width={10} height={8} />
-          <Date id="date_selector">{moment(dateRange.to).format('D MMM YYYY')}</Date>
+          <Date id="date_selector">{moment(dateTo).format('D MMM YYYY')}</Date>
         </DateSelector>
       </Dates>
       <Calendar>
         {
           showCalendar && (
             <DayPickerRangeController
-              startDate={dateRange.from}
-              endDate={dateRange.to}
+              startDate={dateFromLocal}
+              endDate={dateTo}
               onDatesChange={
                 ({ startDate, endDate }) => {
-                  //  auto close when new date range detected
-                  if (startDate.isBefore(endDate) && endDate !== dateRange.to) setShowCalendar(false);
-                  handleDateRangeChange({ from: moment(startDate), to: moment(endDate) })
+                  setDateFromLocal(startDate);
+
+                  //  new date range selected
+                  if (startDate.isBefore(endDate) && endDate !== dateTo) { 
+                    setShowCalendar(false);
+                    handleDateRangeChange({ dateFrom: moment(startDate), dateTo: moment(endDate) });
+                  }
                 }
               }
               keepOpenOnDateSelect={false}
@@ -135,18 +140,14 @@ const DateSelection = ({ dateRange, handleDateRangeChange }) => {
 };
 
 DateSelection.defaultProps = {
-  dateRange: {
-    from: moment(),
-    to: moment(),
-  },
+  dateFrom: moment(),
+  dateTo: moment(),
   handleDateRangeChange: () => { },
 };
 
 DateSelection.propTypes = {
-  dateRange: propTypes.objectOf({
-    from: momentPropTypes.momentObj,
-    to: momentPropTypes.momentObj,
-  }),
+  dateFrom: momentPropTypes.momentObj,
+  dateTo: momentPropTypes.momentObj,
   handleDateRangeChange: propTypes.func,
 };
 
