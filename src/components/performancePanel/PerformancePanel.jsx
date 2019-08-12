@@ -12,13 +12,9 @@ import moment from 'moment';
 import PerformancePanelComponent from './PerformancePanelComponent';
 
 
-const GET_CAMPAIGNS_AND_PERFORMANCE = gql`
+const GET_ACCOUNT_PERFORMANCE = gql`
   query performance_and_campaigns($from: Date, $to: Date){
-    campaigns(from: $from, to: $to){
-      id
-      name
-      type
-      targeting
+    accountPerformance(from: $from, to: $to){
       budget
       impressions
       clicks
@@ -28,32 +24,32 @@ const GET_CAMPAIGNS_AND_PERFORMANCE = gql`
       orders
       revenue
       acos
-      portfolio
-    }
-    accountPerformance {
-      totalRevenue
-      totalAcos
+      absoluteRevenue
+      absoluteAcos
+      date
     }
   }
 `;
 
 const addProps = withProps(({ data  }) => {
-  const { campaigns, accountPerformance } = data;
+  const { accountPerformance } = data;
+  //  total data to display in metric selector
   const reduced = {
-    acos: R.pipe(R.map(R.prop('acos')), R.mean)(campaigns),
-    budget: R.pipe(R.map(R.prop('budget')), R.sum)(campaigns),
-    clicks: R.pipe(R.map(R.prop('clicks')), R.sum)(campaigns),
-    cpc: R.pipe(R.map(R.prop('cpc')), R.mean)(campaigns),
-    ctr: R.pipe(R.map(R.prop('ctr')), R.mean)(campaigns),
-    impressions: R.pipe(R.map(R.prop('impressions')), R.sum)(campaigns),
-    orders: R.pipe(R.map(R.prop('orders')), R.sum)(campaigns),
-    revenue: R.pipe(R.map(R.prop('revenue')), R.sum)(campaigns),
-    spend: R.pipe(R.map(R.prop('spend')), R.sum)(campaigns),
-    totalAcos: accountPerformance.totalAcos,
-    totalRevenue: accountPerformance.totalRevenue,
+    budget: R.pipe(R.map(R.prop('budget')), R.sum)(accountPerformance),
+    impressions: R.pipe(R.map(R.prop('impressions')), R.sum)(accountPerformance),
+    clicks: R.pipe(R.map(R.prop('clicks')), R.sum)(accountPerformance),
+    ctr: R.pipe(R.map(R.prop('ctr')), R.mean)(accountPerformance),
+    spend: R.pipe(R.map(R.prop('spend')), R.sum)(accountPerformance),
+    cpc: R.pipe(R.map(R.prop('cpc')), R.mean)(accountPerformance),
+    orders: R.pipe(R.map(R.prop('orders')), R.sum)(accountPerformance),
+    revenue: R.pipe(R.map(R.prop('revenue')), R.sum)(accountPerformance),
+    acos: R.pipe(R.map(R.prop('acos')), R.mean)(accountPerformance),
+    absoluteRevenue: R.pipe(R.map(R.prop('absoluteRevenue')), R.sum)(accountPerformance),
+    absoluteAcos: R.pipe(R.map(R.prop('absoluteAcos')), R.mean)(accountPerformance),
   };
   return {
-    metrics: reduced,
+    accountPerformance,
+    totaledAccountPerformance: reduced,
     loading: false,
     dateFrom: data.variables.from,
     dateTo: data.variables.to,
@@ -71,7 +67,7 @@ const setLoadingFalse = withProps(() => ({
 }));
 
 export default compose(
-  graphql(GET_CAMPAIGNS_AND_PERFORMANCE, {
+  graphql(GET_ACCOUNT_PERFORMANCE, {
     options: {
       variables: {
         from: moment(moment.now()).subtract(60, 'days'),
