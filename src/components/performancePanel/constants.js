@@ -3,7 +3,7 @@ export const REVENUE = 'revenue';
 export const CLICKS = 'clicks';
 export const SPEND = 'spend';
 export const ABSOLUTEACOS = 'absoluteAcos';
-export const ABSOLUTEREVENUE = 'abosluteRevenue';
+export const ABSOLUTEREVENUE = 'absoluteRevenue';
 export const IMPRESSIONS = 'impressions';
 export const metricSymbols = {
   acos: '%',
@@ -11,5 +11,13 @@ export const metricSymbols = {
   clicks: '',
   spend: '$',
   absoluteAcos: '%',
-  abosluteRevenue: '$',
+  absoluteRevenue: '$',
 };
+export const metricNames = {
+  acos: 'acos',
+  revenue: 'revenue',
+  clicks: 'clicks',
+  spend: 'spend',
+  absoluteAcos: 'total acos',
+  absoluteRevenue: 'total revenue',
+}
