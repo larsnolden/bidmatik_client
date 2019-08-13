@@ -10,8 +10,8 @@ import {
   REVENUE,
   CLICKS,
   SPEND,
-  BLENDEDACOS,
-  TOTALREVENUE,
+  ABSOLUTEACOS,
+  ABSOLUTEREVENUE,
   IMPRESSIONS,
 } from './constants';
 
@@ -42,6 +42,8 @@ const Item = styled.div`
   &:hover {
     background: ${props => props.active ? '#F0F4F8' : 'rgba(240, 244, 248, 0.7)'};
   }
+
+  ${props => props.loading && '-webkit-filter: blur(1px);'}
 `;
 
 const Metric = styled.div`
@@ -55,11 +57,12 @@ const MetricSelector = ({
   revenue,
   clicks,
   spend,
-  totalAcos,
-  totalRevenue,
+  absoluteAcos,
+  absoluteRevenue,
   impressions,
   selectedMetrics,
   handleMetricsChange,
+  loading,
 }) => {
   const [primaryLastSelected, setPrimaryLastSelected] = useState(false);
   const handleSelectMetric = (metric) => {
@@ -82,50 +85,99 @@ const MetricSelector = ({
 
   return (
     <Container>
-      <Item onClick={() => handleSelectMetric(ACOS)} active={isActive(ACOS)}>
+      <Item
+        loading={loading}
+        onClick={() => handleSelectMetric(ACOS)}
+        active={isActive(ACOS)}
+      >
         acos
-        <Metric active={isActive(ACOS)} primary={isPrimary(ACOS)}>
-          {Number(acos * 100).toFixed(2)}
+        <Metric
+          active={isActive(ACOS)}
+          primary={isPrimary(ACOS)}
+        >
+          {Number(acos).toFixed(2)}
           %
         </Metric>
       </Item>
-      <Item onClick={() => handleSelectMetric(REVENUE)} active={isActive(REVENUE)}>
+      <Item
+        loading={loading}
+        onClick={() => handleSelectMetric(REVENUE)}
+        active={isActive(REVENUE)}
+      >
         revenue
-        <Metric active={isActive(REVENUE)} primary={isPrimary(REVENUE)}>
+        <Metric
+          active={isActive(REVENUE)}
+          primary={isPrimary(REVENUE)}
+        >
           {formatNumber(revenue)}
           $
         </Metric>
       </Item>
-      <Item onClick={() => handleSelectMetric(CLICKS)} active={isActive(CLICKS)}>
+      <Item
+        loading={loading}
+        onClick={() => handleSelectMetric(CLICKS)}
+        active={isActive(CLICKS)}
+      >
         clicks
-        <Metric active={isActive(CLICKS)} primary={isPrimary(CLICKS)}>
+        <Metric
+          active={isActive(CLICKS)}
+          primary={isPrimary(CLICKS)}
+        >
           {formatNumber(clicks)}
         </Metric>
       </Item>
-      <Item onClick={() => handleSelectMetric(SPEND)} active={isActive(SPEND)}>
+      <Item
+        loading={loading}
+        onClick={() => handleSelectMetric(SPEND)}
+        active={isActive(SPEND)}
+      >
         spend
-        <Metric active={isActive(SPEND)} primary={isPrimary(SPEND)}>
+        <Metric
+          active={isActive(SPEND)}
+          primary={isPrimary(SPEND)}
+        >
           {formatNumber(spend)}
           $
         </Metric>
       </Item>
-      <Item onClick={() => handleSelectMetric(BLENDEDACOS)} active={isActive(BLENDEDACOS)}>
-        blended acos
-        <Metric active={isActive(BLENDEDACOS)} primary={isPrimary(BLENDEDACOS)}>
-          {Number(totalAcos * 100).toFixed(2)}
+      <Item
+        loading={loading}
+        onClick={() => handleSelectMetric(ABSOLUTEACOS)}
+        active={isActive(ABSOLUTEACOS)}
+      >
+        total acos
+        <Metric
+          active={isActive(ABSOLUTEACOS)}
+          primary={isPrimary(ABSOLUTEACOS)}
+        >
+          {Number(absoluteAcos).toFixed(2)}
           %
         </Metric>
       </Item>
-      <Item onClick={() => handleSelectMetric(TOTALREVENUE)} active={isActive(TOTALREVENUE)}>
+      <Item
+        loading={loading}
+        onClick={() => handleSelectMetric(ABSOLUTEREVENUE)}
+        active={isActive(ABSOLUTEREVENUE)}
+      >
         total revenue
-        <Metric active={isActive(TOTALREVENUE)} primary={isPrimary(TOTALREVENUE)}>
-          {formatNumber(totalRevenue)}
+        <Metric
+          active={isActive(ABSOLUTEREVENUE)}
+          primary={isPrimary(ABSOLUTEREVENUE)}
+        >
+          {formatNumber(absoluteRevenue)}
           $
         </Metric>
       </Item>
-      <Item onClick={() => handleSelectMetric(IMPRESSIONS)} active={isActive(IMPRESSIONS)}>
+      <Item
+        loading={loading}
+        onClick={() => handleSelectMetric(IMPRESSIONS)}
+        active={isActive(IMPRESSIONS)}
+      >
         impressions
-        <Metric active={isActive(IMPRESSIONS)} primary={isPrimary(IMPRESSIONS)}>
+        <Metric
+          active={isActive(IMPRESSIONS)}
+          primary={isPrimary(IMPRESSIONS)}
+        >
           {formatNumber(impressions)}
         </Metric>
       </Item>
@@ -138,11 +190,12 @@ MetricSelector.defaultProps = {
   revenue: 0,
   clicks: 0,
   spend: 0,
-  totalAcos: 0,
-  totalRevenue: 0,
+  absoluteAcos: 0,
+  absoluteRevenue: 0,
   impressions: 0,
   selectedMetrics: () => {},
-  handleMetricsChange: () => {},
+  handleMetricsChange: () => { },
+  loading: true,
 };
 
 MetricSelector.propTypes = {
@@ -150,11 +203,12 @@ MetricSelector.propTypes = {
   revenue: propTypes.number,
   clicks: propTypes.number,
   spend: propTypes.number,
-  totalAcos: propTypes.number,
-  totalRevenue: propTypes.number,
+  absoluteAcos: propTypes.number,
+  absoluteRevenue: propTypes.number,
   impressions: propTypes.number,
   selectedMetrics: propTypes.func,
   handleMetricsChange: propTypes.func,
+  loading: propTypes.bool,
 };
 
 export default MetricSelector;

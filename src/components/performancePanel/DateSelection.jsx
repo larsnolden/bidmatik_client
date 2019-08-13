@@ -12,9 +12,10 @@ import { DayPickerRangeController } from 'react-dates';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
+  `;
+  
 const Dates = styled.div`
+  border-radius: 4px 4px 0 0;
   background: #102A43;
   height: 48px;
   display: flex;
@@ -53,6 +54,7 @@ const To = styled.div`
 `;
 
 const Calendar = styled.div`
+  z-index: 2;
   position: absolute;
   margin-top: 48px;
   align-self: center;
