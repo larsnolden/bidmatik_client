@@ -37,7 +37,7 @@ const GET_ACCOUNT_PERFORMANCE = gql`
   }
 `;
 
-const reduceAccountPerformance = accountPerformance  => ({
+const reduceAccountPerformance = accountPerformance => ({
   impressions: R.pipe(R.map(R.prop('impressions')), R.sum)(accountPerformance),
   clicks: R.pipe(R.map(R.prop('clicks')), R.sum)(accountPerformance),
   ctr: R.pipe(R.map(R.prop('ctr')), R.mean)(accountPerformance),
