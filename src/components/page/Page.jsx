@@ -35,8 +35,12 @@ const Content = styled.div`
   padding: 95px 0 0 165px;
 `;
 
-export default ({ 
-  children
+const ChildSpacer = styled.div`
+  margin-top: 60px;
+`;
+
+export default ({
+  children,
 }) => (
   <Container>
     <Navigation />
@@ -46,7 +50,11 @@ export default ({
         <AccountMenu />
       </UserSettings>
       <Content>
-        { children }
+        {children.map(child => (
+          <ChildSpacer>
+            {child}
+          </ChildSpacer>
+        )) }
       </Content>
     </Column>
   </Container>

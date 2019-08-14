@@ -11,6 +11,7 @@ export const metricSymbols = {
   clicks: '',
   spend: '$',
   absoluteAcos: '%',
+  impressions: '',
   absoluteRevenue: '$',
 };
 export const metricNames = {
@@ -19,5 +20,6 @@ export const metricNames = {
   clicks: 'clicks',
   spend: 'spend',
   absoluteAcos: 'total acos',
+  impressions: 'impressions',
   absoluteRevenue: 'total revenue',
-}
+};
