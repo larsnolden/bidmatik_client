@@ -104,7 +104,6 @@ export default class LineGraph extends React.Component {
     } = this.props;
 
     const lineEquals = linePrimary.metricName === lineSecondary.metricName;
-    console.log(linePrimary)
     //  get the Maximum Y values
     const yMaxPrimary = R.pipe(R.map(R.prop('y')), x => Math.max(...x))(linePrimary.data);
     const yMaxSecondary = R.pipe(R.map(R.prop('y')), x => Math.max(...x))(lineSecondary.data);
