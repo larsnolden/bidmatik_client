@@ -81,8 +81,12 @@ const ColumnHeadingWrapper = styled.div`
   align-items: flex-end;
 `;
 
+const NameHeadingWrapper = styled(ColumnHeadingWrapper)`
+  flex-basis: 300px;
+`;
+
 const Footer = styled.div`
-  height: 32px;
+  height: 48px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -104,11 +108,16 @@ const NextPageChevron = styled(Chevron)`
   margin-left: 2px;
 `;
 
+const ViewColumnSpacing = styled(ColumnHeadingWrapper)`
+  flex-basis: 50px;
+  padding-right: 33px;
+`;
+
 const Table = ({
   title,
   columns,
   handleSortChange,
-  handleFilterChange,
+  // handleFilterChange,
   handleNextPageClick,
   children,
 }) => (
@@ -122,16 +131,25 @@ const Table = ({
     <ColumnsRow>
       <FilterButton src={filterIconPath} />
       <ColumnHeadings>
+
+        <NameHeadingWrapper onClick={() => handleSortChange('Name')}>
+          <ColumnHeading>
+            Name
+          </ColumnHeading>
+          <SortButton src={sortIconPath} />
+        </NameHeadingWrapper>
+
         {
           columns.map(column => (
-            <ColumnHeadingWrapper>  
-              <ColumnHeading onClick={() => handleSortChange(column)}>
+            <ColumnHeadingWrapper onClick={() => handleSortChange(column)}>
+              <ColumnHeading>
                 {column}
               </ColumnHeading>
               <SortButton src={sortIconPath} />
             </ColumnHeadingWrapper>
           ))
         }
+        <ViewColumnSpacing />
       </ColumnHeadings>
     </ColumnsRow>
     {children}
@@ -154,7 +172,7 @@ Table.defaultProps = {
   title: '',
   columns: [''],
   handleSortChange: () => {},
-  handleFilterChange: () => {},
+  // handleFilterChange: () => {},
   handleNextPageClick: () => {},
 };
 
@@ -162,7 +180,7 @@ Table.propTypes = {
   title: propTypes.string,
   columns: propTypes.arrayOf(propTypes.string),
   handleSortChange: propTypes.func,
-  handleFilterChange: propTypes.func,
+  // handleFilterChange: propTypes.func,
   handleNextPageClick: propTypes.func,
   children: propTypes.func.isRequired,
 };
