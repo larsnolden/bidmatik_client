@@ -7,3 +7,6 @@ ____________
 
  ### Imports
  - package imports first, then local imports (seperated by newline)
+
+ ### Graphql
+ GQL string variable names are always UPPERCASE

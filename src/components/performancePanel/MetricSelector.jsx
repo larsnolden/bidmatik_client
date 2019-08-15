@@ -13,7 +13,7 @@ import {
   ABSOLUTEACOS,
   ABSOLUTEREVENUE,
   IMPRESSIONS,
-} from './constants';
+} from 'metricConstants';
 
 
 const Container = styled.div`

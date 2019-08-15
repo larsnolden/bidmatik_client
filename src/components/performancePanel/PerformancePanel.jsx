@@ -13,98 +13,67 @@ import MetricSelector from './MetricSelector';
 import {
   ACOS,
   REVENUE,
-  metricSymbols,
-  metricNames,
-} from './constants';
+  findConstant,
+} from 'metricConstants';
 import LineGraph from './LineGraph';
 
-
-const GET_ACCOUNT_PERFORMANCE = gql`
-  query performance_and_campaigns($from: Date, $to: Date){
-    accountPerformance(from: $from, to: $to){
-      impressions
-      clicks
-      ctr
-      spend
-      cpc
-      orders
-      revenue
-      acos
-      absoluteRevenue
-      absoluteAcos
-      date
-    }
-  }
-`;
-
-const reduceAccountPerformance = accountPerformance => ({
-  impressions: R.pipe(R.map(R.prop('impressions')), R.sum)(accountPerformance),
-  clicks: R.pipe(R.map(R.prop('clicks')), R.sum)(accountPerformance),
-  ctr: R.pipe(R.map(R.prop('ctr')), R.mean)(accountPerformance),
-  spend: R.pipe(R.map(R.prop('spend')), R.sum)(accountPerformance),
-  cpc: R.pipe(R.map(R.prop('cpc')), R.mean)(accountPerformance),
-  orders: R.pipe(R.map(R.prop('orders')), R.sum)(accountPerformance),
-  revenue: R.pipe(R.map(R.prop('revenue')), R.sum)(accountPerformance),
-  acos: R.pipe(R.map(R.prop('acos')), R.mean)(accountPerformance),
-  absoluteRevenue: R.pipe(R.map(R.prop('absoluteRevenue')), R.sum)(accountPerformance),
-  absoluteAcos: R.pipe(R.map(R.prop('absoluteAcos')), R.mean)(accountPerformance),
-});
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const selectGraphData = (metric, accountPerformance) => {
-  const selectedMetricOverTime = R.map(R.pick([metric, 'date']))(accountPerformance);
+const selectGraphData = (metric, performance) => {
+  const selectedMetricOverTime = R.map(R.pick([metric, 'date']))(performance);
   return {
     data: R.map(renameKeys({ date: 'x', [metric]: 'y' }))(selectedMetricOverTime),
-    metricName: metricNames[metric],
-    metricSymbol: metricSymbols[metric],
+    metricName: findConstant(metric).displayName,
+    metricSymbol: findConstant(metric).symbol,
   };
 };
 
 //  Todo: add some loading state
 const PerformancePanel = ({
-  data,
+  from,
+  to,
+  handleDateRangeChange,
+  loading,
+  performance,
+  performanceTotal
 }) => {
   const [selectedMetrics, setSelectedMetrics] = useState({
     primary: ACOS,
     secondary: REVENUE,
   });
 
-  const totaledAccountPerformance = useMemo(() => !data.loading
-    && data.accountPerformance
-    && reduceAccountPerformance(data.accountPerformance),
-  [data.loading, data.accountPerformance]);
+  const primaryGraphqData = useMemo(() => !loading
+    && performance
+    && selectGraphData(selectedMetrics.primary, performance),
+  [loading, performance, selectedMetrics.primary]);
 
-  const primaryGraphqData = useMemo(() => !data.loading
-    && data.accountPerformance
-    && selectGraphData(selectedMetrics.primary, data.accountPerformance),
-  [data.loading, data.accountPerformance, selectedMetrics.primary]);
-
-  const secondaryGraphqData = useMemo(() => !data.loading
-    && data.accountPerformance
-    && selectGraphData(selectedMetrics.secondary, data.accountPerformance),
-  [data.loading, data.accountPerformance, selectedMetrics.secondary]);
+  const secondaryGraphqData = useMemo(() => !loading
+    && performance
+    && selectGraphData(selectedMetrics.secondary, performance),
+  [loading, performance, selectedMetrics.secondary]);
 
   return (
     <Container>
       <DateSelection
-        dateFrom={data.variables.from}
-        dateTo={data.variables.to}
+        dateFrom={from}
+        dateTo={to}
         handleDateRangeChange={
-          ({ dateFrom, dateTo }) => data.refetch({ from: dateFrom, to: dateTo })
+          handleDateRangeChange
+          // ({ dateFrom, dateTo }) => refetch({ from: dateFrom, to: dateTo })
         }
       />
       <MetricSelector
-        {...totaledAccountPerformance}
-        loading={data.loading}
+        {...performanceTotal}
+        loading={loading}
         selectedMetrics={selectedMetrics}
         handleMetricsChange={setSelectedMetrics}
       />
       <LineGraph
-        loading={data.loading}
+        loading={loading}
         linePrimary={primaryGraphqData}
         lineSecondary={secondaryGraphqData}
       />
@@ -112,55 +81,48 @@ const PerformancePanel = ({
   );
 }
 
-export default graphql(GET_ACCOUNT_PERFORMANCE, {
-  options: {
-    variables: {
-      from: moment(moment.now()).subtract(60, 'days'),
-      to: moment(moment.now()),
-    },
-  },
-})(PerformancePanel);
+export default PerformancePanel;
 
-PerformancePanel.defaultProps = {
-  data: {
-    variables: {
-      from: moment(),
-      to: moment(),
-    },
-    loading: true,
-    accountPerformance: [{
-      acos: 0,
-      revenue: 0,
-      clicks: 0,
-      spend: 0,
-      absoluteAcos: 0,
-      absoluteRevenue: 0,
-      impressions: 0,
-      ctr: 0,
-      cpc: 0,
-      orders: 0,
-    }],
-  },
-};
+// PerformancePanel.defaultProps = {
+//   data: {
+//     variables: {
+//       from: moment(),
+//       to: moment(),
+//     },
+//     loading: true,
+//     performance: [{
+//       acos: 0,
+//       revenue: 0,
+//       clicks: 0,
+//       spend: 0,
+//       absoluteAcos: 0,
+//       absoluteRevenue: 0,
+//       impressions: 0,
+//       ctr: 0,
+//       cpc: 0,
+//       orders: 0,
+//     }],
+//   },
+// };
 
-PerformancePanel.propTypes = {
-  data: propTypes.objectOf({
-    variables: propTypes.objectOf({
-      from: momentPropTypes.momentObj,
-      to: momentPropTypes.momentObj,
-    }),
-    loading: propTypes.bool,
-    accountPerformance: propTypes.arrayOf({
-      acos: propTypes.number,
-      revenue: propTypes.number,
-      clicks: propTypes.number,
-      spend: propTypes.number,
-      absoluteAcos: propTypes.number,
-      absoluteRevenue: propTypes.number,
-      impressions: propTypes.number,
-      ctr: propTypes.number,
-      cpc: propTypes.number,
-      orders: propTypes.number,
-    }),
-  }),
-};
+// PerformancePanel.propTypes = {
+//   data: propTypes.objectOf({
+//     variables: propTypes.objectOf({
+//       from: momentPropTypes.momentObj,
+//       to: momentPropTypes.momentObj,
+//     }),
+//     loading: propTypes.bool,
+//     performance: propTypes.arrayOf({
+//       acos: propTypes.number,
+//       revenue: propTypes.number,
+//       clicks: propTypes.number,
+//       spend: propTypes.number,
+//       absoluteAcos: propTypes.number,
+//       absoluteRevenue: propTypes.number,
+//       impressions: propTypes.number,
+//       ctr: propTypes.number,
+//       cpc: propTypes.number,
+//       orders: propTypes.number,
+//     }),
+//   }),
+// };
