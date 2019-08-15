@@ -44,7 +44,7 @@ const CampaignsTable = ({
     title="Campaigns"
     columns={columns}
   >
-    {!loading && rows.map((row, index) => {
+    {!loading && rows && rows.map((row, index) => {
       const isStriped = index % 2 === 0;
       return (
         <Row

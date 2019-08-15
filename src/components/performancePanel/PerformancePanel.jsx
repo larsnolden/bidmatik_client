@@ -25,6 +25,7 @@ const Container = styled.div`
 
 const selectGraphData = (metric, performance) => {
   const selectedMetricOverTime = R.map(R.pick([metric, 'date']))(performance);
+  console.log('findConstant', findConstant(metric), metric);
   return {
     data: R.map(renameKeys({ date: 'x', [metric]: 'y' }))(selectedMetricOverTime),
     metricName: findConstant(metric).displayName,
@@ -42,8 +43,8 @@ const PerformancePanel = ({
   performanceTotal
 }) => {
   const [selectedMetrics, setSelectedMetrics] = useState({
-    primary: ACOS,
-    secondary: REVENUE,
+    primary: ACOS.apiName,
+    secondary: REVENUE.apiName,
   });
 
   const primaryGraphqData = useMemo(() => !loading

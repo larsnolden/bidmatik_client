@@ -154,7 +154,7 @@ const transformProps = withProps(({ data }) => {
     from: data.variables.from,
     to: data.variables.to,
     handleDateRangeChange: ({ dateFrom, dateTo }) => data.refetch({ from: dateFrom, to: dateTo }),
-    campaignRows: campaignRows,
+    campaignRows,
   };
 });
 

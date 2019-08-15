@@ -87,13 +87,13 @@ const MetricSelector = ({
     <Container>
       <Item
         loading={loading}
-        onClick={() => handleSelectMetric(ACOS)}
-        active={isActive(ACOS)}
+        onClick={() => handleSelectMetric(ACOS.apiName)}
+        active={isActive(ACOS.apiName)}
       >
         acos
         <Metric
-          active={isActive(ACOS)}
-          primary={isPrimary(ACOS)}
+          active={isActive(ACOS.apiName)}
+          primary={isPrimary(ACOS.apiName)}
         >
           {Number(acos).toFixed(2)}
           %
@@ -101,13 +101,13 @@ const MetricSelector = ({
       </Item>
       <Item
         loading={loading}
-        onClick={() => handleSelectMetric(REVENUE)}
-        active={isActive(REVENUE)}
+        onClick={() => handleSelectMetric(REVENUE.apiName)}
+        active={isActive(REVENUE.apiName)}
       >
         revenue
         <Metric
-          active={isActive(REVENUE)}
-          primary={isPrimary(REVENUE)}
+          active={isActive(REVENUE.apiName)}
+          primary={isPrimary(REVENUE.apiName)}
         >
           {formatNumber(revenue)}
           $
@@ -115,26 +115,26 @@ const MetricSelector = ({
       </Item>
       <Item
         loading={loading}
-        onClick={() => handleSelectMetric(CLICKS)}
-        active={isActive(CLICKS)}
+        onClick={() => handleSelectMetric(CLICKS.apiName)}
+        active={isActive(CLICKS.apiName)}
       >
         clicks
         <Metric
-          active={isActive(CLICKS)}
-          primary={isPrimary(CLICKS)}
+          active={isActive(CLICKS.apiName)}
+          primary={isPrimary(CLICKS.apiName)}
         >
           {formatNumber(clicks)}
         </Metric>
       </Item>
       <Item
         loading={loading}
-        onClick={() => handleSelectMetric(SPEND)}
-        active={isActive(SPEND)}
+        onClick={() => handleSelectMetric(SPEND.apiName)}
+        active={isActive(SPEND.apiName)}
       >
         spend
         <Metric
-          active={isActive(SPEND)}
-          primary={isPrimary(SPEND)}
+          active={isActive(SPEND.apiName)}
+          primary={isPrimary(SPEND.apiName)}
         >
           {formatNumber(spend)}
           $
@@ -142,13 +142,13 @@ const MetricSelector = ({
       </Item>
       <Item
         loading={loading}
-        onClick={() => handleSelectMetric(ABSOLUTEACOS)}
-        active={isActive(ABSOLUTEACOS)}
+        onClick={() => handleSelectMetric(ABSOLUTEACOS.apiName)}
+        active={isActive(ABSOLUTEACOS.apiName)}
       >
         total acos
         <Metric
-          active={isActive(ABSOLUTEACOS)}
-          primary={isPrimary(ABSOLUTEACOS)}
+          active={isActive(ABSOLUTEACOS.apiName)}
+          primary={isPrimary(ABSOLUTEACOS.apiName)}
         >
           {Number(absoluteAcos).toFixed(2)}
           %
@@ -156,13 +156,13 @@ const MetricSelector = ({
       </Item>
       <Item
         loading={loading}
-        onClick={() => handleSelectMetric(ABSOLUTEREVENUE)}
-        active={isActive(ABSOLUTEREVENUE)}
+        onClick={() => handleSelectMetric(ABSOLUTEREVENUE.apiName)}
+        active={isActive(ABSOLUTEREVENUE.apiName)}
       >
         total revenue
         <Metric
-          active={isActive(ABSOLUTEREVENUE)}
-          primary={isPrimary(ABSOLUTEREVENUE)}
+          active={isActive(ABSOLUTEREVENUE.apiName)}
+          primary={isPrimary(ABSOLUTEREVENUE.apiName)}
         >
           {formatNumber(absoluteRevenue)}
           $
@@ -170,13 +170,13 @@ const MetricSelector = ({
       </Item>
       <Item
         loading={loading}
-        onClick={() => handleSelectMetric(IMPRESSIONS)}
-        active={isActive(IMPRESSIONS)}
+        onClick={() => handleSelectMetric(IMPRESSIONS.apiName)}
+        active={isActive(IMPRESSIONS.apiName)}
       >
         impressions
         <Metric
-          active={isActive(IMPRESSIONS)}
-          primary={isPrimary(IMPRESSIONS)}
+          active={isActive(IMPRESSIONS.apiName)}
+          primary={isPrimary(IMPRESSIONS.apiName)}
         >
           {formatNumber(impressions)}
         </Metric>
