@@ -13,6 +13,7 @@ const Container = styled.div`
   padding-left: 60px;
   justify-content: flex-start;
   flex-basis: 100%;
+  padding: 5px 0 5x 60px;
 `;
 
 const Column = styled.div`
