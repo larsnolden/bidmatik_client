@@ -1,5 +1,4 @@
 import React from 'react';
-import gql from 'graphql-tag';
 
 import Table from 'components/Table/Table';
 import Row from 'components/Table/Row';
@@ -15,7 +14,6 @@ const CampaignsTable = ({
   >
     {!loading && rows && rows.map((row, index) => {
       const isStriped = index % 2 === 0;
-      console.log(row);
       return (
         <Row
           striped={isStriped}

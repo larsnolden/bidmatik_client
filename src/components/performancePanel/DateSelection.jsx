@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import moment from 'moment';
 import styled from '@emotion/styled';
 import propTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { useMutation } from '@apollo/react-hooks';
 
 import Chevron from 'components/Chevron';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { DayPickerRangeController } from 'react-dates';
 
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  `;
-  
+`;
+
 const Dates = styled.div`
   border-radius: 4px 4px 0 0;
   background: #102A43;
@@ -70,7 +74,35 @@ const Calendar = styled.div`
   }
 `;
 
-const DateSelection = ({ dateFrom, dateTo, handleDateRangeChange }) => {
+const USER_FILTER_DATES__QUERY = gql`
+  query {
+    userFilterDates {
+      id
+      from
+      to
+    }
+  }
+`;
+
+const USER_FILTER_DATES__MUTATION = gql`
+  mutation user_filter_dates($from: Date!, $to: Date!) {
+    userFilterDates(from:$from, to:$to) {
+      id
+      from
+      to
+    }
+  }
+`;
+
+const DateSelection = ({
+  data,
+  handleDateRangeChange: handleDateRangeChangeDataFetch,
+}) => {
+  const { loading } = data;
+
+  const dateFrom = loading ? moment() : moment(data.userFilterDates.from);
+  const dateTo = loading ? moment() : moment(data.userFilterDates.to);
+
   const [focusedInput, setFocusedInput] = useState('startDate');
   const [showCalendar, setShowCalendar] = useState(false);
   const [dateFromLocal, setDateFromLocal] = useState(dateFrom);
@@ -80,6 +112,22 @@ const DateSelection = ({ dateFrom, dateTo, handleDateRangeChange }) => {
       setShowCalendar(state);
     }
   };
+  const [mutateUserFilterDates] = useMutation(USER_FILTER_DATES__MUTATION);
+  const handleDateRangeChange = ({ from, to }) => {
+    //  refetch data
+    handleDateRangeChangeDataFetch({ from, to });
+
+    //  save new selected date on server
+    mutateUserFilterDates({
+      //  use moments valueOf func to represent GQL DATE type
+      variables: {
+        from: moment(from).valueOf(),
+        to: moment(to).valueOf(),
+      },
+    });
+  };
+
+  //  On Click show filter is not working properly
 
   return (
     <Container>
@@ -121,7 +169,7 @@ const DateSelection = ({ dateFrom, dateTo, handleDateRangeChange }) => {
                   //  new date range selected
                   if (startDate.isBefore(endDate) && endDate !== dateTo) { 
                     setShowCalendar(false);
-                    handleDateRangeChange({ dateFrom: moment(startDate), dateTo: moment(endDate) });
+                    handleDateRangeChange({ from: startDate, to: endDate });
                   }
                 }
               }
@@ -153,4 +201,4 @@ DateSelection.propTypes = {
   handleDateRangeChange: propTypes.func,
 };
 
-export default DateSelection;
+export default graphql(USER_FILTER_DATES__QUERY)(DateSelection);

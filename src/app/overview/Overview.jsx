@@ -28,7 +28,6 @@ import {
 const campaignTableColumns = [ACOS, ABSOLUTEACOS, REVENUE, CLICKS, IMPRESSIONS, SPEND];
 const campaignTableColumnNames = campaignTableColumns.map(column => column.displayName);
 
-
 const reduceAccountPerformance = performance => ({
   impressions: R.pipe(R.map(R.prop('impressions')), R.sum)(performance),
   clicks: R.pipe(R.map(R.prop('clicks')), R.sum)(performance),
@@ -93,13 +92,11 @@ const ACCOUNT_PERFORMANCE__CAMPAIGNS_QUERY = gql`
 `;
 
 const Overview = ({
-  from,
-  to,
-  handleDateRangeChange,
   loading,
   performance,
   performanceTotal,
-  campaignRows
+  campaignRows,
+  handleDateRangeChange
 }) => {
   //mutate and refetch
   //const handleDateRangeChange 
@@ -108,12 +105,10 @@ const Overview = ({
       heading="Overview"
     >
       <PerformancePanel
-        from={from}
-        to={to}
-        handleDateRangeChange={handleDateRangeChange}
         loading={loading}
         performance={performance}
         performanceTotal={performanceTotal}
+        handleDateRangeChange={handleDateRangeChange}
       />
       <CampaignsTable
         loading={loading}
@@ -130,16 +125,14 @@ const waitWhileLoading = (component, propName = 'data') => branch(
 );
 
 const transformProps = withProps(({ data }) => {
-  const { campaigns, accountPerformance } = data;
+  const { campaigns, accountPerformance, userFilterDates } = data;
   const accountPerformanceReduced = reduceAccountPerformance(accountPerformance);
   const campaignRows = reduceCampaignsRows(campaigns);
   return {
     performanceTotal: accountPerformanceReduced,
     performance: accountPerformance,
     loading: false,
-    from: data.variables.from,
-    to: data.variables.to,
-    handleDateRangeChange: ({ dateFrom, dateTo }) => data.refetch({ from: dateFrom, to: dateTo }),
+    handleDateRangeChange: ({ dateFrom: from, dateTo: to }) => data.refetch({ from, to }),
     campaignRows,
   };
 });
