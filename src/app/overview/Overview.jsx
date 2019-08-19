@@ -20,6 +20,9 @@ import {
   IMPRESSIONS,
   SPEND,
 } from 'metricConstants';
+import {
+  formatPercentage,
+} from 'helper/format';
 
 
 const campaignTableColumns = [ACOS, ABSOLUTEACOS, REVENUE, CLICKS, IMPRESSIONS, SPEND];
@@ -39,39 +42,21 @@ const reduceAccountPerformance = performance => ({
   absoluteAcos: R.pipe(R.map(R.prop('absoluteAcos')), R.mean)(performance),
 });
 
-const reduceCampaignsRows = campaigns => {
-  console.log('campaigns', campaigns);
-  return [{
-    id: Math.random(1, 200),
-  columns: [{
-    value: 'Name of the Campaign',
-  },
-  {
-    value: '10%',
-    change: 21,
-  },
-  {
-    value: '7%',
-    change: -12,
-  },
-  {
-    value: '$1.231',
-    change: -12,
-  },
-  {
-    value: 1000,
-    change: 2,
-  },
-  {
-    value: 100,
-    change: 212,
-  },
-  {
-    value: '$124',
-    change: -134,
-  }],
-  }];
-};
+const reduceCampaignsRows = campaigns => campaigns.map((campaign) => {
+  const columns = campaignTableColumns.map(tColumn => ({
+    value: tColumn.format(campaign[tColumn.apiName]),
+    change: formatPercentage(campaign[`${tColumn.apiName}Change`]),
+  }));
+  return {
+    id: campaign.id,
+    columns: [
+      {
+        value: campaign.name,
+      },
+      ...columns,
+    ],
+  };
+});
 
 const ACCOUNT_PERFORMANCE__CAMPAIGNS_QUERY = gql`
   query performance_and_campaigns($from: Date, $to: Date){
@@ -146,7 +131,6 @@ const transformProps = withProps(({ data }) => {
   const { campaigns, accountPerformance } = data;
   const accountPerformanceReduced = reduceAccountPerformance(accountPerformance);
   const campaignRows = reduceCampaignsRows(campaigns);
-  console.log('performanceReduced', accountPerformanceReduced);
   return {
     performanceTotal: accountPerformanceReduced,
     performance: accountPerformance,

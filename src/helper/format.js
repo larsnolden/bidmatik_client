@@ -7,3 +7,5 @@ export const formatNumber = R.compose(
   R.reverse,
   String,
 );
+
+export const formatPercentage = (n, toN = 2) => Number(n).toFixed(toN);
