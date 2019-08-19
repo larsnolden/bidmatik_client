@@ -104,7 +104,9 @@ const Overview = ({
   //mutate and refetch
   //const handleDateRangeChange 
   return (
-    <Page>
+    <Page
+      heading="Overview"
+    >
       <PerformancePanel
         from={from}
         to={to}

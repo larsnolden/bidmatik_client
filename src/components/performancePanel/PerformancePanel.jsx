@@ -83,27 +83,36 @@ const PerformancePanel = ({
 
 export default PerformancePanel;
 
-// PerformancePanel.defaultProps = {
-//   data: {
-//     variables: {
-//       from: moment(),
-//       to: moment(),
-//     },
-//     loading: true,
-//     performance: [{
-//       acos: 0,
-//       revenue: 0,
-//       clicks: 0,
-//       spend: 0,
-//       absoluteAcos: 0,
-//       absoluteRevenue: 0,
-//       impressions: 0,
-//       ctr: 0,
-//       cpc: 0,
-//       orders: 0,
-//     }],
-//   },
-// };
+PerformancePanel.defaultProps = {
+  from: moment(),
+  to: moment(),
+  loading: true,
+  handleDateRangeChange: () => {},
+  performance: [{
+    acos: 0,
+    revenue: 0,
+    clicks: 0,
+    spend: 0,
+    absoluteAcos: 0,
+    absoluteRevenue: 0,
+    impressions: 0,
+    ctr: 0,
+    cpc: 0,
+    orders: 0,
+  }],
+  performanceTotal: [{
+    acos: 0,
+    revenue: 0,
+    clicks: 0,
+    spend: 0,
+    absoluteAcos: 0,
+    absoluteRevenue: 0,
+    impressions: 0,
+    ctr: 0,
+    cpc: 0,
+    orders: 0,
+  }],
+};
 
 // PerformancePanel.propTypes = {
 //   data: propTypes.objectOf({

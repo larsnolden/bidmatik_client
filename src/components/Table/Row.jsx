@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import propTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 
 const Container = styled.div`
@@ -56,7 +57,7 @@ const ChangeSign = styled.div`
   font-weight: 600;
 `;
 
-const ViewButton = styled.div`
+const ViewButton = styled(Link)`
   font-size: 14px;
   color: #186FAF;
   cursor: pointer;
@@ -69,7 +70,6 @@ const Row = ({
   columns,
   striped,
   // childRows,
-  handleViewClick,
 }) => {
   //  first element is always the row items name
   const rowName = columns[0].value;
@@ -98,7 +98,7 @@ const Row = ({
         </Column>
       ))}
       <ViewColumn>
-        <ViewButton onClick={() => handleViewClick(id)}>
+        <ViewButton to={`/campaign/${id}`}>
           view
         </ViewButton>
       </ViewColumn>

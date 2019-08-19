@@ -15,10 +15,12 @@ const CampaignsTable = ({
   >
     {!loading && rows && rows.map((row, index) => {
       const isStriped = index % 2 === 0;
+      console.log(row);
       return (
         <Row
           striped={isStriped}
           columns={row.columns}
+          id={row.id}
         />
       );
     })}

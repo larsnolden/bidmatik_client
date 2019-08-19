@@ -32,14 +32,22 @@ const UserSettings = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 95px 0 0 165px;
+  padding: 0 0 0 165px;
 `;
 
 const ChildSpacer = styled.div`
   margin-top: 60px;
 `;
 
+const Heading = styled.div`
+  font-weight: 500;
+  font-size: 36px;
+  color: #0A558C;
+  padding: 96px 0 0 165px;
+`;
+
 export default ({
+  heading,
   children,
 }) => (
   <Container>
@@ -49,8 +57,11 @@ export default ({
         <ProfileSelector />
         <AccountMenu />
       </UserSettings>
+      <Heading>
+        {heading}
+      </Heading>
       <Content>
-        {children.map(child => (
+        {children && children.map(child => (
           <ChildSpacer>
             {child}
           </ChildSpacer>
