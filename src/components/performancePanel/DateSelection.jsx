@@ -63,6 +63,10 @@ const Calendar = styled.div`
   margin-top: 48px;
   align-self: center;
 
+  .DayPicker {
+    font-family: Roboto;
+  }
+
   .CalendarDay__selected_span {
     background: #84C5F4;
     border: 1px double #62B0E8;
