@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import moment from 'moment';
 import styled from '@emotion/styled';
 import propTypes from 'prop-types';
@@ -100,12 +100,22 @@ const DateSelection = ({
 }) => {
   const { loading } = data;
 
-  const dateFrom = loading ? moment() : moment(data.userFilterDates.from);
-  const dateTo = loading ? moment() : moment(data.userFilterDates.to);
+  const dateFrom = useMemo(
+    () => (loading ? moment() : moment(data.userFilterDates.from)), [loading, data.userFilterDates],
+  );
+  const dateTo = useMemo(
+    () => (loading ? moment() : moment(data.userFilterDates.to)), [loading, data.userFilterDates],
+  );
 
   const [focusedInput, setFocusedInput] = useState('startDate');
   const [showCalendar, setShowCalendar] = useState(false);
   const [dateFromLocal, setDateFromLocal] = useState(dateFrom);
+
+  //  update localDateFrom when actual date was fetched from server
+  useEffect(
+    () => setDateFromLocal(dateFrom),
+    [loading],
+  );
 
   const handleShowCalendarChange = (state) => {
     if (dateFromLocal.isBefore(dateTo)) {
@@ -126,8 +136,6 @@ const DateSelection = ({
       },
     });
   };
-
-  //  On Click show filter is not working properly
 
   return (
     <Container>
@@ -190,14 +198,24 @@ const DateSelection = ({
 };
 
 DateSelection.defaultProps = {
-  dateFrom: moment(),
-  dateTo: moment(),
+  data: {
+    loading: true,
+    userFilterDates: {
+      from: moment(),
+      to: moment(),
+    },
+  },
   handleDateRangeChange: () => { },
 };
 
 DateSelection.propTypes = {
-  dateFrom: momentPropTypes.momentObj,
-  dateTo: momentPropTypes.momentObj,
+  data: {
+    loading: propTypes.bool,
+    userFilterDates: {
+      from: momentPropTypes.momentObj,
+      to: momentPropTypes.momentObj,
+    },
+  },
   handleDateRangeChange: propTypes.func,
 };
 
