@@ -39,6 +39,7 @@ const Button = styled.div`
   line-height: 48px;
   color: ${props => (!props.active ? '#3A5F8A' : '#FFF')};
   cursor: pointer;
+  box-shadow: ${props => (props.active ? 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)' : 'none')};
 `;
 
 const HelpText = styled.div`
@@ -46,12 +47,13 @@ const HelpText = styled.div`
   letter-spacing: 0.04em;
   color: #3A5F8A;
   font-weight: 400;
+  align-self: center;
+  padding: 20px 20px;
 `;
 
 const Authentication = styled.div`
   flex-direction: column;
   display: flex;
-  padding: 20px;
   box-sizing: border-box;
 `;
 
