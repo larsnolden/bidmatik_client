@@ -73,9 +73,11 @@ const Row = ({
 }) => {
   //  first element is always the row items name
   const rowName = columns[0].value;
-  const columnsWithoutName = columns.slice(1)
+  const columnsWithoutName = columns.slice(1);
   return (
-    <Container darkBg={striped}>
+    <Container
+      darkBg={striped}
+    >
       <NameColumn>
         <Value>
           {rowName}
@@ -110,15 +112,13 @@ export default Row;
 
 Row.defaultProps = {
   striped: false,
-  handleViewClick: () => console.log('handleViewClick'),
 };
 
 Row.propTypes = {
   id: propTypes.string.isRequired,
-  columns: propTypes.arrayOf({
+  columns: propTypes.arrayOf(propTypes.shape({
     value: propTypes.string,
-    change: propTypes.number,
-  }).isRequired,
+    change: propTypes.string,
+  })).isRequired,
   striped: propTypes.bool,
-  handleViewClick: propTypes.func,
 };

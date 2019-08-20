@@ -148,10 +148,10 @@ ProfileSelectorComponent.defaultProps = {
 ProfileSelectorComponent.propTypes = {
   activeProfileName: propTypes.string,
   activeProfileCountry: propTypes.string,
-  availableProfiles: propTypes.arrayOf({
-    namee: propTypes.string,
+  availableProfiles: propTypes.arrayOf(propTypes.shape({
+    name: propTypes.string,
     country: propTypes.string,
-  }),
+  })),
   handleSelectProfile: propTypes.func,
 };
 

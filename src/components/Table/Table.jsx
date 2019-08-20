@@ -173,7 +173,8 @@ Table.defaultProps = {
   columns: [''],
   handleSortChange: () => {},
   // handleFilterChange: () => {},
-  handleNextPageClick: () => {},
+  handleNextPageClick: () => { },
+  children: () => <span />,
 };
 
 Table.propTypes = {
@@ -182,5 +183,5 @@ Table.propTypes = {
   handleSortChange: propTypes.func,
   // handleFilterChange: propTypes.func,
   handleNextPageClick: propTypes.func,
-  children: propTypes.func.isRequired,
+  children: propTypes.node,
 };

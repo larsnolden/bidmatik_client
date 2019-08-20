@@ -3,26 +3,6 @@ import {
   formatNumber,
 } from 'helper/format';
 
-// export const metricSymbols = {
-//   acos: '%',
-//   revenue: '$',
-//   clicks: '',
-//   spend: '$',
-//   absoluteAcos: '%',
-//   impressions: '',
-//   absoluteRevenue: '$',
-// };
-// export const metricNames = {
-//   acos: 'ACoS',
-//   revenue: 'Revenue',
-//   clicks: 'Clicks',
-//   spend: 'Spend',
-//   absoluteAcos: 'Total ACoS',
-//   impressions: 'Impressions',
-//   absoluteRevenue: 'Total Revenue',
-// };
-
-
 export const ACOS = {
   displayName: 'ACoS',
   symbol: '%',

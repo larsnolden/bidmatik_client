@@ -185,6 +185,19 @@ const MetricSelector = ({
   );
 };
 
+Item.defaultProps = {
+  loading: true,
+  onClick: () => {},
+  active: true,
+};
+
+
+Item.propTypes = {
+  loading: propTypes.bool,
+  onClick: propTypes.func,
+  active: propTypes.bool,
+};
+
 MetricSelector.defaultProps = {
   acos: 0,
   revenue: 0,
@@ -193,7 +206,10 @@ MetricSelector.defaultProps = {
   absoluteAcos: 0,
   absoluteRevenue: 0,
   impressions: 0,
-  selectedMetrics: () => {},
+  selectedMetrics: {
+    primary: '',
+    secondary: '',
+  },
   handleMetricsChange: () => { },
   loading: true,
 };
@@ -206,7 +222,7 @@ MetricSelector.propTypes = {
   absoluteAcos: propTypes.number,
   absoluteRevenue: propTypes.number,
   impressions: propTypes.number,
-  selectedMetrics: propTypes.func,
+  selectedMetrics: propTypes.objectOf(propTypes.string),
   handleMetricsChange: propTypes.func,
   loading: propTypes.bool,
 };

@@ -1,22 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import styled from '@emotion/styled';
-import moment from 'moment';
 import propTypes from 'prop-types';
-import momentPropTypes from 'react-moment-proptypes';
 import * as R from 'ramda';
-import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
 
 import renameKeys from 'helper/renameKeys';
-import DateSelection from './DateSelection';
-import MetricSelector from './MetricSelector';
 import {
   ACOS,
   REVENUE,
   findConstant,
 } from 'metricConstants';
+import DateSelection from './DateSelection';
+import MetricSelector from './MetricSelector';
 import LineGraph from './LineGraph';
-
 
 const Container = styled.div`
   display: flex;
@@ -37,21 +32,23 @@ const PerformancePanel = ({
   handleDateRangeChange,
   loading,
   performance,
-  performanceTotal
+  performanceTotal,
 }) => {
   const [selectedMetrics, setSelectedMetrics] = useState({
     primary: ACOS.apiName,
     secondary: REVENUE.apiName,
   });
 
-  const primaryGraphqData = useMemo(() => !loading
+  const primaryGraphData = useMemo(() => (!loading
     && performance
-    && selectGraphData(selectedMetrics.primary, performance),
+    ? selectGraphData(selectedMetrics.primary, performance)
+    : {}),
   [loading, performance, selectedMetrics.primary]);
 
-  const secondaryGraphqData = useMemo(() => !loading
+  const secondaryGraphData = useMemo(() => (!loading
     && performance
-    && selectGraphData(selectedMetrics.secondary, performance),
+    ? selectGraphData(selectedMetrics.secondary, performance)
+    : {}),
   [loading, performance, selectedMetrics.secondary]);
 
   return (
@@ -67,20 +64,18 @@ const PerformancePanel = ({
       />
       <LineGraph
         loading={loading}
-        linePrimary={primaryGraphqData}
-        lineSecondary={secondaryGraphqData}
+        linePrimary={primaryGraphData}
+        lineSecondary={secondaryGraphData}
       />
     </Container>
   );
-}
+};
 
 export default PerformancePanel;
 
 PerformancePanel.defaultProps = {
-  from: moment(),
-  to: moment(),
+  handleDateRangeChange: () => { },
   loading: true,
-  handleDateRangeChange: () => {},
   performance: [{
     acos: 0,
     revenue: 0,
@@ -93,7 +88,7 @@ PerformancePanel.defaultProps = {
     cpc: 0,
     orders: 0,
   }],
-  performanceTotal: [{
+  performanceTotal: {
     acos: 0,
     revenue: 0,
     clicks: 0,
@@ -104,27 +99,12 @@ PerformancePanel.defaultProps = {
     ctr: 0,
     cpc: 0,
     orders: 0,
-  }],
+  },
 };
 
-// PerformancePanel.propTypes = {
-//   data: propTypes.objectOf({
-//     variables: propTypes.objectOf({
-//       from: momentPropTypes.momentObj,
-//       to: momentPropTypes.momentObj,
-//     }),
-//     loading: propTypes.bool,
-//     performance: propTypes.arrayOf({
-//       acos: propTypes.number,
-//       revenue: propTypes.number,
-//       clicks: propTypes.number,
-//       spend: propTypes.number,
-//       absoluteAcos: propTypes.number,
-//       absoluteRevenue: propTypes.number,
-//       impressions: propTypes.number,
-//       ctr: propTypes.number,
-//       cpc: propTypes.number,
-//       orders: propTypes.number,
-//     }),
-//   }),
-// };
+PerformancePanel.propTypes = {
+  handleDateRangeChange: propTypes.func,
+  loading: propTypes.bool,
+  performance: propTypes.arrayOf(propTypes.objectOf(propTypes.number)),
+  performanceTotal: propTypes.objectOf(propTypes.number),
+};

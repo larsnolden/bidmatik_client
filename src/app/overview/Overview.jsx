@@ -98,8 +98,6 @@ const Overview = ({
   campaignRows,
   handleDateRangeChange
 }) => {
-  //mutate and refetch
-  //const handleDateRangeChange 
   return (
     <Page
       heading="Overview"
@@ -125,7 +123,7 @@ const waitWhileLoading = (component, propName = 'data') => branch(
 );
 
 const transformProps = withProps(({ data }) => {
-  const { campaigns, accountPerformance, userFilterDates } = data;
+  const { campaigns, accountPerformance } = data;
   const accountPerformanceReduced = reduceAccountPerformance(accountPerformance);
   const campaignRows = reduceCampaignsRows(campaigns);
   return {

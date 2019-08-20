@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import moment from 'moment';
 import styled from '@emotion/styled';
 import propTypes from 'prop-types';
@@ -114,7 +114,7 @@ const DateSelection = ({
   //  update localDateFrom when actual date was fetched from server
   useEffect(
     () => setDateFromLocal(dateFrom),
-    [loading],
+    [loading, dateFrom],
   );
 
   const handleShowCalendarChange = (state) => {
@@ -175,7 +175,7 @@ const DateSelection = ({
                   setDateFromLocal(startDate);
 
                   //  new date range selected
-                  if (startDate.isBefore(endDate) && endDate !== dateTo) { 
+                  if (startDate.isBefore(endDate) && endDate !== dateTo) {
                     setShowCalendar(false);
                     handleDateRangeChange({ from: startDate, to: endDate });
                   }
@@ -209,13 +209,13 @@ DateSelection.defaultProps = {
 };
 
 DateSelection.propTypes = {
-  data: {
+  data: propTypes.shape({
     loading: propTypes.bool,
-    userFilterDates: {
-      from: momentPropTypes.momentObj,
-      to: momentPropTypes.momentObj,
-    },
-  },
+    userFilterDates: propTypes.shape({
+      from: momentPropTypes.string,
+      to: momentPropTypes.string,
+    }),
+  }),
   handleDateRangeChange: propTypes.func,
 };
 

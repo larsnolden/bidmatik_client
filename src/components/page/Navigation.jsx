@@ -43,7 +43,7 @@ export default () => (
     </Link>
     <Menu>
       <MenuItem to="/" activeClassName="activeMenuItem">Advertise</MenuItem>
-      <MenuItem activeClassName="activeMenuItem">Reports</MenuItem>
+      <MenuItem to="/reports" activeClassName="activeMenuItem">Reports</MenuItem>
     </Menu>
   </Container>
 );

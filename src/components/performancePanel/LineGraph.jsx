@@ -147,7 +147,9 @@ export default class LineGraph extends React.Component {
           />
           <LineSeries
             data={linePrimary.data}
-            onNearestX={(value, { index }) => this.setState({ hoverValuesPrimary: linePrimary.data[index] })}
+            onNearestX={
+              (_, { index }) => this.setState({ hoverValuesPrimary: linePrimary.data[index] })
+            }
             color="#DE911D"
           />
           <LineSeries
@@ -157,7 +159,7 @@ export default class LineGraph extends React.Component {
             }))}
             color="#4098D7"
             onNearestX={(value, { index }) => {
-              this.setState({ hoverValuesSecondary: lineSecondary.data[index] })
+              this.setState({ hoverValuesSecondary: lineSecondary.data[index] });
             }}
             opacity={lineEquals ? 0 : 1}
           />
@@ -193,7 +195,7 @@ export default class LineGraph extends React.Component {
                 {
                   !lineEquals && (
                     <div>
-                      <CrosshairMetricTitle>{lineSecondary.metricName}</CrosshairMetricTitle >
+                      <CrosshairMetricTitle>{lineSecondary.metricName}</CrosshairMetricTitle>
                       <CrosshairMetricTwo>
                         {lineSecondary.metricSymbol === '%' ? Number(this.state.hoverValuesSecondary.y).toFixed(2) : formatNumber(this.state.hoverValuesSecondary.y)}
                         {lineSecondary.metricSymbol}
@@ -217,6 +219,7 @@ LineGraph.defaultProps = {
       y: 0,
     }],
     metricName: '',
+    metricSymbol: '',
   },
   lineSecondary: {
     data: [{
@@ -224,24 +227,21 @@ LineGraph.defaultProps = {
       y: 0,
     }],
     metricName: '',
+    metricSymbol: '',
   },
   loading: true,
 };
 
 LineGraph.propTypes = {
-  linePrimary: propTypes.objectOf({
-    data: propTypes.objectOf([{
-      x: propTypes.number,
-      y: propTypes.number,
-    }]),
+  linePrimary: propTypes.shape({
+    data: propTypes.arrayOf(propTypes.objectOf(propTypes.number)),
     metricName: propTypes.string,
+    metricSymbol: propTypes.string,
   }),
-  lineSecondary: propTypes.objectOf({
-    data: propTypes.objectOf([{
-      x: propTypes.number,
-      y: propTypes.number,
-    }]),
+  lineSecondary: propTypes.shape({
+    data: propTypes.arrayOf(propTypes.objectOf(propTypes.number)),
     metricName: propTypes.string,
+    metricSymbol: propTypes.string,
   }),
   loading: propTypes.bool,
 };
