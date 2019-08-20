@@ -1,8 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import propTypes from 'prop-types';
+import gql from 'graphql-tag';
+import { useMutation } from '@apollo/react-hooks';
+import Cookies from 'js-cookie';
+import { Redirect } from 'react-router-dom';
 
 import bidmatikLogoPath from 'assets/BidmatikLogo.png';
+
+
+const AUTHENTICATE_USER__MUTATION = gql`
+  mutation($authCode: String!) {
+    createSession(authCode: $authCode) {
+      token
+    }
+  }
+`;
 
 const Container = styled.div`
   background: #3A5F8A;
@@ -73,7 +86,45 @@ const AuthButton = styled.div`
 
 const Authenticate = () => {
   const [isLoginActive, setIsLoginActive] = useState(true);
+  const [isNewCookieSet, setIsNewCookieSet] = useState(false);
+  const [authorize, { data, loading, called }] = useMutation(AUTHENTICATE_USER__MUTATION);
 
+  const isProduction = process.env.REACT_APP_ENV === 'production';
+
+  const handleAuthenticationClick = isProduction ? () => {
+    const options = {
+      scope: 'profile cpc_advertising:campaign_management',
+      response_type: 'code',
+    };
+    // eslint-disable-next-line
+    window.amazon.Login.authorize(options, async (res) => {
+      authorize({
+        variables: {
+          authCode: res.code,
+        },
+      });
+    });
+  }
+    : () => {
+      //  development auth
+      authorize({
+        variables: {
+          authCode: '',
+        },
+      });
+    };
+
+  useEffect(
+    () => {
+      if (called && !loading && data.createSession) {
+        Cookies.set('authentication', data.createSession.token);
+        setIsNewCookieSet(true);
+      }
+    },
+    [loading, data],
+  );
+
+  if (called && !loading && isNewCookieSet) return <Redirect to="/" />;
   return (
     <Container>
       <ActionBar>
@@ -90,19 +141,19 @@ const Authenticate = () => {
           {
             isLoginActive ? (
               <HelpText>
-                Use
-                <b> Login with Amazon </b>
-                to sign in
+                Use your
+                <b> Seller Central </b>
+                account to login
               </HelpText>
             ) : (
               <HelpText>
-                Signup with your
+                Use your
                 <b> Seller Central </b>
-                account
+                account to signup
               </HelpText>
             )
           }
-          <AuthButton />
+          <AuthButton onClick={handleAuthenticationClick} />
         </Authentication>
       </ActionBar>
     </Container>
