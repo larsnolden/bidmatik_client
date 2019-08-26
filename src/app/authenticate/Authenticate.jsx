@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import propTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import Cookies from 'js-cookie';
@@ -121,7 +120,7 @@ const Authenticate = () => {
         setIsNewCookieSet(true);
       }
     },
-    [loading, data],
+    [loading, data, called],
   );
 
   if (called && !loading && isNewCookieSet) return <Redirect to="/" />;
