@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import styled from '@emotion/styled';
 import propTypes from 'prop-types';
 import * as R from 'ramda';
+import moment from 'moment';
 
 import renameKeys from 'helper/renameKeys';
 import {
@@ -19,9 +20,14 @@ const Container = styled.div`
 `;
 
 const selectGraphData = (metric, performance) => {
-  const selectedMetricOverTime = R.map(R.pick([metric, 'date']))(performance);
+  const dateLens = R.lensProp('date');
+  const graphqData = R.compose(
+    R.map(renameKeys({ date: 'x', [metric]: 'y' })),
+    R.map(R.over(dateLens, x => moment(x).toDate())),
+    R.map(R.pick([metric, 'date'])),
+  )(performance);
   return {
-    data: R.map(renameKeys({ date: 'x', [metric]: 'y' }))(selectedMetricOverTime),
+    data: graphqData,
     metricName: findConstant(metric).displayName,
     metricSymbol: findConstant(metric).symbol,
   };

@@ -102,6 +102,8 @@ export default class LineGraph extends React.Component {
       linePrimary,
       lineSecondary,
     } = this.props;
+    console.log('linePrimary', linePrimary);
+    console.log('lineSecondary', lineSecondary);
 
     const lineEquals = linePrimary.metricName === lineSecondary.metricName;
     //  get the Maximum Y values
@@ -125,7 +127,7 @@ export default class LineGraph extends React.Component {
           <VerticalGridLines />
           <HorizontalGridLines />
           <XAxis
-            tickTotal={10}
+            tickTotal={7}
             tickFormat={tickFormatX}
           />
           <YAxis

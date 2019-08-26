@@ -1,7 +1,6 @@
 import React from 'react';
 import Page from 'components/page/Page';
 import PerformancePanel from 'components/performancePanel/PerformancePanel';
-import CampaignsTable from './CampaignsTable';
 import {
   compose,
   withProps,
@@ -10,8 +9,6 @@ import {
 } from 'recompose';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import * as R from 'ramda';
-import moment from 'moment';
 import {
   ACOS,
   ABSOLUTEACOS,
@@ -23,6 +20,7 @@ import {
 import {
   formatPercentage,
 } from 'helper/format';
+import CampaignsTable from './CampaignsTable';
 
 
 const campaignTableColumns = [ACOS, ABSOLUTEACOS, REVENUE, CLICKS, IMPRESSIONS, SPEND];
