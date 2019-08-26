@@ -32,7 +32,7 @@ const UserSettings = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 0 0 165px;
+  padding: 0 0 90px 165px;
 `;
 
 const ChildSpacer = styled.div`
