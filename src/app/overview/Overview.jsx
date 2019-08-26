@@ -44,6 +44,7 @@ const reduceCampaignsRows = campaigns => campaigns.map((campaign) => {
     id,
     columns: [
       {
+        id,
         value: name,
       },
       ...columns,
