@@ -80,7 +80,7 @@ const Calendar = styled.div`
 
 const USER_FILTER_DATES__QUERY = gql`
   query {
-    userFilterDates {
+    UserFilterDates {
       id
       from
       to
@@ -89,8 +89,8 @@ const USER_FILTER_DATES__QUERY = gql`
 `;
 
 const USER_FILTER_DATES__MUTATION = gql`
-  mutation user_filter_dates($from: Date!, $to: Date!) {
-    userFilterDates(from:$from, to:$to) {
+  mutation user_filter_dates($input: UserFilterDatesInput!) {
+    SetUserFilterDates(input: $input) {
       id
       from
       to
@@ -105,10 +105,10 @@ const DateSelection = ({
   const { loading } = data;
 
   const dateFrom = useMemo(
-    () => (loading ? moment() : moment(data.userFilterDates.from)), [loading, data.userFilterDates],
+    () => (loading ? moment() : moment(data.UserFilterDates.from)), [loading, data.UserFilterDates],
   );
   const dateTo = useMemo(
-    () => (loading ? moment() : moment(data.userFilterDates.to)), [loading, data.userFilterDates],
+    () => (loading ? moment() : moment(data.UserFilterDates.to)), [loading, data.UserFilterDates],
   );
 
   const [focusedInput, setFocusedInput] = useState('startDate');
@@ -128,16 +128,19 @@ const DateSelection = ({
   };
   const [mutateUserFilterDates] = useMutation(USER_FILTER_DATES__MUTATION);
   const handleDateRangeChange = ({ from, to }) => {
-    //  refetch data
-    handleDateRangeChangeDataFetch({ from, to });
-
     //  save new selected date on server
     mutateUserFilterDates({
-      //  use moments valueOf func to represent GQL DATE type
       variables: {
-        from: moment(from).valueOf(),
-        to: moment(to).valueOf(),
+        input: {
+          from,
+          to,
+        },
       },
+    });
+    //  refetch data in Overview Query
+    handleDateRangeChangeDataFetch({
+      from,
+      to,
     });
   };
 
@@ -181,7 +184,7 @@ const DateSelection = ({
                   //  new date range selected
                   if (startDate.isBefore(endDate) && endDate !== dateTo) {
                     setShowCalendar(false);
-                    handleDateRangeChange({ from: startDate, to: endDate });
+                    handleDateRangeChange({ from: moment(startDate).format('YYYYMMDD'), to: moment(endDate).format('YYYYMMDD') });
                   }
                 }
               }
@@ -204,7 +207,7 @@ const DateSelection = ({
 DateSelection.defaultProps = {
   data: {
     loading: true,
-    userFilterDates: {
+    UserFilterDates: {
       from: moment(),
       to: moment(),
     },
@@ -215,7 +218,7 @@ DateSelection.defaultProps = {
 DateSelection.propTypes = {
   data: propTypes.shape({
     loading: propTypes.bool,
-    userFilterDates: propTypes.shape({
+    UserFilterDates: propTypes.shape({
       from: momentPropTypes.string,
       to: momentPropTypes.string,
     }),

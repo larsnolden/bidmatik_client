@@ -28,29 +28,25 @@ import {
 const campaignTableColumns = [ACOS, ABSOLUTEACOS, REVENUE, CLICKS, IMPRESSIONS, SPEND];
 const campaignTableColumnNames = campaignTableColumns.map(column => column.displayName);
 
-const reduceAccountPerformance = performance => ({
-  impressions: R.pipe(R.map(R.prop('impressions')), R.sum)(performance),
-  clicks: R.pipe(R.map(R.prop('clicks')), R.sum)(performance),
-  ctr: R.pipe(R.map(R.prop('ctr')), R.mean)(performance),
-  spend: R.pipe(R.map(R.prop('spend')), R.sum)(performance),
-  cpc: R.pipe(R.map(R.prop('cpc')), R.mean)(performance),
-  orders: R.pipe(R.map(R.prop('orders')), R.sum)(performance),
-  revenue: R.pipe(R.map(R.prop('revenue')), R.sum)(performance),
-  acos: R.pipe(R.map(R.prop('acos')), R.mean)(performance),
-  absoluteRevenue: R.pipe(R.map(R.prop('absoluteRevenue')), R.sum)(performance),
-  absoluteAcos: R.pipe(R.map(R.prop('absoluteAcos')), R.mean)(performance),
-});
-
 const reduceCampaignsRows = campaigns => campaigns.map((campaign) => {
+  const {
+    id,
+    name,
+    CampaignPerformanceReduced,
+    CampaignPerformanceDelta,
+  } = campaign;
   const columns = campaignTableColumns.map(tColumn => ({
-    value: tColumn.format(campaign[tColumn.apiName]),
-    change: formatPercentage(campaign[`${tColumn.apiName}Change`]),
+    value: tColumn.format(CampaignPerformanceReduced[tColumn.apiName]),
+    //  don't display percent badge if change is 0
+    change: CampaignPerformanceDelta[tColumn.apiName] * 100 !== 0
+      ? formatPercentage(CampaignPerformanceDelta[tColumn.apiName] * 100, 0)
+      : null,
   }));
   return {
-    id: campaign.id,
+    id,
     columns: [
       {
-        value: campaign.name,
+        value: name,
       },
       ...columns,
     ],
@@ -58,35 +54,76 @@ const reduceCampaignsRows = campaigns => campaigns.map((campaign) => {
 });
 
 const ACCOUNT_PERFORMANCE__CAMPAIGNS_QUERY = gql`
-  query performance_and_campaigns($from: Date, $to: Date){
-    accountPerformance(from: $from, to: $to){
-      impressions
-      clicks
-      ctr
-      spend
-      cpc
-      orders
-      revenue
-      acos
-      absoluteRevenue
-      absoluteAcos
-      date
-    }
-    campaigns(from:$from, to: $to) {
+  # CampaignPerformance is the generic response type for any kind of campaign performance query
+  fragment CampaignMetricsPercent on CampaignPerformancePercent {
+    impressions
+    clicks
+    ctr
+    spend
+    orders
+    revenue
+    acos
+    absoluteAcos
+  }
+
+  fragment CampaignMetrics on CampaignPerformance {
+    impressions
+    clicks
+    ctr
+    spend
+    orders
+    revenue
+    acos
+    absoluteAcos
+  }
+
+
+  # ProfilePerformance is the generic response type for any kind of profile performance query
+  fragment ProfileMetrics on ProfilePerformance {
+    impressions
+    clicks
+    ctr
+    spend
+    cpc
+    orders
+    revenue
+    acos
+    absoluteRevenue
+    absoluteAcos
+  }
+
+
+  query overview($profileId: ID!, $from: Date!, $to: Date!) {
+    UserFilterDates {
       id
-      name
-      impressions
-      impressionsChange
-      clicks
-      clicksChange
-      spend
-      spendChange
-      revenue
-      revenueChange
-      acos
-      acosChange
-      absoluteAcos
-      absoluteAcosChange
+      from
+      to
+    }
+
+    SellerProfile(id: $profileId) {
+      id
+      #to get the avt of all samples (eg. a sample = 1 day of records)
+      # (we could compute this based on the Performance All query, but do we want to?)
+      ProfilePerformanceReduced(from: $from, to: $to) {
+        ...ProfileMetrics
+      }
+      #to get each sample from fromDate to toDate
+      ProfilePerformance(from: $from, to: $to) {
+        date
+        ...ProfileMetrics
+      }
+      Campaigns(from: $from, to: $to) {
+        id
+        name
+        #to get the average of all samples
+        CampaignPerformanceReduced(from: $from, to: $to) {
+          ...CampaignMetrics
+        }
+        #to get the delta from fromDate to toDate
+        CampaignPerformanceDelta(from: $from, to: $to) {
+          ...CampaignMetricsPercent
+        }
+      }
     }
   }
 `;
@@ -123,14 +160,27 @@ const waitWhileLoading = (component, propName = 'data') => branch(
 );
 
 const transformProps = withProps(({ data }) => {
-  const { campaigns, accountPerformance } = data;
-  const accountPerformanceReduced = reduceAccountPerformance(accountPerformance);
-  const campaignRows = reduceCampaignsRows(campaigns);
+  console.log('data', data);
+  const {
+    ProfilePerformance,
+    ProfilePerformanceReduced,
+    Campaigns,
+  } = data.SellerProfile;
+
+  //  Filter Dates have been fetched in the first request of this query
+  //  fetch again with received filter dates
+  if (data.variables.from === '19970101') {
+    data.refetch({
+      from: String(data.UserFilterDates.from),
+      to: String(data.UserFilterDates.to),
+    });
+  }
+  const campaignRows = reduceCampaignsRows(Campaigns);
   return {
-    performanceTotal: accountPerformanceReduced,
-    performance: accountPerformance,
+    performanceTotal: ProfilePerformanceReduced,
+    performance: ProfilePerformance,
     loading: false,
-    handleDateRangeChange: ({ dateFrom: from, dateTo: to }) => data.refetch({ from, to }),
+    handleDateRangeChange: data.refetch,
     campaignRows,
   };
 });
@@ -139,8 +189,9 @@ export default compose(
   graphql(ACCOUNT_PERFORMANCE__CAMPAIGNS_QUERY, {
     options: {
       variables: {
-        from: moment(moment.now()).subtract(60, 'days'),
-        to: moment(moment.now()),
+        profileId: '2839110176393643',
+        from: '19970101',
+        to: '19970101',
       },
     },
   }),
