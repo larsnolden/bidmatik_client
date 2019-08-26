@@ -3,7 +3,7 @@ import Page from 'components/page/Page';
 import PerformancePanel from 'components/performancePanel/PerformancePanel';
 
 const Campaign = ({
-  route,
+  match,
   from,
   to,
   handleDateRangeChange,
@@ -12,18 +12,17 @@ const Campaign = ({
   performanceTotal,
 }) => (
   <Page
-    heading="Demo Campaign"
+    heading={match.params.campaignId}
   >
-    {/* <h1>{JSON.stringify(route)}</h1> */}
-    {/* <h1>{JSON.stringify(route)}</h1> */}
-    {/* <PerformancePanel
+    <PerformancePanel
       from={from}
       to={to}
       handleDateRangeChange={handleDateRangeChange}
       loading={loading}
       performance={performance}
       performanceTotal={performanceTotal}
-      /> */}
+      />
+      some
   </Page>
 );
 
