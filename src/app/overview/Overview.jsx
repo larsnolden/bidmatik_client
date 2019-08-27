@@ -22,6 +22,129 @@ import {
 } from 'helper/format';
 import CampaignsTable from './CampaignsTable';
 
+import { QueryRenderer, grapqhl } from 'react-relay';
+import environment from 'environment';
+
+export default class Overview extends React.Component {
+  render() { 
+    return (
+      <QueryRenderer
+        environment={envrionment}
+        query={graphql`
+          # CampaignPerformance is the generic response type for any kind of campaign performance query
+          fragment CampaignMetricsPercent on CampaignPerformancePercent {
+            impressions
+            clicks
+            ctr
+            spend
+            orders
+            revenue
+            acos
+            absoluteAcos
+          }
+
+          fragment CampaignMetrics on CampaignPerformance {
+            impressions
+            clicks
+            ctr
+            spend
+            orders
+            revenue
+            acos
+            absoluteAcos
+          }
+
+
+          # ProfilePerformance is the generic response type for any kind of profile performance query
+          fragment ProfileMetrics on ProfilePerformance {
+            impressions
+            clicks
+            ctr
+            spend
+            cpc
+            orders
+            revenue
+            acos
+            absoluteRevenue
+            absoluteAcos
+          }
+
+
+          query overview($profileId: ID!, $from: Date!, $to: Date!) {
+            UserFilterDates {
+              ...UserFilterDates_userFilterDates
+            }
+
+            SellerProfile(id: $profileId) {
+              id
+              #to get the avt of all samples (eg. a sample = 1 day of records)
+              # (we could compute this based on the Performance All query, but do we want to?)
+              ProfilePerformanceReduced(from: $from, to: $to) {
+                ...ProfileMetrics
+              }
+              #to get each sample from fromDate to toDate
+              ProfilePerformance(from: $from, to: $to) {
+                date
+                ...ProfileMetrics
+              }
+              Campaigns(from: $from, to: $to) {
+                id
+                name
+                #to get the average of all samples
+                CampaignPerformanceReduced(from: $from, to: $to) {
+                  ...CampaignMetrics
+                }
+                #to get the delta from fromDate to toDate
+                CampaignPerformanceDelta(from: $from, to: $to) {
+                  ...CampaignMetricsPercent
+                }
+              }
+            }
+          }
+        `}
+      variables={{
+        profileId: '2839110176393643',
+        //         from: '19970101',
+        //         to: '19970101',
+      }}
+        render={({ error, props }) => {
+        console.log('overview received props')
+        if (error) {
+          return <div>Error!</div>;
+        }
+        if (!props) {
+          return <div>Loading...</div>;
+        }
+        const {
+          loading,
+          performance,
+          performanceTotal,
+          campaignRows,
+          handleDateRangeChange
+        } = props.overview;
+        return (
+          <Page
+            heading="Overview"
+          >
+            <PerformancePanel
+              loading={loading}
+              performance={performance}
+              performanceTotal={performanceTotal}
+              handleDateRangeChange={handleDateRangeChange}
+            />
+            <CampaignsTable
+              loading={loading}
+              rows={campaignRows}
+              columns={campaignTableColumnNames}
+            />
+          </Page>
+        );
+      }}
+      />
+    )
+  }
+}
+
 
 const campaignTableColumns = [ACOS, ABSOLUTEACOS, REVENUE, CLICKS, IMPRESSIONS, SPEND];
 const campaignTableColumnNames = campaignTableColumns.map(column => column.displayName);
@@ -52,104 +175,11 @@ const reduceCampaignsRows = campaigns => campaigns.map((campaign) => {
   };
 });
 
-const ACCOUNT_PERFORMANCE__CAMPAIGNS_QUERY = gql`
-  # CampaignPerformance is the generic response type for any kind of campaign performance query
-  fragment CampaignMetricsPercent on CampaignPerformancePercent {
-    impressions
-    clicks
-    ctr
-    spend
-    orders
-    revenue
-    acos
-    absoluteAcos
-  }
-
-  fragment CampaignMetrics on CampaignPerformance {
-    impressions
-    clicks
-    ctr
-    spend
-    orders
-    revenue
-    acos
-    absoluteAcos
-  }
-
-
-  # ProfilePerformance is the generic response type for any kind of profile performance query
-  fragment ProfileMetrics on ProfilePerformance {
-    impressions
-    clicks
-    ctr
-    spend
-    cpc
-    orders
-    revenue
-    acos
-    absoluteRevenue
-    absoluteAcos
-  }
-
-
-  query overview($profileId: ID!, $from: Date!, $to: Date!) {
-    UserFilterDates {
-      id
-      from
-      to
-    }
-
-    SellerProfile(id: $profileId) {
-      id
-      #to get the avt of all samples (eg. a sample = 1 day of records)
-      # (we could compute this based on the Performance All query, but do we want to?)
-      ProfilePerformanceReduced(from: $from, to: $to) {
-        ...ProfileMetrics
-      }
-      #to get each sample from fromDate to toDate
-      ProfilePerformance(from: $from, to: $to) {
-        date
-        ...ProfileMetrics
-      }
-      Campaigns(from: $from, to: $to) {
-        id
-        name
-        #to get the average of all samples
-        CampaignPerformanceReduced(from: $from, to: $to) {
-          ...CampaignMetrics
-        }
-        #to get the delta from fromDate to toDate
-        CampaignPerformanceDelta(from: $from, to: $to) {
-          ...CampaignMetricsPercent
-        }
-      }
-    }
-  }
-`;
-
 const Overview = ({
-  loading,
-  performance,
-  performanceTotal,
-  campaignRows,
-  handleDateRangeChange
+ 
 }) => {
   return (
-    <Page
-      heading="Overview"
-    >
-      <PerformancePanel
-        loading={loading}
-        performance={performance}
-        performanceTotal={performanceTotal}
-        handleDateRangeChange={handleDateRangeChange}
-      />
-      <CampaignsTable
-        loading={loading}
-        rows={campaignRows}
-        columns={campaignTableColumnNames}
-      />
-    </Page>
+    
   );
 };
 
@@ -184,16 +214,18 @@ const transformProps = withProps(({ data }) => {
   };
 });
 
-export default compose(
-  graphql(ACCOUNT_PERFORMANCE__CAMPAIGNS_QUERY, {
-    options: {
-      variables: {
-        profileId: '2839110176393643',
-        from: '19970101',
-        to: '19970101',
-      },
-    },
-  }),
-  waitWhileLoading(Overview),
-  transformProps,
-)(Overview);
+export default Overview;
+
+// export default compose(
+//   graphql(ACCOUNT_PERFORMANCE__CAMPAIGNS_QUERY, {
+//     options: {
+//       variables: {
+//         profileId: '2839110176393643',
+//         from: '19970101',
+//         to: '19970101',
+//       },
+//     },
+//   }),
+//   waitWhileLoading(Overview),
+//   transformProps,
+// )(Overview);

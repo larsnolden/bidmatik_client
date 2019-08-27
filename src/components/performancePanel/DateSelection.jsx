@@ -3,15 +3,15 @@ import moment from 'moment';
 import styled from '@emotion/styled';
 import propTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
-import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
+import { DayPickerRangeController } from 'react-dates';
+import graphql from 'babel-plugin-relay/macro';
+import { createFragmentContainer } from 'react-relay';
+import environment from 'environment';
 
 import Chevron from 'components/Chevron';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
-import { DayPickerRangeController } from 'react-dates';
-
 
 const Container = styled.div`
   display: flex;
@@ -78,70 +78,29 @@ const Calendar = styled.div`
   }
 `;
 
-const USER_FILTER_DATES__QUERY = gql`
-  query {
-    UserFilterDates {
-      id
-      from
-      to
-    }
-  }
-`;
-
-const USER_FILTER_DATES__MUTATION = gql`
-  mutation user_filter_dates($input: UserFilterDatesInput!) {
-    SetUserFilterDates(input: $input) {
-      id
-      from
-      to
-    }
-  }
-`;
-
-const DateSelection = ({
-  data,
-  handleDateRangeChange: handleDateRangeChangeDataFetch,
+const DateSelectionComponent = ({
+  from: fromDate,
+  to: toDate,
+  handleDateRangeChange
 }) => {
-  const { loading } = data;
-
-  const dateFrom = useMemo(
-    () => (loading ? moment() : moment(data.UserFilterDates.from)), [loading, data.UserFilterDates],
-  );
-  const dateTo = useMemo(
-    () => (loading ? moment() : moment(data.UserFilterDates.to)), [loading, data.UserFilterDates],
-  );
+  const from = moment(fromDate);
+  const to = moment(toDate);
 
   const [focusedInput, setFocusedInput] = useState('startDate');
   const [showCalendar, setShowCalendar] = useState(false);
-  const [dateFromLocal, setDateFromLocal] = useState(dateFrom);
+  const [dateFromLocal, setDateFromLocal] = useState(from);
 
   //  update localDateFrom when actual date was fetched from server
   useEffect(
-    () => setDateFromLocal(dateFrom),
-    [loading, dateFrom],
+    () => setDateFromLocal(from),
+    [from],
   );
 
+
   const handleShowCalendarChange = (state) => {
-    if (dateFromLocal.isBefore(dateTo)) {
+    if (dateFromLocal.isBefore(to)) {
       setShowCalendar(state);
     }
-  };
-  const [mutateUserFilterDates] = useMutation(USER_FILTER_DATES__MUTATION);
-  const handleDateRangeChange = ({ from, to }) => {
-    //  save new selected date on server
-    mutateUserFilterDates({
-      variables: {
-        input: {
-          from,
-          to,
-        },
-      },
-    });
-    //  refetch data in Overview Query
-    handleDateRangeChangeDataFetch({
-      from,
-      to,
-    });
   };
 
   return (
@@ -168,7 +127,7 @@ const DateSelection = ({
           }}
         >
           <ChevronStyled id="date_selector" color="#BCCCDC" width={10} height={8} />
-          <Date id="date_selector">{moment(dateTo).format('D MMM YYYY')}</Date>
+          <Date id="date_selector">{moment(to).format('D MMM YYYY')}</Date>
         </DateSelector>
       </Dates>
       <Calendar>
@@ -176,13 +135,13 @@ const DateSelection = ({
           showCalendar && (
             <DayPickerRangeController
               startDate={dateFromLocal}
-              endDate={dateTo}
+              endDate={to}
               onDatesChange={
                 ({ startDate, endDate }) => {
                   setDateFromLocal(startDate);
 
                   //  new date range selected
-                  if (startDate.isBefore(endDate) && endDate !== dateTo) {
+                  if (startDate.isBefore(endDate) && endDate !== to) {
                     setShowCalendar(false);
                     handleDateRangeChange({ from: moment(startDate).format('YYYYMMDD'), to: moment(endDate).format('YYYYMMDD') });
                   }
@@ -204,26 +163,17 @@ const DateSelection = ({
   );
 };
 
-DateSelection.defaultProps = {
-  data: {
-    loading: true,
-    UserFilterDates: {
-      from: moment(),
-      to: moment(),
-    },
+export default createFragmentContainer(
+  ({ props }) => <DateSelectionComponent {...props.DateSelection} />,
+  {
+    dateSelection: graphql`
+      fragment DateSelection_dateSelection on Overview {
+       UserFilterDates {
+         id
+         from
+         to
+       }
+     }
+   `,
   },
-  handleDateRangeChange: () => { },
-};
-
-DateSelection.propTypes = {
-  data: propTypes.shape({
-    loading: propTypes.bool,
-    UserFilterDates: propTypes.shape({
-      from: momentPropTypes.string,
-      to: momentPropTypes.string,
-    }),
-  }),
-  handleDateRangeChange: propTypes.func,
-};
-
-export default graphql(USER_FILTER_DATES__QUERY)(DateSelection);
+);
