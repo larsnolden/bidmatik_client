@@ -26,9 +26,9 @@ const CampaignsTable = ({
     title="Campaigns"
     columns={campaignTableColumnNames}
   >
-    loading ? 
-    <h1>loading</h1>
-    : {campaigns.map((campaign, index) => {
+    {
+      loading ? <h1>loading</h1>
+    : campaigns.map((campaign, index) => {
         const isStriped = index % 2 === 0;
         return (
           <CampaignRow
@@ -36,7 +36,7 @@ const CampaignsTable = ({
             striped={isStriped}
           />
         );
-      })}
+      })
     }
   </Table>
 );

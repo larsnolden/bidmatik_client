@@ -67,12 +67,12 @@ const PerformancePanel = ({
         userFilterDates={userFilterDates}
         handleDateRangeChange={handleUserFilterDatesChange}
       />
-      <MetricSelector
+      {/* <MetricSelector
         loading={loading}
         selectedMetrics={selectedMetrics}
         handleMetricsChange={setSelectedMetrics}
         performanceReduced={profilePerformanceReduced}
-      />
+      /> */}
       <LineGraph
         loading={loading}
         linePrimary={primaryGraphData}

@@ -66,7 +66,7 @@ const MetricSelector = ({
   },
   selectedMetrics,
   handleMetricsChange,
-  loading = false,
+  loading,
 }) => {
   const [primaryLastSelected, setPrimaryLastSelected] = useState(false);
   const handleSelectMetric = (metric) => {
