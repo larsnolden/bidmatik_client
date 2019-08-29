@@ -25,11 +25,12 @@ const Column = styled.div`
 `;
 
 const NameColumn = styled(Column)`
-  flex-basis: 300px;
+  flex-basis: 35%;
+  padding-right: 40px;
 `;
 
 const ViewColumn = styled(Column)`
-  flex-basis: 50px;
+  flex-basis: 5%;
 `;
 
 const Value = styled.div`
@@ -67,23 +68,22 @@ const ViewButton = styled(Link)`
 
 const Row = ({
   id,
+  name,
   columns,
   striped,
   // childRows,
 }) => {
   //  first element is always the row items name
-  const rowName = columns[0].value;
-  const columnsWithoutName = columns.slice(1);
   return (
     <Container
       darkBg={striped}
     >
       <NameColumn>
         <Value>
-          {rowName}
+          {name}
         </Value>
       </NameColumn>
-      {columnsWithoutName.map(column => (
+      {columns.map(column => (
         <Column>
           <Value>
             {column.value}

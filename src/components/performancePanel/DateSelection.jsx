@@ -164,15 +164,13 @@ const DateSelectionComponent = ({
 };
 
 export default createFragmentContainer(
-  ({ props }) => <DateSelectionComponent {...props.DateSelection} />,
+  DateSelectionComponent,
   {
     dateSelection: graphql`
-      fragment DateSelection_dateSelection on Overview {
-       UserFilterDates {
-         id
-         from
-         to
-       }
+      fragment DateSelection_dateSelection on UserFilterDates {
+        id
+        from
+        to
      }
    `,
   },

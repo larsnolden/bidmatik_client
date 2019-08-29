@@ -46,7 +46,7 @@
     "start": "react-app-rewired start",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "relay": "graphql get-schema && relay-compiler --src ./src --schema ./src/schema.graphql --extensions js jsx"
+    "relay": "graphql get-schema && relay-compiler --src ./src --schema ./src/schema.graphql --extensions=js --extensions=jsx"
   },
   "eslintConfig": {
     "extends": "airbnb",

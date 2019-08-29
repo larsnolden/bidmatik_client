@@ -1,3 +1,4 @@
+/* eslint-disable react/prefer-stateless-function */
 import React from 'react';
 import Page from 'components/page/Page';
 import PerformancePanel from 'components/performancePanel/PerformancePanel';
@@ -7,225 +8,82 @@ import {
   branch,
   renderComponent,
 } from 'recompose';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
-import {
-  ACOS,
-  ABSOLUTEACOS,
-  REVENUE,
-  CLICKS,
-  IMPRESSIONS,
-  SPEND,
-} from 'metricConstants';
-import {
-  formatPercentage,
-} from 'helper/format';
+
 import CampaignsTable from './CampaignsTable';
 
-import { QueryRenderer, grapqhl } from 'react-relay';
+import graphql from 'babel-plugin-relay/macro';
+import { QueryRenderer } from 'react-relay';
 import environment from 'environment';
 
 export default class Overview extends React.Component {
   render() { 
     return (
       <QueryRenderer
-        environment={envrionment}
+        environment={environment}
         query={graphql`
-          # CampaignPerformance is the generic response type for any kind of campaign performance query
-          fragment CampaignMetricsPercent on CampaignPerformancePercent {
-            impressions
-            clicks
-            ctr
-            spend
-            orders
-            revenue
-            acos
-            absoluteAcos
-          }
-
-          fragment CampaignMetrics on CampaignPerformance {
-            impressions
-            clicks
-            ctr
-            spend
-            orders
-            revenue
-            acos
-            absoluteAcos
-          }
-
-
-          # ProfilePerformance is the generic response type for any kind of profile performance query
-          fragment ProfileMetrics on ProfilePerformance {
-            impressions
-            clicks
-            ctr
-            spend
-            cpc
-            orders
-            revenue
-            acos
-            absoluteRevenue
-            absoluteAcos
-          }
-
-
-          query overview($profileId: ID!, $from: Date!, $to: Date!) {
+          query OverviewQuery($profileId: ID!, $from: Date!, $to: Date!) {
             UserFilterDates {
-              ...UserFilterDates_userFilterDates
+              ...DateSelection_dateSelection,
             }
-
             SellerProfile(id: $profileId) {
               id
               #to get the avt of all samples (eg. a sample = 1 day of records)
               # (we could compute this based on the Performance All query, but do we want to?)
               ProfilePerformanceReduced(from: $from, to: $to) {
-                ...ProfileMetrics
+                ...MetricSelector_performanceReduced,
               }
               #to get each sample from fromDate to toDate
               ProfilePerformance(from: $from, to: $to) {
-                date
-                ...ProfileMetrics
+                ...PerformancePanel_performance,
               }
               Campaigns(from: $from, to: $to) {
-                id
-                name
-                #to get the average of all samples
-                CampaignPerformanceReduced(from: $from, to: $to) {
-                  ...CampaignMetrics
-                }
-                #to get the delta from fromDate to toDate
-                CampaignPerformanceDelta(from: $from, to: $to) {
-                  ...CampaignMetricsPercent
-                }
+                ...CampaignsTable_campaigns,
               }
             }
-          }
-        `}
-      variables={{
-        profileId: '2839110176393643',
-        //         from: '19970101',
-        //         to: '19970101',
-      }}
+        }
+      `}
+        variables={{
+          profileId: '2839110176393643',
+          from: '20190501',
+          to: '20190520',
+        }}
         render={({ error, props }) => {
-        console.log('overview received props')
-        if (error) {
-          return <div>Error!</div>;
-        }
-        if (!props) {
-          return <div>Loading...</div>;
-        }
-        const {
-          loading,
-          performance,
-          performanceTotal,
-          campaignRows,
-          handleDateRangeChange
-        } = props.overview;
-        return (
-          <Page
-            heading="Overview"
-          >
-            <PerformancePanel
-              loading={loading}
-              performance={performance}
-              performanceTotal={performanceTotal}
-              handleDateRangeChange={handleDateRangeChange}
-            />
-            <CampaignsTable
-              loading={loading}
-              rows={campaignRows}
-              columns={campaignTableColumnNames}
-            />
-          </Page>
-        );
-      }}
+          console.log('overview received props', props)
+          if (error) {
+            console.log('Relay Error in overview', error);
+            return <div>Error!</div>;
+          }
+          if (!props) {
+            return <div>Loading...</div>;
+          }
+
+          //  TODO: implement mutation
+          const handleDateRangeChange = () => { }
+          const {
+            SellerProfile: {
+              ProfilePerformance,
+              ProfilePerformanceReduced,
+              Campaigns,
+            },
+          } = props;
+          console.log('ProfilePerformance in Overview', ProfilePerformance);
+          return (
+            <Page
+              heading="Overview"
+            >
+              <PerformancePanel
+                loading={false}
+                handleDateRangeChange={handleDateRangeChange}
+                performance={ProfilePerformance}
+                profilePerformanceReduced={ProfilePerformanceReduced}
+              />
+              <CampaignsTable
+                campaigns={Campaigns}
+              />
+            </Page>
+          );
+        }}
       />
     )
   }
 }
-
-
-const campaignTableColumns = [ACOS, ABSOLUTEACOS, REVENUE, CLICKS, IMPRESSIONS, SPEND];
-const campaignTableColumnNames = campaignTableColumns.map(column => column.displayName);
-
-const reduceCampaignsRows = campaigns => campaigns.map((campaign) => {
-  const {
-    id,
-    name,
-    CampaignPerformanceReduced,
-    CampaignPerformanceDelta,
-  } = campaign;
-  const columns = campaignTableColumns.map(tColumn => ({
-    value: tColumn.format(CampaignPerformanceReduced[tColumn.apiName]),
-    //  don't display percent badge if change is 0
-    change: CampaignPerformanceDelta[tColumn.apiName] * 100 !== 0
-      ? formatPercentage(CampaignPerformanceDelta[tColumn.apiName] * 100, 0)
-      : null,
-  }));
-  return {
-    id,
-    columns: [
-      {
-        id,
-        value: name,
-      },
-      ...columns,
-    ],
-  };
-});
-
-const Overview = ({
- 
-}) => {
-  return (
-    
-  );
-};
-
-const waitWhileLoading = (component, propName = 'data') => branch(
-  props => props[propName] && props[propName].loading,
-  renderComponent(component),
-);
-
-const transformProps = withProps(({ data }) => {
-  console.log('data', data);
-  const {
-    ProfilePerformance,
-    ProfilePerformanceReduced,
-    Campaigns,
-  } = data.SellerProfile;
-
-  //  Filter Dates have been fetched in the first request of this query
-  //  fetch again with received filter dates
-  if (data.variables.from === '19970101') {
-    data.refetch({
-      from: String(data.UserFilterDates.from),
-      to: String(data.UserFilterDates.to),
-    });
-  }
-  const campaignRows = reduceCampaignsRows(Campaigns);
-  return {
-    performanceTotal: ProfilePerformanceReduced,
-    performance: ProfilePerformance,
-    loading: false,
-    handleDateRangeChange: data.refetch,
-    campaignRows,
-  };
-});
-
-export default Overview;
-
-// export default compose(
-//   graphql(ACCOUNT_PERFORMANCE__CAMPAIGNS_QUERY, {
-//     options: {
-//       variables: {
-//         profileId: '2839110176393643',
-//         from: '19970101',
-//         to: '19970101',
-//       },
-//     },
-//   }),
-//   waitWhileLoading(Overview),
-//   transformProps,
-// )(Overview);

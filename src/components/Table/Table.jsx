@@ -41,6 +41,9 @@ const ColumnsRow = styled.div`
   height: 45px;
   align-items: center;
   border-bottom: 1px solid #BCCCDC;
+  position: sticky;
+  top: 0;
+  background: #fff;
 `;
 
 const ColumnHeadings = styled.div`
@@ -82,7 +85,8 @@ const ColumnHeadingWrapper = styled.div`
 `;
 
 const NameHeadingWrapper = styled(ColumnHeadingWrapper)`
-  flex-basis: 300px;
+  flex-basis: 35%;
+  padding-right: 40px;
 `;
 
 const Footer = styled.div`

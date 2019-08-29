@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import propTypes from 'prop-types';
+import graphql from 'babel-plugin-relay/macro';
+import { createFragmentContainer } from 'react-relay';
 
 import { formatNumber } from 'helper/format';
 import {
@@ -53,16 +55,18 @@ const Metric = styled.div`
 `;
 
 const MetricSelector = ({
-  acos,
-  revenue,
-  clicks,
-  spend,
-  absoluteAcos,
-  absoluteRevenue,
-  impressions,
+  performanceReduced: {
+    acos,
+    revenue,
+    clicks,
+    spend,
+    absoluteAcos,
+    absoluteRevenue,
+    impressions,
+  },
   selectedMetrics,
   handleMetricsChange,
-  loading,
+  loading = false,
 }) => {
   const [primaryLastSelected, setPrimaryLastSelected] = useState(false);
   const handleSelectMetric = (metric) => {
@@ -185,6 +189,24 @@ const MetricSelector = ({
   );
 };
 
+export default createFragmentContainer(
+  MetricSelector,
+  {
+    performanceReduced: graphql`
+    #<ComponentFileName>_<propName>
+      fragment MetricSelector_performanceReduced on ProfilePerformance {
+        acos
+        revenue
+        clicks
+        spend
+        absoluteAcos
+        absoluteRevenue
+        impressions
+      }
+    `,
+  },
+);
+
 Item.defaultProps = {
   loading: true,
   onClick: () => {},
@@ -226,5 +248,3 @@ MetricSelector.propTypes = {
   handleMetricsChange: propTypes.func,
   loading: propTypes.bool,
 };
-
-export default MetricSelector;
