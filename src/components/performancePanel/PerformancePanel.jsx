@@ -63,6 +63,7 @@ const PerformancePanel = ({
   return (
     <Container>
       <DateSelection
+        loading={loading}
         userFilterDates={userFilterDates}
         handleDateRangeChange={handleUserFilterDatesChange}
       />

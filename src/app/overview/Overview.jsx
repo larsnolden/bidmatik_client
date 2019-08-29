@@ -50,8 +50,20 @@ export default () => {
           console.log('Relay Error in overview', error);
           return <div>Error!</div>;
         }
+        const loading = !props;
         if (!props) {
-          return <div>Loading...</div>;
+          return  (
+            <Page
+              heading="Overview"
+            >
+              <PerformancePanel
+                loading={loading}
+              />
+              <CampaignsTable
+                loading={loading}
+              />
+            </Page>
+          );
         }
         const {
           SellerProfile: {
@@ -68,11 +80,12 @@ export default () => {
             <PerformancePanel
               handleUserFilterDatesChange={setFilterDates}
               userFilterDates={UserFilterDates}
-              loading={false}
+              loading={loading}
               performance={ProfilePerformance}
               profilePerformanceReduced={ProfilePerformanceReduced}
             />
             <CampaignsTable
+              loading={loading}
               campaigns={Campaigns}
             />
           </Page>

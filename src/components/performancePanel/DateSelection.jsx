@@ -109,14 +109,11 @@ function commitDateSelection({
 }
 
 const DateSelectionComponent = ({
-  userFilterDates: {
-    from: fromDate,
-    to: toDate,
-  },
-  handleDateRangeChange
+  userFilterDates,
+  handleDateRangeChange,
 }) => {
-  const from = moment(fromDate);
-  const to = moment(toDate);
+  const from = moment(userFilterDates.from);
+  const to = moment(userFilterDates.to);
 
   const [focusedInput, setFocusedInput] = useState('startDate');
   const [showCalendar, setShowCalendar] = useState(false);

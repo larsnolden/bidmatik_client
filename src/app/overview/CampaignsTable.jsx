@@ -20,20 +20,24 @@ const campaignTableColumnNames = campaignTableColumns.map(column => column.displ
 
 const CampaignsTable = ({
   campaigns,
+  loading
 }) => (
   <Table
     title="Campaigns"
     columns={campaignTableColumnNames}
   >
-    {campaigns.map((campaign, index) => {
-      const isStriped = index % 2 === 0;
-      return (
-        <CampaignRow
-          campaign={campaign}
-          striped={isStriped}
-        />
-      );
-    })}
+    loading ? 
+    <h1>loading</h1>
+    : {campaigns.map((campaign, index) => {
+        const isStriped = index % 2 === 0;
+        return (
+          <CampaignRow
+            campaign={campaign}
+            striped={isStriped}
+          />
+        );
+      })}
+    }
   </Table>
 );
 
