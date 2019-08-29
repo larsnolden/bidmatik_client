@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import moment from 'moment';
 import styled from '@emotion/styled';
 import propTypes from 'prop-types';
@@ -6,7 +6,7 @@ import momentPropTypes from 'react-moment-proptypes';
 import gql from 'graphql-tag';
 import { DayPickerRangeController } from 'react-dates';
 import graphql from 'babel-plugin-relay/macro';
-import { createFragmentContainer } from 'react-relay';
+import { createFragmentContainer, commitMutation } from 'react-relay';
 import environment from 'environment';
 
 import Chevron from 'components/Chevron';
@@ -78,9 +78,41 @@ const Calendar = styled.div`
   }
 `;
 
+const dateSelectionMutation = graphql`
+  mutation DateSelectionMutation($input: UserFilterDatesInput!) {
+    SetUserFilterDates(input: $input) {
+      id
+      from
+      to
+    }
+  }
+`;
+
+function commitDateSelection({
+  from,
+  to,
+}) {
+  console.log('commitDateSelection', from, to);
+  console.log('environment', environment);
+  return commitMutation(
+    environment,
+    {
+      mutation: dateSelectionMutation,
+      variables: {
+        input: {
+          from,
+          to,
+        },
+      },
+    },
+  );
+}
+
 const DateSelectionComponent = ({
-  from: fromDate,
-  to: toDate,
+  userFilterDates: {
+    from: fromDate,
+    to: toDate,
+  },
   handleDateRangeChange
 }) => {
   const from = moment(fromDate);
@@ -89,12 +121,6 @@ const DateSelectionComponent = ({
   const [focusedInput, setFocusedInput] = useState('startDate');
   const [showCalendar, setShowCalendar] = useState(false);
   const [dateFromLocal, setDateFromLocal] = useState(from);
-
-  //  update localDateFrom when actual date was fetched from server
-  useEffect(
-    () => setDateFromLocal(from),
-    [from],
-  );
 
 
   const handleShowCalendarChange = (state) => {
@@ -114,7 +140,7 @@ const DateSelectionComponent = ({
           }}
         >
           <ChevronStyled id="date_selector" color="#BCCCDC" width={10} height={8} />
-          <Date id="date_selector">{moment(dateFromLocal).format('D MMM YYYY')}</Date>
+          <Date id="date_selector">{dateFromLocal.format('D MMM YYYY')}</Date>
         </DateSelector>
         <To>
           TO
@@ -127,7 +153,7 @@ const DateSelectionComponent = ({
           }}
         >
           <ChevronStyled id="date_selector" color="#BCCCDC" width={10} height={8} />
-          <Date id="date_selector">{moment(to).format('D MMM YYYY')}</Date>
+          <Date id="date_selector">{to.format('D MMM YYYY')}</Date>
         </DateSelector>
       </Dates>
       <Calendar>
@@ -143,7 +169,8 @@ const DateSelectionComponent = ({
                   //  new date range selected
                   if (startDate.isBefore(endDate) && endDate !== to) {
                     setShowCalendar(false);
-                    handleDateRangeChange({ from: moment(startDate).format('YYYYMMDD'), to: moment(endDate).format('YYYYMMDD') });
+                    commitDateSelection({ from: startDate.format('YYYYMMDD'), to: endDate.format('YYYYMMDD') });
+                    handleDateRangeChange({ from: startDate.format('YYYYMMDD'), to: endDate.format('YYYYMMDD') });
                   }
                 }
               }
@@ -166,8 +193,8 @@ const DateSelectionComponent = ({
 export default createFragmentContainer(
   DateSelectionComponent,
   {
-    dateSelection: graphql`
-      fragment DateSelection_dateSelection on UserFilterDates {
+    userFilterDates: graphql`
+      fragment DateSelection_userFilterDates on UserFilterDates {
         id
         from
         to

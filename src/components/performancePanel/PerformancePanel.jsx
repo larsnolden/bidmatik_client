@@ -37,7 +37,8 @@ const selectGraphData = (metric, performance) => {
 
 //  Todo: add some loading state
 const PerformancePanel = ({
-  handleDateRangeChange,
+  handleUserFilterDatesChange,
+  userFilterDates,
   loading,
   performance,
   profilePerformanceReduced,
@@ -62,7 +63,8 @@ const PerformancePanel = ({
   return (
     <Container>
       <DateSelection
-        handleDateRangeChange={handleDateRangeChange}
+        userFilterDates={userFilterDates}
+        handleDateRangeChange={handleUserFilterDatesChange}
       />
       <MetricSelector
         loading={loading}

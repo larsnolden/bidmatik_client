@@ -19,20 +19,16 @@ export type CampaignRow_campaign = {|
     +clicks: ?number,
     +ctr: ?number,
     +spend: ?number,
-    +orders: ?number,
     +revenue: ?number,
     +acos: ?number,
-    +absoluteAcos: ?number,
   |},
   +CampaignPerformanceDelta: ?{|
     +impressions: ?number,
     +clicks: ?number,
     +ctr: ?number,
     +spend: ?number,
-    +orders: ?number,
     +revenue: ?number,
     +acos: ?number,
-    +absoluteAcos: ?number,
   |},
   +$refType: CampaignRow_campaign$ref,
 |};
@@ -89,13 +85,6 @@ v1 = [
   {
     "kind": "ScalarField",
     "alias": null,
-    "name": "orders",
-    "args": null,
-    "storageKey": null
-  },
-  {
-    "kind": "ScalarField",
-    "alias": null,
     "name": "revenue",
     "args": null,
     "storageKey": null
@@ -104,13 +93,6 @@ v1 = [
     "kind": "ScalarField",
     "alias": null,
     "name": "acos",
-    "args": null,
-    "storageKey": null
-  },
-  {
-    "kind": "ScalarField",
-    "alias": null,
-    "name": "absoluteAcos",
     "args": null,
     "storageKey": null
   }
@@ -124,12 +106,12 @@ return {
     {
       "kind": "RootArgument",
       "name": "from",
-      "type": "Date!"
+      "type": "Date"
     },
     {
       "kind": "RootArgument",
       "name": "to",
-      "type": "Date!"
+      "type": "Date"
     }
   ],
   "selections": [
@@ -171,5 +153,5 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '949c7d23e8b199af9f05d3f3f93bf493';
+(node/*: any*/).hash = '171f0b8b6a47804bb65650bac975ecaf';
 module.exports = node;

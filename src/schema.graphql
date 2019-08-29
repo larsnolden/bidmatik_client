@@ -1,5 +1,5 @@
 # source: http://localhost:4000
-# timestamp: Tue Aug 27 2019 11:19:06 GMT+0200 (CEST)
+# timestamp: Thu Aug 29 2019 10:20:50 GMT+0200 (CEST)
 
 enum AdType {
   SP
@@ -19,10 +19,10 @@ type Campaign {
   portfolio: String
 
   """Reduce all samples in requested time into one sample"""
-  CampaignPerformanceReduced(from: Date!, to: Date!): CampaignPerformance
+  CampaignPerformanceReduced(from: Date, to: Date): CampaignPerformance
 
   """Percent change of data compared to previous period"""
-  CampaignPerformanceDelta(from: Date!, to: Date!): CampaignPerformancePercent
+  CampaignPerformanceDelta(from: Date, to: Date): CampaignPerformancePercent
 }
 
 type CampaignPerformance {
@@ -92,13 +92,13 @@ type SellerProfile {
   countryCode: CountryCode!
 
   """include all campaigns that have to report any data in that time window"""
-  Campaigns(from: Date!, to: Date!): [Campaign]!
+  Campaigns(from: Date, to: Date): [Campaign]!
 
   """Reduce all samples in requested time into one sample"""
-  ProfilePerformanceReduced(from: Date!, to: Date!): ProfilePerformance!
+  ProfilePerformanceReduced(from: Date, to: Date): ProfilePerformance!
 
   """Return all samples in requested time"""
-  ProfilePerformance(from: Date!, to: Date!): [ProfilePerformance]!
+  ProfilePerformance(from: Date, to: Date): [ProfilePerformance]!
 }
 
 enum Targeting {

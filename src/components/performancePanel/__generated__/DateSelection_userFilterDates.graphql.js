@@ -9,25 +9,25 @@
 /*::
 import type { ReaderFragment } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type DateSelection_dateSelection$ref: FragmentReference;
-declare export opaque type DateSelection_dateSelection$fragmentType: DateSelection_dateSelection$ref;
-export type DateSelection_dateSelection = {|
+declare export opaque type DateSelection_userFilterDates$ref: FragmentReference;
+declare export opaque type DateSelection_userFilterDates$fragmentType: DateSelection_userFilterDates$ref;
+export type DateSelection_userFilterDates = {|
   +id: string,
   +from: any,
   +to: any,
-  +$refType: DateSelection_dateSelection$ref,
+  +$refType: DateSelection_userFilterDates$ref,
 |};
-export type DateSelection_dateSelection$data = DateSelection_dateSelection;
-export type DateSelection_dateSelection$key = {
-  +$data?: DateSelection_dateSelection$data,
-  +$fragmentRefs: DateSelection_dateSelection$ref,
+export type DateSelection_userFilterDates$data = DateSelection_userFilterDates;
+export type DateSelection_userFilterDates$key = {
+  +$data?: DateSelection_userFilterDates$data,
+  +$fragmentRefs: DateSelection_userFilterDates$ref,
 };
 */
 
 
 const node/*: ReaderFragment*/ = {
   "kind": "Fragment",
-  "name": "DateSelection_dateSelection",
+  "name": "DateSelection_userFilterDates",
   "type": "UserFilterDates",
   "metadata": null,
   "argumentDefinitions": [],
@@ -56,5 +56,5 @@ const node/*: ReaderFragment*/ = {
   ]
 };
 // prettier-ignore
-(node/*: any*/).hash = '51fb3cb3c14c3d8b403f1211fbcf7f37';
+(node/*: any*/).hash = '05a308b0f69e779ce95cac1f66852a85';
 module.exports = node;
