@@ -67,10 +67,10 @@ const ViewButton = styled(Link)`
 `;
 
 const Row = ({
-  id,
   name,
   columns,
   striped,
+  onViewClickPath,
   // childRows,
 }) => {
   //  first element is always the row items name
@@ -100,7 +100,7 @@ const Row = ({
         </Column>
       ))}
       <ViewColumn>
-        <ViewButton to={`/campaign/${id}`}>
+        <ViewButton to={onViewClickPath}>
           view
         </ViewButton>
       </ViewColumn>

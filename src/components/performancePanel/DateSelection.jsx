@@ -1,15 +1,14 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
-import propTypes from 'prop-types';
-import momentPropTypes from 'react-moment-proptypes';
-import gql from 'graphql-tag';
-import { DayPickerRangeController } from 'react-dates';
 import graphql from 'babel-plugin-relay/macro';
 import { createFragmentContainer, commitMutation } from 'react-relay';
 import environment from 'environment';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
+import propTypes from 'prop-types';
+
 import DateSelectionComponent from './DateSelectionComponent';
+import BranchRenderOnLoading from 'helper/BranchRenderOnLoading';
 
 const dateSelectionMutation = graphql`
   mutation DateSelectionMutation($input: UserFilterDatesInput!) {
@@ -21,25 +20,14 @@ const dateSelectionMutation = graphql`
   }
 `;
 
-const createOptimisticResponse = (from, to) => ({
-  UserFilterDates: {
-    id: "1",
-    from,
-    to,
-  }
-});
-
 function commitDateSelection({
   from,
   to,
 }) {
-  console.log('commitDateSelection', from, to);
-  console.log('environment', environment);
   return commitMutation(
     environment,
     {
       mutation: dateSelectionMutation,
-      optimisticResponse: createOptimisticResponse(from, to),
       variables: {
         input: {
           from,
@@ -49,10 +37,6 @@ function commitDateSelection({
     },
   );
 }
-
-const branchOnLoading = (loadingComponent, notLoadingComponent) => ({ loading, ...props }) => {
-  return loading ? loadingComponent : notLoadingComponent(props);
-};
 
 const DateSelectionContainer = ({
   userFilterDates,
@@ -100,14 +84,15 @@ const DateSelectionContainer = ({
       focusedInput={focusedInput}
       handleShowCalendarChange={handleShowCalendarChange}
       setFocusedInput={setFocusedInput}
-      from={from}
+      from={dateFromLocal}
       to={to}
+      loading={false}
     />
   );
 };
 
 export default createFragmentContainer(
-  branchOnLoading(({ userFilterDates: { from, to }}) => DateSelectionComponent({ from: moment(from), to: moment(to) }), DateSelectionContainer),
+  BranchRenderOnLoading(DateSelectionComponent, DateSelectionContainer),
   {
     userFilterDates: graphql`
       fragment DateSelection_userFilterDates on UserFilterDates {
@@ -118,3 +103,19 @@ export default createFragmentContainer(
    `,
   },
 );
+
+DateSelectionContainer.defaultProps = {
+  userFilterDates: {
+    from: '',
+    to: '',
+  },
+  handleDateRangeChange: () => {},
+};
+
+DateSelectionContainer.propTypes = {
+  userFilterDates: propTypes.shape({
+    from: propTypes.string,
+    to: propTypes.string,
+  }),
+  handleDateRangeChange: propTypes.func,
+};

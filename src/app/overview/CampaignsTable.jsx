@@ -14,9 +14,19 @@ import {
 } from 'metricConstants';
 import CampaignRow from './CampaignRow';
 
-
 const campaignTableColumns = [ACOS, IMPRESSIONS, CLICKS, CTR, SPEND, REVENUE];
 const campaignTableColumnNames = campaignTableColumns.map(column => column.displayName);
+
+
+const CampaignRows = campaigns => campaigns.map((campaign, index) => {
+  const isStriped = index % 2 === 0;
+  return (
+    <CampaignRow
+      campaign={campaign}
+      striped={isStriped}
+    />
+  );
+});
 
 const CampaignsTable = ({
   campaigns,
@@ -27,16 +37,7 @@ const CampaignsTable = ({
     columns={campaignTableColumnNames}
   >
     {
-      loading ? <h1>loading</h1>
-    : campaigns.map((campaign, index) => {
-        const isStriped = index % 2 === 0;
-        return (
-          <CampaignRow
-            campaign={campaign}
-            striped={isStriped}
-          />
-        );
-      })
+      !loading && CampaignRows(campaigns)
     }
   </Table>
 );

@@ -67,12 +67,12 @@ const PerformancePanel = ({
         userFilterDates={userFilterDates}
         handleDateRangeChange={handleUserFilterDatesChange}
       />
-      {/* <MetricSelector
+      <MetricSelector
         loading={loading}
         selectedMetrics={selectedMetrics}
         handleMetricsChange={setSelectedMetrics}
         performanceReduced={profilePerformanceReduced}
-      /> */}
+      />
       <LineGraph
         loading={loading}
         linePrimary={primaryGraphData}
@@ -84,10 +84,6 @@ const PerformancePanel = ({
 
 export default createFragmentContainer(
   PerformancePanel,
-  // (PerformancePanelProps) => {
-  //   console.log('PerformancePanelProps', PerformancePanelProps)
-  //   return <div>Performance Panel</div>;
-  // },
   {
     performance: graphql`
       #<ComponentFileName>_<propName>

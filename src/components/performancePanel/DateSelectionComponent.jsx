@@ -2,8 +2,11 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { DayPickerRangeController } from 'react-dates';
 import moment from 'moment';
+import propTypes from 'prop-types';
+import momentPropTypes from 'react-moment-proptypes';
 
 import Chevron from 'components/Chevron';
+
 
 const Container = styled.div`
   display: flex;
@@ -27,6 +30,7 @@ const Date = styled.div`
   line-height: 12px;
   letter-spacing: 0.01em;
   color: #E0FCFF;
+  filter: ${props => props.loading ? 'blur(4px)' : 'none'};
 `;
 
 const DateSelector = styled.div`
@@ -78,7 +82,7 @@ const DateSelectionComponent = ({
   focusedInput,
   handleShowCalendarChange,
   setFocusedInput,
-  loading = false,
+  loading = true,
   from,
   to,
 }) => (
@@ -134,6 +138,20 @@ DateSelectionComponent.defaultProps = {
   focusedInput: () => { },
   handleShowCalendarChange: () => { },
   setFocusedInput: () => { },
+  loading: true,
+};
+
+DateSelectionComponent.propTypes = {
+  handleDateFromClick: propTypes.func,
+  handleDateToClick: propTypes.func,
+  from: momentPropTypes.momentObj,
+  to: momentPropTypes.momentObj,
+  showCalendar: propTypes.bool,
+  handleNewDatesSelect: propTypes.func,
+  focusedInput: propTypes.string,
+  handleShowCalendarChange: propTypes.func,
+  setFocusedInput: propTypes.func,
+  loading: propTypes.bool,
 };
 
 export default DateSelectionComponent;

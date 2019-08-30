@@ -5,19 +5,20 @@ import Row from 'components/Table/Row';
 
 import {
   ACOS,
-  ABSOLUTEACOS,
   REVENUE,
   CLICKS,
   IMPRESSIONS,
   SPEND,
+  CTR,
 } from 'metricConstants';
 import {
   formatPercentage,
 } from 'helper/format';
 
 
-const campaignTableColumns = [ACOS, ABSOLUTEACOS, REVENUE, CLICKS, IMPRESSIONS, SPEND];
-const CampaignRowComponent = ({
+const campaignTableColumns = [ACOS, IMPRESSIONS, CLICKS, CTR, SPEND, REVENUE];
+
+const CampaignRow = ({
   campaign: {
     CampaignPerformanceReduced,
     CampaignPerformanceDelta,
@@ -26,7 +27,7 @@ const CampaignRowComponent = ({
     isStriped
   }
 }) => {
-  const columns = campaignTableColumns.map(tColumn => ({
+    const columns = campaignTableColumns.map(tColumn => ({
     value: tColumn.format(CampaignPerformanceReduced[tColumn.apiName]),
     //  don't display percent badge if change is 0
     change:
@@ -35,32 +36,40 @@ const CampaignRowComponent = ({
         : null,
   }));
   return (
-    <Row name={name} key={id} id={id} striped={isStriped} columns={columns} />
+    <Row
+      name={name}
+      onViewClickPath={`/campaign/${id}`}
+      striped={isStriped}
+      columns={columns}
+    />
   );
 };
 
-export default createFragmentContainer(CampaignRowComponent, {
-  campaign: graphql`
-    #<ComponentFileName>_<propName>
-    fragment CampaignRow_campaign on Campaign {
-      name
-      id
-      CampaignPerformanceReduced(from: $from, to: $to) {
-        impressions
-        clicks
-        ctr
-        spend
-        revenue
-        acos
+export default createFragmentContainer(
+  CampaignRow,
+  {
+    campaign: graphql`
+      #<ComponentFileName>_<propName>
+      fragment CampaignRow_campaign on Campaign {
+        name
+        id
+        CampaignPerformanceReduced(from: $from, to: $to) {
+          acos
+          impressions
+          clicks
+          ctr
+          spend
+          revenue
+        }
+        CampaignPerformanceDelta(from: $from, to: $to) {
+          acos
+          impressions
+          clicks
+          ctr
+          spend
+          revenue
+        }
       }
-      CampaignPerformanceDelta(from: $from, to: $to) {
-        impressions
-        clicks
-        ctr
-        spend
-        revenue
-        acos
-      }
-    }
-  `,
-});
+    `,
+  }
+);
