@@ -61,11 +61,15 @@ export default ({
         {heading}
       </Heading>
       <Content>
-        {children && children.map(child => (
-          <ChildSpacer>
-            {child}
-          </ChildSpacer>
-        )) }
+        {/* render  a list of children or a single child */}
+        {children && children.length > 1
+          ? children.map(child => (
+            <ChildSpacer>
+              {child}
+            </ChildSpacer>
+          ))
+          : <ChildSpacer>{children}</ChildSpacer>
+          }
       </Content>
     </Column>
   </Container>

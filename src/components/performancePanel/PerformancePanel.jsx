@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 import propTypes from 'prop-types';
 import * as R from 'ramda';
 import moment from 'moment';
+import graphql from 'babel-plugin-relay/macro';
+import { createFragmentContainer } from 'react-relay';
 
 import renameKeys from 'helper/renameKeys';
 import {
@@ -35,10 +37,11 @@ const selectGraphData = (metric, performance) => {
 
 //  Todo: add some loading state
 const PerformancePanel = ({
-  handleDateRangeChange,
+  handleUserFilterDatesChange,
+  userFilterDates,
   loading,
   performance,
-  performanceTotal,
+  performanceReduced,
 }) => {
   const [selectedMetrics, setSelectedMetrics] = useState({
     primary: ACOS.apiName,
@@ -60,13 +63,15 @@ const PerformancePanel = ({
   return (
     <Container>
       <DateSelection
-        handleDateRangeChange={handleDateRangeChange}
+        loading={loading}
+        userFilterDates={userFilterDates}
+        handleDateRangeChange={handleUserFilterDatesChange}
       />
       <MetricSelector
-        {...performanceTotal}
         loading={loading}
         selectedMetrics={selectedMetrics}
         handleMetricsChange={setSelectedMetrics}
+        performanceReduced={performanceReduced}
       />
       <LineGraph
         loading={loading}
@@ -77,7 +82,24 @@ const PerformancePanel = ({
   );
 };
 
-export default PerformancePanel;
+export default createFragmentContainer(
+  PerformancePanel,
+  {
+    performance: graphql`
+      #<ComponentFileName>_<propName>
+      fragment PerformancePanel_performance on Performance @relay(plural: true) {
+        date
+        acos
+        revenue
+        clicks
+        spend
+        absoluteAcos
+        absoluteRevenue
+        impressions
+      }
+    `,
+  },
+);
 
 PerformancePanel.defaultProps = {
   handleDateRangeChange: () => { },

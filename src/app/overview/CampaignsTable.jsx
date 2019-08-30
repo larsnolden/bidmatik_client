@@ -1,34 +1,58 @@
 import React from 'react';
 import propTypes from 'prop-types';
+import { createFragmentContainer } from 'react-relay';
 
 import Table from 'components/Table/Table';
-import Row from 'components/Table/Row';
+import graphql from 'babel-plugin-relay/macro';
+import {
+  ACOS,
+  CTR,
+  REVENUE,
+  CLICKS,
+  IMPRESSIONS,
+  SPEND,
+} from 'metricConstants';
+import CampaignRow from './CampaignRow';
 
+const campaignTableColumns = [ACOS, IMPRESSIONS, CLICKS, CTR, SPEND, REVENUE];
+const campaignTableColumnNames = campaignTableColumns.map(column => column.displayName);
+
+
+const CampaignRows = campaigns => campaigns.map((campaign, index) => {
+  const isStriped = index % 2 === 0;
+  return (
+    <CampaignRow
+      campaign={campaign}
+      striped={isStriped}
+    />
+  );
+});
 
 const CampaignsTable = ({
-  columns,
-  rows,
-  loading,
+  campaigns,
+  loading
 }) => (
   <Table
     title="Campaigns"
-    columns={columns}
+    columns={campaignTableColumnNames}
   >
-    {!loading && rows && rows.map((row, index) => {
-      const isStriped = index % 2 === 0;
-      return (
-        <Row
-          key={row.id}
-          striped={isStriped}
-          columns={row.columns}
-          id={row.id}
-        />
-      );
-    })}
+    {
+      !loading && CampaignRows(campaigns)
+    }
   </Table>
 );
 
-export default CampaignsTable;
+export default createFragmentContainer(
+  CampaignsTable,
+  {
+    campaigns: graphql`
+      #<ComponentFileName>_<propName>
+      fragment CampaignsTable_campaigns on Campaign @relay(plural: true) {
+       ...CampaignRow_campaign,
+      }
+    `,
+  },
+);
 
 CampaignsTable.defaultProps = {
   columns: [''],

@@ -1,0 +1,108 @@
+# source: http://localhost:4000
+# timestamp: Fri Aug 30 2019 12:16:02 GMT+0200 (CEST)
+
+enum AdType {
+  SP
+  SB
+}
+
+type AuthToken {
+  token: String!
+}
+
+type Campaign {
+  id: ID!
+  name: String!
+  adType: AdType!
+  targeting: Targeting!
+  budget: Float!
+  portfolio: String
+
+  """Reduce all samples in requested time into one sample"""
+  CampaignPerformanceReduced(from: Date, to: Date): Performance
+
+  """Percent change of data compared to previous period"""
+  CampaignPerformanceDelta(from: Date, to: Date): PerformancePercent
+}
+
+enum CountryCode {
+  US
+  MX
+  CA
+  DE
+  UK
+  IT
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type Mutation {
+  _empty: String
+  createSession(authCode: String!): AuthToken!
+  SetUserFilterDates(input: UserFilterDatesInput!): UserFilterDates!
+}
+
+type Performance {
+  date: Date
+  impressions: Int
+  clicks: Int
+  ctr: Float
+  spend: Int
+  cpc: Float
+  orders: Int
+  revenue: Int
+  acos: Float
+  absoluteRevenue: Int
+  absoluteAcos: Float
+}
+
+type PerformancePercent {
+  impressions: Float
+  clicks: Float
+  ctr: Float
+  spend: Float
+  orders: Float
+  revenue: Float
+  acos: Float
+  absoluteAcos: Float
+}
+
+type Query {
+  _empty: String
+  Campaign(id: ID!): Campaign
+  SellerProfiles: [SellerProfile]!
+  SellerProfile(id: ID!): SellerProfile
+  UserFilterDates: UserFilterDates
+}
+
+type SellerProfile {
+  id: ID!
+  name: String!
+  countryCode: CountryCode!
+
+  """include all campaigns that have to report any data in that time window"""
+  Campaigns(from: Date, to: Date): [Campaign]!
+
+  """Reduce all samples in requested time into one sample"""
+  ProfilePerformanceReduced(from: Date, to: Date): Performance!
+
+  """Return all samples in requested time"""
+  ProfilePerformance(from: Date, to: Date): [Performance]!
+}
+
+enum Targeting {
+  Automatic
+  Manual
+}
+
+type UserFilterDates {
+  id: ID!
+  from: Date!
+  to: Date!
+}
+
+input UserFilterDatesInput {
+  from: Date!
+  to: Date!
+}

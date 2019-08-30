@@ -21,6 +21,12 @@ export const CLICKS = {
   apiName: 'clicks',
   format: x => formatNumber(x),
 };
+export const CTR = {
+  displayName: 'CTR',
+  symbol: '%',
+  apiName: 'ctr',
+  format: x => formatPercentage(x) + CTR.symbol,
+};
 export const SPEND = {
   displayName: 'Spend',
   symbol: '$',
