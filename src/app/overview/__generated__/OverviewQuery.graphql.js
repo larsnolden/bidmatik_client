@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 07a246e68e4d114983d94cdc92a87a23
+ * @relayHash 6457723ce853a7ea3d8a2f936e23494e
  */
 
 /* eslint-disable */
@@ -22,7 +22,7 @@ export type OverviewQueryResponse = {|
   +UserFilterDates: ?{|
     +$fragmentRefs: DateSelection_userFilterDates$ref
   |},
-  +SellerProfile: ?{|
+  +SellerProfile: {|
     +id: string,
     +ProfilePerformanceReduced: {|
       +$fragmentRefs: MetricSelector_performanceReduced$ref

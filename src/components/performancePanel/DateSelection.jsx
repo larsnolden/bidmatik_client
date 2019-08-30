@@ -10,6 +10,7 @@ import propTypes from 'prop-types';
 import DateSelectionComponent from './DateSelectionComponent';
 import BranchRenderOnLoading from 'helper/BranchRenderOnLoading';
 
+
 const dateSelectionMutation = graphql`
   mutation DateSelectionMutation($input: UserFilterDatesInput!) {
     SetUserFilterDates(input: $input) {

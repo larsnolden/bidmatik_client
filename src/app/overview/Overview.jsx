@@ -1,5 +1,5 @@
 /* eslint-disable react/prefer-stateless-function */
-import React, { useState }from 'react';
+import React, { useState, Fragment }from 'react';
 import graphql from 'babel-plugin-relay/macro';
 import { QueryRenderer } from 'react-relay';
 import environment from 'environment';
@@ -9,7 +9,7 @@ import PerformancePanel from 'components/performancePanel/PerformancePanel';
 import CampaignsTable from './CampaignsTable';
 
 
-export default () => {
+const Overview =  () => {
   const [filterDates, setFilterDates] = useState({
     from: null,
     to: null,
@@ -18,27 +18,27 @@ export default () => {
     <QueryRenderer
       environment={environment}
       query={graphql`
-      query OverviewQuery($profileId: ID!, $from: Date, $to: Date) {
-        UserFilterDates {
-          ...DateSelection_userFilterDates,
+        query OverviewQuery($profileId: ID!, $from: Date, $to: Date) {
+          UserFilterDates {
+            ...DateSelection_userFilterDates,
+          }
+          SellerProfile(id: $profileId) {
+            id
+            #to get the avt of all samples (eg. a sample = 1 day of records)
+            # (we could compute this based on the Performance All query, but do we want to?)
+            ProfilePerformanceReduced(from: $from, to: $to) {
+              ...MetricSelector_performanceReduced,
+            }
+            #to get each sample from fromDate to toDate
+            ProfilePerformance(from: $from, to: $to) {
+              ...PerformancePanel_performance,
+            }
+            Campaigns(from: $from, to: $to) {
+              ...CampaignsTable_campaigns,
+            }
+          }
         }
-        SellerProfile(id: $profileId) {
-          id
-          #to get the avt of all samples (eg. a sample = 1 day of records)
-          # (we could compute this based on the Performance All query, but do we want to?)
-          ProfilePerformanceReduced(from: $from, to: $to) {
-            ...MetricSelector_performanceReduced,
-          }
-          #to get each sample from fromDate to toDate
-          ProfilePerformance(from: $from, to: $to) {
-            ...PerformancePanel_performance,
-          }
-          Campaigns(from: $from, to: $to) {
-            ...CampaignsTable_campaigns,
-          }
-        }
-    }
-  `}
+     `}
       variables={{
         profileId: '2839110176393643',
         from: filterDates.from,
@@ -50,9 +50,9 @@ export default () => {
           return <div>Error!</div>;
         }
         const loading = !props;
-        if (!props) {
-          return  (
-            <Page
+        if (loading) {
+          return (
+            <Fragment
               heading="Overview"
             >
               <PerformancePanel
@@ -61,9 +61,10 @@ export default () => {
               <CampaignsTable
                 loading={loading}
               />
-            </Page>
+            </Fragment>
           );
         }
+
         const {
           SellerProfile: {
             ProfilePerformance,
@@ -73,9 +74,7 @@ export default () => {
           UserFilterDates,
         } = props;
         return (
-          <Page
-            heading="Overview"
-          >
+          <Fragment>
             <PerformancePanel
               handleUserFilterDatesChange={setFilterDates}
               userFilterDates={UserFilterDates}
@@ -87,9 +86,19 @@ export default () => {
               loading={loading}
               campaigns={Campaigns}
             />
-          </Page>
+          </Fragment>
         );
       }}
     />
-  )
+  );
 };
+
+
+//  wrap in Page to pass down the selected profile
+export default () => (
+  <Page
+    heading="Overview"
+  >
+    <Overview />
+  </Page>
+);

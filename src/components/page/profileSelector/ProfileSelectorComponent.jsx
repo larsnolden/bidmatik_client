@@ -16,6 +16,7 @@ const flags = {
 };
 
 const Container = styled.div`
+  z-index: 99;
   margin-right: 26px;
   color: #4098D7;
   font-size: 18px;
@@ -48,6 +49,10 @@ const SelectedProfile = styled(Profile)`
   background: #DCEEFB;
 `;
 
+const ProfileName = styled.div`
+  margin: 0 10px 0 5px;
+`;
+
 const Flag = styled.div`
   height: 41px;
   width: 41px;
@@ -65,8 +70,7 @@ const FlagIcon = styled.img`
 `;
 
 const ChevronSelect = styled(Chevron)`
-  margin: 4px 0 0 auto;
-  padding-left: 10px;
+  margin: 0 0 0 20px;
   transform: rotate(${props => props.rotateUp ? '180deg' : '0deg'});
 `;
 
@@ -77,12 +81,12 @@ const AvailableProfiles = styled.div`
 
 const AvailableProfile = ({
   name,
-  country,
+  countryCode,
   onClick,
 }) => (
   <Profile onClick={onClick}>
     <Flag>
-      <FlagIcon src={flags[country]} />
+      <FlagIcon src={flags[countryCode]} />
     </Flag>
     {name}
   </Profile>
@@ -90,20 +94,20 @@ const AvailableProfile = ({
 
 AvailableProfile.propTypes = {
   name: propTypes.string,
-  country: propTypes.func,
+  countryCode: propTypes.func,
   onClick: propTypes.func,
 };
 
 AvailableProfile.defaultProps = {
   name: '',
-  country: 'US',
+  countryCode: 'US',
   onClick: () => {},
 };
 
 
 const ProfileSelectorComponent = ({
   activeProfileName,
-  activeProfileCountry,
+  activeProfileCountryCode,
   availableProfiles,
   handleSelectProfile,
 }) => {
@@ -112,9 +116,11 @@ const ProfileSelectorComponent = ({
     <Container tabIndex="0" onBlur={() => setIsOpen(false)} showShadow={isOpen}>
       <SelectedProfile onClick={() => setIsOpen(!isOpen)} hideBottomCornerRaidus={isOpen}>
         <Flag selected>
-          <FlagIcon src={flags[activeProfileCountry]} />
+          <FlagIcon src={flags[activeProfileCountryCode]} />
         </Flag>
-        {activeProfileName}
+        <ProfileName>
+          {activeProfileName}
+        </ProfileName>
         <ChevronSelect rotateUp={isOpen} color="#4098D7" width="14" height="9" />
       </SelectedProfile>
       {
@@ -124,10 +130,13 @@ const ProfileSelectorComponent = ({
               availableProfiles
                 .map(profile => (
                   <AvailableProfile
-                    key={profile.name + profile.country}
+                    key={profile.name + profile.countryCode}
                     name={profile.name}
-                    country={profile.country}
-                    onClick={() => handleSelectProfile(profile)}
+                    countryCode={profile.countryCode}
+                    onClick={() => {
+                      setIsOpen(false);
+                      handleSelectProfile(profile);
+                    }}
                   />
                 ))
             }
@@ -140,17 +149,17 @@ const ProfileSelectorComponent = ({
 
 ProfileSelectorComponent.defaultProps = {
   activeProfileName: '',
-  activeProfileCountry: '',
+  activeProfilecountryCode: '',
   availableProfiles: [],
   handleSelectProfile: () => {},
 };
 
 ProfileSelectorComponent.propTypes = {
   activeProfileName: propTypes.string,
-  activeProfileCountry: propTypes.string,
+  activeProfilecountryCode: propTypes.string,
   availableProfiles: propTypes.arrayOf(propTypes.shape({
     name: propTypes.string,
-    country: propTypes.string,
+    countryCode: propTypes.string,
   })),
   handleSelectProfile: propTypes.func,
 };
