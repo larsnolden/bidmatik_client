@@ -1,13 +1,13 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { useState }from 'react';
-import Page from 'components/page/Page';
-import PerformancePanel from 'components/performancePanel/PerformancePanel';
-
-import CampaignsTable from './CampaignsTable';
-
 import graphql from 'babel-plugin-relay/macro';
 import { QueryRenderer } from 'react-relay';
 import environment from 'environment';
+
+import Page from 'components/page/Page';
+import PerformancePanel from 'components/performancePanel/PerformancePanel';
+import CampaignsTable from './CampaignsTable';
+
 
 export default () => {
   const [filterDates, setFilterDates] = useState({
@@ -45,7 +45,6 @@ export default () => {
         to: filterDates.to,
       }}
       render={({ error, props }) => {
-        console.log('overview received props', props)
         if (error) {
           console.log('Relay Error in overview', error);
           return <div>Error!</div>;

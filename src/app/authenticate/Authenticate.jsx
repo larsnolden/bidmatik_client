@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
 import Cookies from 'js-cookie';
 import { Redirect } from 'react-router-dom';
-
+import { commitMutation } from 'react-relay';
 import bidmatikLogoPath from 'assets/BidmatikLogo.png';
-
-
-const AUTHENTICATE_USER__MUTATION = gql`
-  mutation($authCode: String!) {
-    createSession(authCode: $authCode) {
-      token
-    }
-  }
-`;
+import environment from 'environment';
+import graphql from "babel-plugin-relay/macro";
 
 const Container = styled.div`
   background: #3A5F8A;
@@ -83,47 +75,56 @@ const AuthButton = styled.div`
   }
 `;
 
+const authenticateUserMutation = graphql`
+  mutation AuthenticateMutation($authCode: String!) {
+    createSession(authCode: $authCode) {
+      token
+    }
+  }
+`;
+
+function createSessionMutation({ authCode }, setIsNewCookieSet) {
+  return commitMutation(
+    environment,
+    {
+      mutation: authenticateUserMutation,
+      variables: {
+        authCode,
+      },
+      onCompleted: (data) => {
+        Cookies.set('authentication', data.createSession.token);
+        setIsNewCookieSet(true);
+      },
+    },
+  );
+}
+
 const Authenticate = () => {
   const [isLoginActive, setIsLoginActive] = useState(true);
   const [isNewCookieSet, setIsNewCookieSet] = useState(false);
-  const [authorize, { data, loading, called }] = useMutation(AUTHENTICATE_USER__MUTATION);
 
   const isProduction = process.env.REACT_APP_ENV === 'production';
 
-  const handleAuthenticationClick = isProduction ? () => {
-    const options = {
-      scope: 'profile cpc_advertising:campaign_management',
-      response_type: 'code',
-    };
-    // eslint-disable-next-line
-    window.amazon.Login.authorize(options, async (res) => {
-      authorize({
-        variables: {
-          authCode: res.code,
-        },
+  const handleAuthenticationClick = () => {
+    if (isProduction) {
+      const options = {
+        scope: 'profile cpc_advertising:campaign_management',
+        response_type: 'code',
+      };
+      // eslint-disable-next-line
+      window.amazon.Login.authorize(options, async (res) => {
+        if (res.code) createSessionMutation({
+          authCode: res.code
+        }, setIsNewCookieSet);
       });
-    });
-  }
-    : () => {
-      //  development auth
-      authorize({
-        variables: {
-          authCode: '',
-        },
-      });
-    };
+    } else {
+      createSessionMutation({
+        authCode: '',
+      }, setIsNewCookieSet);
+    }
+  };
 
-  useEffect(
-    () => {
-      if (called && !loading && data.createSession) {
-        Cookies.set('authentication', data.createSession.token);
-        setIsNewCookieSet(true);
-      }
-    },
-    [loading, data, called],
-  );
-
-  if (called && !loading && isNewCookieSet) return <Redirect to="/" />;
+  if (isNewCookieSet) return <Redirect to="/" />;
   return (
     <Container>
       <ActionBar>

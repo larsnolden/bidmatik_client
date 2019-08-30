@@ -5,6 +5,7 @@ import {
   RecordSource,
   Store,
 } from 'relay-runtime';
+import Cookies from 'js-cookie';
 
 import RelayQueryResponseCache from 'relay-runtime/lib/RelayQueryResponseCache';
 
@@ -31,11 +32,15 @@ function fetchQuery(
     return fromCache;
   }
 
+  // Get auth token
+  const token = Cookies.get('authentication');
+
   // Otherwise, fetch data from server
   return fetch('http://localhost:4000', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authentication: token || '',
     },
     body: JSON.stringify({
       query: operation.text,
