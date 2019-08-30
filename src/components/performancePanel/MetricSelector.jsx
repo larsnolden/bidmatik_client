@@ -24,7 +24,7 @@ export default createFragmentContainer(
   {
     performanceReduced: graphql`
     #<ComponentFileName>_<propName>
-      fragment MetricSelector_performanceReduced on ProfilePerformance {
+      fragment MetricSelector_performanceReduced on Performance {
         acos
         revenue
         clicks

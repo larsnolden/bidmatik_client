@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 619b3271b6ee39afc6834580a511af06
+ * @relayHash 07a246e68e4d114983d94cdc92a87a23
  */
 
 /* eslint-disable */
@@ -73,7 +73,7 @@ fragment DateSelection_userFilterDates on UserFilterDates {
   to
 }
 
-fragment MetricSelector_performanceReduced on ProfilePerformance {
+fragment MetricSelector_performanceReduced on Performance {
   acos
   revenue
   clicks
@@ -83,7 +83,7 @@ fragment MetricSelector_performanceReduced on ProfilePerformance {
   impressions
 }
 
-fragment PerformancePanel_performance on ProfilePerformance {
+fragment PerformancePanel_performance on Performance {
   date
   acos
   revenue
@@ -102,20 +102,20 @@ fragment CampaignRow_campaign on Campaign {
   name
   id
   CampaignPerformanceReduced(from: $from, to: $to) {
+    acos
     impressions
     clicks
     ctr
     spend
     revenue
-    acos
   }
   CampaignPerformanceDelta(from: $from, to: $to) {
+    acos
     impressions
     clicks
     ctr
     spend
     revenue
-    acos
   }
 }
 */
@@ -217,6 +217,7 @@ v10 = {
   "storageKey": null
 },
 v11 = [
+  (v4/*: any*/),
   (v10/*: any*/),
   (v6/*: any*/),
   {
@@ -227,8 +228,7 @@ v11 = [
     "storageKey": null
   },
   (v7/*: any*/),
-  (v5/*: any*/),
-  (v4/*: any*/)
+  (v5/*: any*/)
 ];
 return {
   "kind": "Request",
@@ -271,7 +271,7 @@ return {
             "name": "ProfilePerformanceReduced",
             "storageKey": null,
             "args": (v3/*: any*/),
-            "concreteType": "ProfilePerformance",
+            "concreteType": "Performance",
             "plural": false,
             "selections": [
               {
@@ -287,7 +287,7 @@ return {
             "name": "ProfilePerformance",
             "storageKey": null,
             "args": (v3/*: any*/),
-            "concreteType": "ProfilePerformance",
+            "concreteType": "Performance",
             "plural": true,
             "selections": [
               {
@@ -364,7 +364,7 @@ return {
             "name": "ProfilePerformanceReduced",
             "storageKey": null,
             "args": (v3/*: any*/),
-            "concreteType": "ProfilePerformance",
+            "concreteType": "Performance",
             "plural": false,
             "selections": [
               (v4/*: any*/),
@@ -382,7 +382,7 @@ return {
             "name": "ProfilePerformance",
             "storageKey": null,
             "args": (v3/*: any*/),
-            "concreteType": "ProfilePerformance",
+            "concreteType": "Performance",
             "plural": true,
             "selections": [
               {
@@ -424,7 +424,7 @@ return {
                 "name": "CampaignPerformanceReduced",
                 "storageKey": null,
                 "args": (v3/*: any*/),
-                "concreteType": "CampaignPerformance",
+                "concreteType": "Performance",
                 "plural": false,
                 "selections": (v11/*: any*/)
               },
@@ -434,7 +434,7 @@ return {
                 "name": "CampaignPerformanceDelta",
                 "storageKey": null,
                 "args": (v3/*: any*/),
-                "concreteType": "CampaignPerformancePercent",
+                "concreteType": "PerformancePercent",
                 "plural": false,
                 "selections": (v11/*: any*/)
               }
@@ -448,7 +448,7 @@ return {
     "operationKind": "query",
     "name": "OverviewQuery",
     "id": null,
-    "text": "query OverviewQuery(\n  $profileId: ID!\n  $from: Date\n  $to: Date\n) {\n  UserFilterDates {\n    ...DateSelection_userFilterDates\n    id\n  }\n  SellerProfile(id: $profileId) {\n    id\n    ProfilePerformanceReduced(from: $from, to: $to) {\n      ...MetricSelector_performanceReduced\n    }\n    ProfilePerformance(from: $from, to: $to) {\n      ...PerformancePanel_performance\n    }\n    Campaigns(from: $from, to: $to) {\n      ...CampaignsTable_campaigns\n      id\n    }\n  }\n}\n\nfragment DateSelection_userFilterDates on UserFilterDates {\n  id\n  from\n  to\n}\n\nfragment MetricSelector_performanceReduced on ProfilePerformance {\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment PerformancePanel_performance on ProfilePerformance {\n  date\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment CampaignsTable_campaigns on Campaign {\n  ...CampaignRow_campaign\n}\n\nfragment CampaignRow_campaign on Campaign {\n  name\n  id\n  CampaignPerformanceReduced(from: $from, to: $to) {\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n    acos\n  }\n  CampaignPerformanceDelta(from: $from, to: $to) {\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n    acos\n  }\n}\n",
+    "text": "query OverviewQuery(\n  $profileId: ID!\n  $from: Date\n  $to: Date\n) {\n  UserFilterDates {\n    ...DateSelection_userFilterDates\n    id\n  }\n  SellerProfile(id: $profileId) {\n    id\n    ProfilePerformanceReduced(from: $from, to: $to) {\n      ...MetricSelector_performanceReduced\n    }\n    ProfilePerformance(from: $from, to: $to) {\n      ...PerformancePanel_performance\n    }\n    Campaigns(from: $from, to: $to) {\n      ...CampaignsTable_campaigns\n      id\n    }\n  }\n}\n\nfragment DateSelection_userFilterDates on UserFilterDates {\n  id\n  from\n  to\n}\n\nfragment MetricSelector_performanceReduced on Performance {\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment PerformancePanel_performance on Performance {\n  date\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment CampaignsTable_campaigns on Campaign {\n  ...CampaignRow_campaign\n}\n\nfragment CampaignRow_campaign on Campaign {\n  name\n  id\n  CampaignPerformanceReduced(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n  CampaignPerformanceDelta(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n}\n",
     "metadata": {}
   }
 };

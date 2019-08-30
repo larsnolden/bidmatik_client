@@ -41,7 +41,7 @@ const PerformancePanel = ({
   userFilterDates,
   loading,
   performance,
-  profilePerformanceReduced,
+  performanceReduced,
 }) => {
   const [selectedMetrics, setSelectedMetrics] = useState({
     primary: ACOS.apiName,
@@ -71,7 +71,7 @@ const PerformancePanel = ({
         loading={loading}
         selectedMetrics={selectedMetrics}
         handleMetricsChange={setSelectedMetrics}
-        performanceReduced={profilePerformanceReduced}
+        performanceReduced={performanceReduced}
       />
       <LineGraph
         loading={loading}
@@ -87,7 +87,7 @@ export default createFragmentContainer(
   {
     performance: graphql`
       #<ComponentFileName>_<propName>
-      fragment PerformancePanel_performance on ProfilePerformance @relay(plural: true) {
+      fragment PerformancePanel_performance on Performance @relay(plural: true) {
         date
         acos
         revenue

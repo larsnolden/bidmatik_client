@@ -82,7 +82,7 @@ export default () => {
               userFilterDates={UserFilterDates}
               loading={loading}
               performance={ProfilePerformance}
-              profilePerformanceReduced={ProfilePerformanceReduced}
+              performanceReduced={ProfilePerformanceReduced}
             />
             <CampaignsTable
               loading={loading}

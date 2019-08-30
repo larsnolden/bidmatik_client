@@ -15,20 +15,20 @@ export type CampaignRow_campaign = {|
   +name: string,
   +id: string,
   +CampaignPerformanceReduced: ?{|
+    +acos: ?number,
     +impressions: ?number,
     +clicks: ?number,
     +ctr: ?number,
     +spend: ?number,
     +revenue: ?number,
-    +acos: ?number,
   |},
   +CampaignPerformanceDelta: ?{|
+    +acos: ?number,
     +impressions: ?number,
     +clicks: ?number,
     +ctr: ?number,
     +spend: ?number,
     +revenue: ?number,
-    +acos: ?number,
   |},
   +$refType: CampaignRow_campaign$ref,
 |};
@@ -54,6 +54,13 @@ var v0 = [
   }
 ],
 v1 = [
+  {
+    "kind": "ScalarField",
+    "alias": null,
+    "name": "acos",
+    "args": null,
+    "storageKey": null
+  },
   {
     "kind": "ScalarField",
     "alias": null,
@@ -86,13 +93,6 @@ v1 = [
     "kind": "ScalarField",
     "alias": null,
     "name": "revenue",
-    "args": null,
-    "storageKey": null
-  },
-  {
-    "kind": "ScalarField",
-    "alias": null,
-    "name": "acos",
     "args": null,
     "storageKey": null
   }
@@ -135,7 +135,7 @@ return {
       "name": "CampaignPerformanceReduced",
       "storageKey": null,
       "args": (v0/*: any*/),
-      "concreteType": "CampaignPerformance",
+      "concreteType": "Performance",
       "plural": false,
       "selections": (v1/*: any*/)
     },
@@ -145,7 +145,7 @@ return {
       "name": "CampaignPerformanceDelta",
       "storageKey": null,
       "args": (v0/*: any*/),
-      "concreteType": "CampaignPerformancePercent",
+      "concreteType": "PerformancePercent",
       "plural": false,
       "selections": (v1/*: any*/)
     }
@@ -153,5 +153,5 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '171f0b8b6a47804bb65650bac975ecaf';
+(node/*: any*/).hash = 'b5b94f324b1f4127092211ae062159a0';
 module.exports = node;

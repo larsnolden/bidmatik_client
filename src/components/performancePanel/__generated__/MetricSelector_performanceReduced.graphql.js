@@ -32,7 +32,7 @@ export type MetricSelector_performanceReduced$key = {
 const node/*: ReaderFragment*/ = {
   "kind": "Fragment",
   "name": "MetricSelector_performanceReduced",
-  "type": "ProfilePerformance",
+  "type": "Performance",
   "metadata": null,
   "argumentDefinitions": [],
   "selections": [
@@ -88,5 +88,5 @@ const node/*: ReaderFragment*/ = {
   ]
 };
 // prettier-ignore
-(node/*: any*/).hash = 'a3af3076c7d61ada6a4979e5d814ca3e';
+(node/*: any*/).hash = '322084547271700e55a874e787f0bfa7';
 module.exports = node;

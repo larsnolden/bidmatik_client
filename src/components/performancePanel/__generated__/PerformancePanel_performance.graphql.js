@@ -33,7 +33,7 @@ export type PerformancePanel_performance$key = {
 const node/*: ReaderFragment*/ = {
   "kind": "Fragment",
   "name": "PerformancePanel_performance",
-  "type": "ProfilePerformance",
+  "type": "Performance",
   "metadata": {
     "plural": true
   },
@@ -98,5 +98,5 @@ const node/*: ReaderFragment*/ = {
   ]
 };
 // prettier-ignore
-(node/*: any*/).hash = '8f851d28d75513eb35fa4d63883f8119';
+(node/*: any*/).hash = 'a7ba7e85738725fa55fb0d191567f62a';
 module.exports = node;

@@ -115,7 +115,6 @@ Row.defaultProps = {
 };
 
 Row.propTypes = {
-  id: propTypes.string.isRequired,
   columns: propTypes.arrayOf(propTypes.shape({
     value: propTypes.string,
     change: propTypes.string,
