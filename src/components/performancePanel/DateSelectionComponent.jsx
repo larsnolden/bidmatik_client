@@ -70,7 +70,7 @@ const Calendar = styled.div`
   }
 `;
 
-const DateSelctionComponent = ({
+const DateSelectionComponent = ({
   handleDateFromClick,
   handleDateToClick,
   showCalendar,
@@ -79,10 +79,8 @@ const DateSelctionComponent = ({
   handleShowCalendarChange,
   setFocusedInput,
   loading = false,
-  dates: { 
-    from,
-    to,
-  }
+  from,
+  to,
 }) => (
   <Container>
     <Dates>
@@ -91,7 +89,7 @@ const DateSelctionComponent = ({
         onClick={handleDateFromClick}
       >
         <ChevronStyled id="date_selector" color="#BCCCDC" width={10} height={8} />
-        <Date loading id="date_selector">{from.format('D MMM YYYY')}</Date>
+        <Date loading={loading} id="date_selector">{from.format('D MMM YYYY')}</Date>
       </DateSelector>
       <To>
         TO
@@ -101,7 +99,7 @@ const DateSelctionComponent = ({
         onClick={handleDateToClick}
       >
         <ChevronStyled id="date_selector" color="#BCCCDC" width={10} height={8} />
-        <Date loading id="date_selector">{to.format('D MMM YYYY')}</Date>
+        <Date loading={loading} id="date_selector">{to.format('D MMM YYYY')}</Date>
       </DateSelector>
     </Dates>
     <Calendar>
@@ -126,7 +124,7 @@ const DateSelctionComponent = ({
   </Container>
 );
 
-DateSelctionComponent.defaultProps = {
+DateSelectionComponent.defaultProps = {
   handleDateFromClick: () => { },
   handleDateToClick: () => { },
   from: moment(moment.now()),
@@ -138,4 +136,4 @@ DateSelctionComponent.defaultProps = {
   setFocusedInput: () => { },
 };
 
-export default DateSelctionComponent;
+export default DateSelectionComponent;

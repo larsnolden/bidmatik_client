@@ -27,7 +27,7 @@ const createOptimisticResponse = (from, to) => ({
     from,
     to,
   }
-})
+});
 
 function commitDateSelection({
   from,
@@ -51,7 +51,6 @@ function commitDateSelection({
 }
 
 const branchOnLoading = (loadingComponent, notLoadingComponent) => ({ loading, ...props }) => {
-  console.log('branchOnLoading', loading, props)
   return loading ? loadingComponent : notLoadingComponent(props);
 };
 
@@ -83,10 +82,9 @@ const DateSelectionContainer = ({
   };
 
   const handleNewDatesSelect = ({ startDate, endDate }) => {
-    console.log('handleNewDatesSelect', startDate, endDate);
     setDateFromLocal(startDate);
-    //  new date range selected
     if (startDate.isBefore(endDate) && endDate !== to) {
+      //  new date range selected
       setShowCalendar(false);
       commitDateSelection({ from: startDate.format('YYYYMMDD'), to: endDate.format('YYYYMMDD') });
       handleDateRangeChange({ from: startDate.format('YYYYMMDD'), to: endDate.format('YYYYMMDD') });
@@ -97,18 +95,19 @@ const DateSelectionContainer = ({
     <DateSelectionComponent
       handleDateFromClick={handleDateFromClick}
       handleDateToClick={handleDateToClick}
-      dates={{ from, to }}
       showCalendar={showCalendar}
       handleNewDatesSelect={handleNewDatesSelect}
       focusedInput={focusedInput}
       handleShowCalendarChange={handleShowCalendarChange}
       setFocusedInput={setFocusedInput}
+      from={from}
+      to={to}
     />
   );
 };
 
 export default createFragmentContainer(
-  branchOnLoading(DateSelectionComponent, DateSelectionContainer),
+  branchOnLoading(({ userFilterDates: { from, to }}) => DateSelectionComponent({ from: moment(from), to: moment(to) }), DateSelectionContainer),
   {
     userFilterDates: graphql`
       fragment DateSelection_userFilterDates on UserFilterDates {
