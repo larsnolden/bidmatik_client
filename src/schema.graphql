@@ -1,5 +1,5 @@
 # source: http://localhost:4000
-# timestamp: Sat Aug 31 2019 10:06:19 GMT+0200 (Central European Summer Time)
+# timestamp: Sat Aug 31 2019 12:27:30 GMT+0200 (Central European Summer Time)
 
 enum AdType {
   SP
@@ -49,12 +49,12 @@ type Performance {
   impressions: Int
   clicks: Int
   ctr: Float
-  spend: Int
+  spend: Float
   cpc: Float
   orders: Int
-  revenue: Int
+  revenue: Float
   acos: Float
-  absoluteRevenue: Int
+  absoluteRevenue: Float
   absoluteAcos: Float
 }
 
