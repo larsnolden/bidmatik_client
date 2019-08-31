@@ -32,7 +32,7 @@ const CampaignRow = ({
     //  don't display percent badge if change is 0
     change:
       CampaignPerformanceDelta[tColumn.apiName] * 100 !== 0
-        ? formatPercentage(CampaignPerformanceDelta[tColumn.apiName] * 100, 0)
+        ? formatPercentage(CampaignPerformanceDelta[tColumn.apiName], 0)
         : null,
   }));
   return (

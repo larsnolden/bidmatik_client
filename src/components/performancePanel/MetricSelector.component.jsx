@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import propTypes from 'prop-types';
 
-import { formatNumber } from 'helper/format';
-
-
+import {
+  formatNumber,
+  formatPercentage,
+} from 'helper/format';
 import {
   ACOS,
   REVENUE,
@@ -15,6 +16,7 @@ import {
   ABSOLUTEREVENUE,
   IMPRESSIONS,
 } from 'metricConstants';
+
 
 const Container = styled.div`
   display: flex;
@@ -95,7 +97,7 @@ const MetricSelectorComponent = ({
           active={isActive(ACOS.apiName)}
           primary={isPrimary(ACOS.apiName)}
         >
-          {Number(acos).toFixed(2)}
+          {formatPercentage(acos)}
           %
         </Metric>
       </Item>
@@ -150,7 +152,7 @@ const MetricSelectorComponent = ({
           active={isActive(ABSOLUTEACOS.apiName)}
           primary={isPrimary(ABSOLUTEACOS.apiName)}
         >
-          {Number(absoluteAcos).toFixed(2)}
+          {formatPercentage(absoluteAcos)}
           %
         </Metric>
       </Item>

@@ -8,4 +8,4 @@ export const formatNumber = R.compose(
   String,
 );
 
-export const formatPercentage = (n, toN = 2) => Number(n).toFixed(toN);
+export const formatPercentage = (n, toN = 2) => Number(n * 100).toFixed(toN);
