@@ -4,21 +4,25 @@ import graphql from 'babel-plugin-relay/macro';
 import { QueryRenderer } from 'react-relay';
 import environment from 'environment';
 
-import Page from 'components/page/Page';
+import Page, { ActiveProfileIdContext }  from 'components/page/Page';
 import PerformancePanel from 'components/performancePanel/PerformancePanel';
 import CampaignsTable from './CampaignsTable';
 
 
-const Overview =  () => {
+const Overview = ({
+  activeProfileId
+}) => {
+  console.log('activeProfileId', activeProfileId);
   const [filterDates, setFilterDates] = useState({
     from: null,
     to: null,
   });
+
   return (
     <QueryRenderer
       environment={environment}
       query={graphql`
-        query OverviewQuery($profileId: ID!, $from: Date, $to: Date) {
+        query OverviewQuery($profileId: ID, $from: Date, $to: Date) {
           UserFilterDates {
             ...DateSelection_userFilterDates,
           }
@@ -40,7 +44,7 @@ const Overview =  () => {
         }
      `}
       variables={{
-        profileId: '2839110176393643',
+        profileId: activeProfileId,
         from: filterDates.from,
         to: filterDates.to,
       }}
@@ -99,6 +103,9 @@ export default () => (
   <Page
     heading="Overview"
   >
-    <Overview />
+    <ActiveProfileIdContext.Consumer>
+      {/* {React Context Consumer wants a function as child  */}
+      {profileId => <Overview activeProfileId={profileId} />}
+    </ActiveProfileIdContext.Consumer>
   </Page>
 );

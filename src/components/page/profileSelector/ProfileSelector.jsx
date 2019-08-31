@@ -39,7 +39,7 @@ function SetActiveProfile(id) {
         id,
       },
       updater: (store) => {
-        //  replace node manually
+        //  replace record manually
         const activeProfile = store.getRoot().getLinkedRecord('ActiveSellerProfile')
         const response = store.getRootField('SetActiveSellerProfile');
         activeProfile.copyFieldsFrom(response);
@@ -48,7 +48,9 @@ function SetActiveProfile(id) {
   );
 }
 
-export default () => (
+export default ({
+  handleActiveProfileChange,
+}) => (
   <QueryRenderer
     environment={environment}
     query={ProfilesQuery}
@@ -63,17 +65,22 @@ export default () => (
       }
       console.log('UserSellerProfiles', props);
       const { SellerProfiles, ActiveSellerProfile } = props;
-
+      console.log('Got Active Seller Profile', ActiveSellerProfile.id)
       const AvailableSellerProfile = SellerProfiles.filter(
         profile => profile.id !== ActiveSellerProfile.id,
       );
+
+      const handleSelectProfile = (profile) => {
+        SetActiveProfile(profile.id);
+        handleActiveProfileChange(profile.id);
+      };
 
       return (
         <ProfileSelectorComponent
           activeProfileName={ActiveSellerProfile.name}
           activeProfileCountryCode={ActiveSellerProfile.countryCode}
           availableProfiles={AvailableSellerProfile}
-          handleSelectProfile={(profile) => SetActiveProfile(profile.id)}
+          handleSelectProfile={handleSelectProfile}
         />
       );
     }}

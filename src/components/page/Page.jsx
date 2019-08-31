@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 
 import Navigation from './Navigation';
@@ -46,31 +46,40 @@ const Heading = styled.div`
   padding: 96px 0 0 165px;
 `;
 
+export const ActiveProfileIdContext = React.createContext(123123);
+
 export default ({
   heading,
   children,
-}) => (
-  <Container>
-    <Navigation />
-    <Column>
-      <UserSettings>
-        <ProfileSelector />
-        <AccountMenu />
-      </UserSettings>
-      <Heading>
-        {heading}
-      </Heading>
-      <Content>
-        {/* render  a list of children or a single child */}
-        {children && children.length > 1
-          ? children.map(child => (
-            <ChildSpacer>
-              {child}
-            </ChildSpacer>
-          ))
-          : <ChildSpacer>{children}</ChildSpacer>
-          }
-      </Content>
-    </Column>
-  </Container>
-);
+}) => {
+  const [activeProfileId, setActiveProfileId] = useState(null);
+  return (
+    <Container>
+      <Navigation />
+      <Column>
+        <UserSettings>
+          <ProfileSelector
+            handleActiveProfileChange={setActiveProfileId}
+          />
+          <AccountMenu />
+        </UserSettings>
+        <Heading>
+          {heading}
+        </Heading>
+        <ActiveProfileIdContext.Provider value={activeProfileId}>
+          <Content>
+            {/* render  a list of children or a single child */}
+            {children && children.length > 1
+              ? children.map(child => (
+                <ChildSpacer>
+                  {child}
+                </ChildSpacer>
+              ))
+              : <ChildSpacer>{children}</ChildSpacer>
+              }
+          </Content>
+        </ActiveProfileIdContext.Provider>
+      </Column>
+    </Container>
+  );
+};

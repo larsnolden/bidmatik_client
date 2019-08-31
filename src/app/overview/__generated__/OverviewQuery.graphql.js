@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6457723ce853a7ea3d8a2f936e23494e
+ * @relayHash 003fb0b82e5bb5fa4f180da1dbda6759
  */
 
 /* eslint-disable */
@@ -14,7 +14,7 @@ type DateSelection_userFilterDates$ref = any;
 type MetricSelector_performanceReduced$ref = any;
 type PerformancePanel_performance$ref = any;
 export type OverviewQueryVariables = {|
-  profileId: string,
+  profileId?: ?string,
   from?: ?any,
   to?: ?any,
 |};
@@ -44,7 +44,7 @@ export type OverviewQuery = {|
 
 /*
 query OverviewQuery(
-  $profileId: ID!
+  $profileId: ID
   $from: Date
   $to: Date
 ) {
@@ -125,7 +125,7 @@ var v0 = [
   {
     "kind": "LocalArgument",
     "name": "profileId",
-    "type": "ID!",
+    "type": "ID",
     "defaultValue": null
   },
   {
@@ -448,11 +448,11 @@ return {
     "operationKind": "query",
     "name": "OverviewQuery",
     "id": null,
-    "text": "query OverviewQuery(\n  $profileId: ID!\n  $from: Date\n  $to: Date\n) {\n  UserFilterDates {\n    ...DateSelection_userFilterDates\n    id\n  }\n  SellerProfile(id: $profileId) {\n    id\n    ProfilePerformanceReduced(from: $from, to: $to) {\n      ...MetricSelector_performanceReduced\n    }\n    ProfilePerformance(from: $from, to: $to) {\n      ...PerformancePanel_performance\n    }\n    Campaigns(from: $from, to: $to) {\n      ...CampaignsTable_campaigns\n      id\n    }\n  }\n}\n\nfragment DateSelection_userFilterDates on UserFilterDates {\n  id\n  from\n  to\n}\n\nfragment MetricSelector_performanceReduced on Performance {\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment PerformancePanel_performance on Performance {\n  date\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment CampaignsTable_campaigns on Campaign {\n  ...CampaignRow_campaign\n}\n\nfragment CampaignRow_campaign on Campaign {\n  name\n  id\n  CampaignPerformanceReduced(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n  CampaignPerformanceDelta(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n}\n",
+    "text": "query OverviewQuery(\n  $profileId: ID\n  $from: Date\n  $to: Date\n) {\n  UserFilterDates {\n    ...DateSelection_userFilterDates\n    id\n  }\n  SellerProfile(id: $profileId) {\n    id\n    ProfilePerformanceReduced(from: $from, to: $to) {\n      ...MetricSelector_performanceReduced\n    }\n    ProfilePerformance(from: $from, to: $to) {\n      ...PerformancePanel_performance\n    }\n    Campaigns(from: $from, to: $to) {\n      ...CampaignsTable_campaigns\n      id\n    }\n  }\n}\n\nfragment DateSelection_userFilterDates on UserFilterDates {\n  id\n  from\n  to\n}\n\nfragment MetricSelector_performanceReduced on Performance {\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment PerformancePanel_performance on Performance {\n  date\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment CampaignsTable_campaigns on Campaign {\n  ...CampaignRow_campaign\n}\n\nfragment CampaignRow_campaign on Campaign {\n  name\n  id\n  CampaignPerformanceReduced(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n  CampaignPerformanceDelta(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n}\n",
     "metadata": {}
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '4cbf442024aca082546228da4589c99c';
+(node/*: any*/).hash = 'b916f8e360958f4a70f1eda987b27b07';
 module.exports = node;
