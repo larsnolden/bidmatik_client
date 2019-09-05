@@ -35,18 +35,14 @@ const Content = styled.div`
   padding: 0 0 90px 165px;
 `;
 
-const ChildSpacer = styled.div`
-  margin-top: 60px;
-`;
-
 const Heading = styled.div`
   font-weight: 500;
-  font-size: 36px;
+  font-size: 42px;
   color: #0A558C;
   padding: 96px 0 0 165px;
 `;
 
-export const ActiveProfileIdContext = React.createContext(123123);
+export const ActiveProfileIdContext = React.createContext();
 
 export default ({
   heading,
@@ -68,15 +64,7 @@ export default ({
         </Heading>
         <ActiveProfileIdContext.Provider value={activeProfileId}>
           <Content>
-            {/* render  a list of children or a single child */}
-            {children && children.length > 1
-              ? children.map(child => (
-                <ChildSpacer>
-                  {child}
-                </ChildSpacer>
-              ))
-              : <ChildSpacer>{children}</ChildSpacer>
-              }
+            {children}
           </Content>
         </ActiveProfileIdContext.Provider>
       </Column>

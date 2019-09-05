@@ -3,11 +3,16 @@ import React, { useState, Fragment }from 'react';
 import graphql from 'babel-plugin-relay/macro';
 import { QueryRenderer } from 'react-relay';
 import environment from 'environment';
+import styled from '@emotion/styled';
 
-import Page, { ActiveProfileIdContext }  from 'components/page/Page';
+import Page, { ActiveProfileIdContext } from 'components/page/Page';
 import PerformancePanel from 'components/performancePanel/PerformancePanel';
 import CampaignsTable from './CampaignsTable';
 
+
+const CampaignsTableSpaced = styled(CampaignsTable)`
+  margin-top: 60px;
+`;
 
 const Overview = ({
   activeProfileId
@@ -62,7 +67,7 @@ const Overview = ({
               <PerformancePanel
                 loading={loading}
               />
-              <CampaignsTable
+              <CampaignsTableSpaced
                 loading={loading}
               />
             </Fragment>
@@ -86,7 +91,7 @@ const Overview = ({
               performance={ProfilePerformance}
               performanceReduced={ProfilePerformanceReduced}
             />
-            <CampaignsTable
+            <CampaignsTableSpaced
               loading={loading}
               campaigns={Campaigns}
             />

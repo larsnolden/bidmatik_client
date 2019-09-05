@@ -30,9 +30,11 @@ const CampaignRows = campaigns => campaigns.map((campaign, index) => {
 
 const CampaignsTable = ({
   campaigns,
-  loading
+  loading,
+  className
 }) => (
   <Table
+    className={className}
     title="Campaigns"
     columns={campaignTableColumnNames}
   >

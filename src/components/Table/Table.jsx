@@ -124,8 +124,9 @@ const Table = ({
   // handleFilterChange,
   handleNextPageClick,
   children,
+  className,
 }) => (
-  <Container>
+  <Container className={className}>
     <HeadingWrapper>
       <Heading>
         {title}
