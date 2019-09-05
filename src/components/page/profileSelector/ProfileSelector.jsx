@@ -61,7 +61,7 @@ export default ({
       }
       const loading = !props;
       if (loading) {
-        return <h1>Loading</h1>;
+        return <ProfileSelectorComponent loading={true} />;
       }
       console.log('UserSellerProfiles', props);
       const { SellerProfiles, ActiveSellerProfile } = props;

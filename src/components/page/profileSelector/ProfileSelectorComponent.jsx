@@ -29,6 +29,7 @@ const Container = styled.div`
   }
   border-radius: 30px 30px 10px 10px;
   box-shadow: ${props => props.showShadow ? '0px 1px 3px rgba(0, 0, 0, 0.2)' : 'none'};
+  filter: ${props => props.loading ? 'blur(4px)' : 'none'};  
 `;
 
 const Profile = styled.div`
@@ -110,10 +111,16 @@ const ProfileSelectorComponent = ({
   activeProfileCountryCode,
   availableProfiles,
   handleSelectProfile,
+  loading,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <Container tabIndex="0" onBlur={() => setIsOpen(false)} showShadow={isOpen}>
+    <Container
+      loading={loading}
+      tabIndex="0"
+      onBlur={() => setIsOpen(false)}
+      showShadow={isOpen}
+    >
       <SelectedProfile onClick={() => setIsOpen(!isOpen)} hideBottomCornerRaidus={isOpen}>
         <Flag selected>
           <FlagIcon src={flags[activeProfileCountryCode]} />
@@ -148,7 +155,7 @@ const ProfileSelectorComponent = ({
 };
 
 ProfileSelectorComponent.defaultProps = {
-  activeProfileName: '',
+  activeProfileName: 'profile',
   activeProfilecountryCode: '',
   availableProfiles: [],
   handleSelectProfile: () => {},
