@@ -70,7 +70,7 @@ const FlagIcon = styled.img`
 `;
 
 const ChevronSelect = styled(Chevron)`
-  margin: 0 0 0 20px;
+  margin: 0 0 0 auto;
   transform: rotate(${props => props.rotateUp ? '180deg' : '0deg'});
 `;
 
