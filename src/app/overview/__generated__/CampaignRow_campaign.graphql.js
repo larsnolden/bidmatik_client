@@ -12,8 +12,8 @@ import type { FragmentReference } from "relay-runtime";
 declare export opaque type CampaignRow_campaign$ref: FragmentReference;
 declare export opaque type CampaignRow_campaign$fragmentType: CampaignRow_campaign$ref;
 export type CampaignRow_campaign = {|
-  +name: string,
   +id: string,
+  +name: string,
   +CampaignPerformanceReduced: ?{|
     +acos: ?number,
     +impressions: ?number,
@@ -64,14 +64,14 @@ const node/*: ReaderFragment*/ = (function(){
 var v0 = {
   "kind": "ScalarField",
   "alias": null,
-  "name": "name",
+  "name": "id",
   "args": null,
   "storageKey": null
 },
 v1 = {
   "kind": "ScalarField",
   "alias": null,
-  "name": "id",
+  "name": "name",
   "args": null,
   "storageKey": null
 },
@@ -180,8 +180,8 @@ return {
       "concreteType": "AdGroup",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
         (v1/*: any*/),
+        (v0/*: any*/),
         {
           "kind": "LinkedField",
           "alias": null,
@@ -208,5 +208,5 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '0c3f2b400ea59ec2939b7f8b9b25ae77';
+(node/*: any*/).hash = 'da22ad01bcdf27e23fdc4aa9d3a2e189';
 module.exports = node;

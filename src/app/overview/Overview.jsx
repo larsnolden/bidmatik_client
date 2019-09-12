@@ -9,9 +9,9 @@ import styled from '@emotion/styled';
 import { setPageContext } from 'redux/pageActions';
 import Page from 'components/page/Page';
 import PerformancePanel from 'components/performancePanel/PerformancePanel';
-import CampaignsTable from './CampaignsTable';
+import CampaignTable from './CampaignTable';
 
-const CampaignsTableSpaced = styled(CampaignsTable)`
+const CampaignTableSpaced = styled(CampaignTable)`
   margin-top: 60px;
 `;
 
@@ -45,7 +45,7 @@ const OverviewComponent = ({ activeProfileId, setPageContext }) => {
               ...PerformancePanel_performance
             }
             Campaigns(from: $from, to: $to) {
-              ...CampaignsTable_campaigns
+              ...CampaignTable_campaigns
             }
           }
         }
@@ -65,7 +65,7 @@ const OverviewComponent = ({ activeProfileId, setPageContext }) => {
           return (
             <React.Fragment>
               <PerformancePanel loading={loading} />
-              <CampaignsTableSpaced loading={loading} />
+              <CampaignTableSpaced loading={loading} />
             </React.Fragment>
           );
         }
@@ -88,7 +88,7 @@ const OverviewComponent = ({ activeProfileId, setPageContext }) => {
               performance={ProfilePerformance}
               performanceReduced={ProfilePerformanceReduced}
             />
-            <CampaignsTableSpaced loading={loading} campaigns={Campaigns} />
+            <CampaignTableSpaced loading={loading} campaigns={Campaigns} />
           </React.Fragment>
         );
       }}

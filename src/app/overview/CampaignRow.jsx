@@ -1,35 +1,21 @@
 import React, { Fragment, useState } from 'react';
-import graphql from "babel-plugin-relay/macro";
-import { createFragmentContainer } from "react-relay";
+import graphql from 'babel-plugin-relay/macro';
+import { createFragmentContainer } from 'react-relay';
 import Row from 'components/Table/Row';
 
-import {
-  ACOS,
-  REVENUE,
-  CLICKS,
-  IMPRESSIONS,
-  SPEND,
-  CTR,
-} from 'metricConstants';
-import {
-  formatPercentage,
-} from 'helper/format';
-
+import { ACOS, REVENUE, CLICKS, IMPRESSIONS, SPEND, CTR } from 'metricConstants';
+import { formatPercentage } from 'helper/format';
 
 const campaignTableColumns = [ACOS, IMPRESSIONS, CLICKS, CTR, SPEND, REVENUE];
 
-const AdGroupRow = ({
-  name,
-  id,
-  performanceReduced,
-  performanceDelta,
-}) => {
+const AdGroupRow = ({ name, id, performanceReduced, performanceDelta }) => {
   const adGroupColumns = campaignTableColumns.map(tColumn => ({
     value: tColumn.format(performanceReduced[tColumn.apiName]),
     //  don't display percent badge if change is 0
-    change: performanceDelta[tColumn.apiName] * 100 !== 0
-      ? formatPercentage(performanceDelta[tColumn.apiName], 0)
-      : null,
+    change:
+      performanceDelta[tColumn.apiName] * 100 !== 0
+        ? formatPercentage(performanceDelta[tColumn.apiName], 0)
+        : null
   }));
 
   return (
@@ -44,21 +30,15 @@ const AdGroupRow = ({
 };
 
 const CampaignRow = ({
-  campaign: {
-    CampaignPerformanceReduced,
-    CampaignPerformanceDelta,
-    name,
-    id,
-    AdGroups,
-    isStriped,
-  }
+  campaign: { CampaignPerformanceReduced, CampaignPerformanceDelta, name, id, AdGroups, striped }
 }) => {
   const campaignColumns = campaignTableColumns.map(tColumn => ({
     value: tColumn.format(CampaignPerformanceReduced[tColumn.apiName]),
     //  don't display percent badge if change is 0
-    change: CampaignPerformanceDelta[tColumn.apiName] * 100 !== 0
-      ? formatPercentage(CampaignPerformanceDelta[tColumn.apiName], 0)
-      : null,
+    change:
+      CampaignPerformanceDelta[tColumn.apiName] * 100 !== 0
+        ? formatPercentage(CampaignPerformanceDelta[tColumn.apiName], 0)
+        : null
   }));
 
   const [showAdGroups, setShowAdGroups] = useState(false);
@@ -68,12 +48,12 @@ const CampaignRow = ({
       <Row
         name={name}
         type="Campaign"
-        striped={isStriped}
+        striped={striped}
         columns={campaignColumns}
         handleExpandClick={() => setShowAdGroups(!showAdGroups)}
         isExpanded={showAdGroups}
       />
-      {showAdGroups && (
+      {showAdGroups &&
         AdGroups.map(adGroup => (
           <AdGroupRow
             name={adGroup.name}
@@ -81,21 +61,37 @@ const CampaignRow = ({
             performanceReduced={adGroup.AdGroupPerformanceReduced}
             performanceDelta={adGroup.AdGroupPerformanceDelta}
           />
-        ))
-      )}
+        ))}
     </Fragment>
   );
 };
 
-export default createFragmentContainer(
-  CampaignRow,
-  {
-    campaign: graphql`
-      #<ComponentFileName>_<propName>
-      fragment CampaignRow_campaign on Campaign {
+export default createFragmentContainer(CampaignRow, {
+  campaign: graphql`
+    #<ComponentFileName>_<propName>
+    fragment CampaignRow_campaign on Campaign {
+      id
+      name
+      CampaignPerformanceReduced(from: $from, to: $to) {
+        acos
+        impressions
+        clicks
+        ctr
+        spend
+        revenue
+      }
+      CampaignPerformanceDelta(from: $from, to: $to) {
+        acos
+        impressions
+        clicks
+        ctr
+        spend
+        revenue
+      }
+      AdGroups {
         name
         id
-        CampaignPerformanceReduced(from: $from, to: $to) {
+        AdGroupPerformanceReduced(from: $from, to: $to) {
           acos
           impressions
           clicks
@@ -103,35 +99,15 @@ export default createFragmentContainer(
           spend
           revenue
         }
-        CampaignPerformanceDelta(from: $from, to: $to) {
+        AdGroupPerformanceDelta(from: $from, to: $to) {
           acos
           impressions
           clicks
           ctr
           spend
           revenue
-        }
-        AdGroups {
-          name
-          id
-          AdGroupPerformanceReduced(from: $from, to: $to) {
-            acos
-            impressions
-            clicks
-            ctr
-            spend
-            revenue
-          }
-          AdGroupPerformanceDelta(from: $from, to: $to) {
-            acos
-            impressions
-            clicks
-            ctr
-            spend
-            revenue
-          }
         }
       }
-    `,
-  },
-);
+    }
+  `
+});
