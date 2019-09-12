@@ -1,5 +1,5 @@
 /* eslint-disable react/prefer-stateless-function */
-import React, { useState, Fragment }from 'react';
+import React, { useState } from 'react';
 import graphql from 'babel-plugin-relay/macro';
 import { QueryRenderer } from 'react-relay';
 import environment from 'environment';
@@ -9,18 +9,14 @@ import Page, { ActiveProfileIdContext } from 'components/page/Page';
 import PerformancePanel from 'components/performancePanel/PerformancePanel';
 import CampaignsTable from './CampaignsTable';
 
-
 const CampaignsTableSpaced = styled(CampaignsTable)`
   margin-top: 60px;
 `;
 
-const Overview = ({
-  activeProfileId
-}) => {
-  console.log('activeProfileId', activeProfileId);
+const Overview = ({ activeProfileId }) => {
   const [filterDates, setFilterDates] = useState({
     from: null,
-    to: null,
+    to: null
   });
 
   return (
@@ -29,29 +25,29 @@ const Overview = ({
       query={graphql`
         query OverviewQuery($profileId: ID, $from: Date, $to: Date) {
           UserFilterDates {
-            ...DateSelection_userFilterDates,
+            ...DateSelection_userFilterDates
           }
           SellerProfile(id: $profileId) {
             id
             #to get the avt of all samples (eg. a sample = 1 day of records)
             # (we could compute this based on the Performance All query, but do we want to?)
             ProfilePerformanceReduced(from: $from, to: $to) {
-              ...MetricSelector_performanceReduced,
+              ...MetricSelector_performanceReduced
             }
             #to get each sample from fromDate to toDate
             ProfilePerformance(from: $from, to: $to) {
-              ...PerformancePanel_performance,
+              ...PerformancePanel_performance
             }
             Campaigns(from: $from, to: $to) {
-              ...CampaignsTable_campaigns,
+              ...CampaignsTable_campaigns
             }
           }
         }
-     `}
+      `}
       variables={{
         profileId: activeProfileId,
         from: filterDates.from,
-        to: filterDates.to,
+        to: filterDates.to
       }}
       render={({ error, props }) => {
         if (error) {
@@ -61,29 +57,19 @@ const Overview = ({
         const loading = !props;
         if (loading) {
           return (
-            <Fragment
-              heading="Overview"
-            >
-              <PerformancePanel
-                loading={loading}
-              />
-              <CampaignsTableSpaced
-                loading={loading}
-              />
-            </Fragment>
+            <React.Fragment>
+              <PerformancePanel loading={loading} />
+              <CampaignsTableSpaced loading={loading} />
+            </React.Fragment>
           );
         }
 
         const {
-          SellerProfile: {
-            ProfilePerformance,
-            ProfilePerformanceReduced,
-            Campaigns,
-          },
-          UserFilterDates,
+          SellerProfile: { ProfilePerformance, ProfilePerformanceReduced, Campaigns },
+          UserFilterDates
         } = props;
         return (
-          <Fragment>
+          <React.Fragment>
             <PerformancePanel
               handleUserFilterDatesChange={setFilterDates}
               userFilterDates={UserFilterDates}
@@ -91,23 +77,17 @@ const Overview = ({
               performance={ProfilePerformance}
               performanceReduced={ProfilePerformanceReduced}
             />
-            <CampaignsTableSpaced
-              loading={loading}
-              campaigns={Campaigns}
-            />
-          </Fragment>
+            <CampaignsTableSpaced loading={loading} campaigns={Campaigns} />
+          </React.Fragment>
         );
       }}
     />
   );
 };
 
-
 //  wrap in Page to pass down the selected profile
 export default () => (
-  <Page
-    heading="Overview"
-  >
+  <Page heading="Overview">
     <ActiveProfileIdContext.Consumer>
       {/* {React Context Consumer wants a function as child  */}
       {profileId => <Overview activeProfileId={profileId} />}
