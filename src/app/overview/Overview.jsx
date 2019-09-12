@@ -2,10 +2,12 @@
 import React, { useState } from 'react';
 import graphql from 'babel-plugin-relay/macro';
 import { QueryRenderer } from 'react-relay';
+import { connect } from 'react-redux';
 import environment from 'environment';
 import styled from '@emotion/styled';
 
-import Page, { ActiveProfileIdContext } from 'components/page/Page';
+import { setPageContext } from 'redux/pageActions';
+import Page from 'components/page/Page';
 import PerformancePanel from 'components/performancePanel/PerformancePanel';
 import CampaignsTable from './CampaignsTable';
 
@@ -13,7 +15,11 @@ const CampaignsTableSpaced = styled(CampaignsTable)`
   margin-top: 60px;
 `;
 
-const Overview = ({ activeProfileId }) => {
+const OverviewComponent = ({ activeProfileId, setPageContext }) => {
+  setPageContext({
+    pageName: 'Overview',
+    isLoading: true
+  });
   const [filterDates, setFilterDates] = useState({
     from: null,
     to: null
@@ -64,6 +70,11 @@ const Overview = ({ activeProfileId }) => {
           );
         }
 
+        setPageContext({
+          pageName: 'Overview',
+          isLoading: false
+        });
+
         const {
           SellerProfile: { ProfilePerformance, ProfilePerformanceReduced, Campaigns },
           UserFilterDates
@@ -85,12 +96,21 @@ const Overview = ({ activeProfileId }) => {
   );
 };
 
-//  wrap in Page to pass down the selected profile
+const mapStateToProps = state => ({
+  activeProfileId: state.activeProfileId
+});
+
+const mapDispatchToProps = dispatch => ({
+  setPageContext: ({ pageName, isLoading }) => dispatch(setPageContext({ pageName, isLoading }))
+});
+
+const Overview = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OverviewComponent);
+
 export default () => (
-  <Page heading="Overview">
-    <ActiveProfileIdContext.Consumer>
-      {/* {React Context Consumer wants a function as child  */}
-      {profileId => <Overview activeProfileId={profileId} />}
-    </ActiveProfileIdContext.Consumer>
+  <Page>
+    <Overview />
   </Page>
 );

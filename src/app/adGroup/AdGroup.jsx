@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import Page, { ActiveProfileIdContext } from 'components/page/Page';
+import Page from 'components/page/Page';
+import { connect } from 'react-redux';
 import PerformancePanel from 'components/performancePanel/PerformancePanel';
 import { QueryRenderer } from 'react-relay';
 import environment from 'environment';
 import graphql from 'babel-plugin-relay/macro';
+import { setPageContext } from 'redux/pageActions';
 
 const adGroupQuery = graphql`
   query AdGroupQuery($from: Date, $to: Date, $id: ID!) {
@@ -27,13 +29,17 @@ const adGroupQuery = graphql`
   }
 `;
 
-const AdGroup = ({ adGroupId, activeProfileId }) => {
+const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
+  //  page names is null while loading
+  setPageContext({
+    pageName: 'AdGroup',
+    isLoading: true
+  });
+
   const [filterDates, setFilterDates] = useState({
     from: null,
     to: null
   });
-
-  console.log('adGroupId', adGroupId);
 
   return (
     <QueryRenderer
@@ -60,9 +66,14 @@ const AdGroup = ({ adGroupId, activeProfileId }) => {
         }
 
         const {
-          AdGroup: { AdGroupPerformance, AdGroupPerformanceReduced, Keywords },
+          AdGroup: { name, AdGroupPerformance, AdGroupPerformanceReduced, Keywords },
           UserFilterDates
         } = props;
+
+        setPageContext({
+          pageName: name,
+          isLoading: false
+        });
 
         return (
           <React.Fragment>
@@ -80,12 +91,22 @@ const AdGroup = ({ adGroupId, activeProfileId }) => {
   );
 };
 
+const mapStateToProps = state => ({
+  profileId: state.activeProfileId
+});
+
+const mapDispatchToProps = dispatch => ({
+  setPageContext: ({ pageName, isLoading }) => dispatch(setPageContext({ pageName, isLoading }))
+});
+
+const AdGroup = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AdGroupComponent);
+
 //  wrap in Page to pass down the selected profile
 export default ({ match }) => (
-  <Page heading="AdGroupName">
-    <ActiveProfileIdContext.Consumer>
-      {/* {React Context Consumer wants a function as child  */}
-      {profileId => <AdGroup activeProfileId={profileId} adGroupId={match.params.adGroupId} />}
-    </ActiveProfileIdContext.Consumer>
+  <Page>
+    <AdGroup adGroupId={match.params.adGroupId} />
   </Page>
 );

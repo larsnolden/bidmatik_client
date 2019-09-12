@@ -1,14 +1,20 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+
+import pageReducer from './redux/pageReducer';
 import Routes from './Routes';
+
+const store = createStore(pageReducer);
 
 function App() {
   return (
-    <Fragment>
+    <Provider store={store}>
       <BrowserRouter>
         <Routes />
       </BrowserRouter>
-    </Fragment>
+    </Provider>
   );
 }
 

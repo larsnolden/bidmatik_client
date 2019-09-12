@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { QueryRenderer, commitMutation } from 'react-relay';
 import ProfileSelectorComponent from './ProfileSelectorComponent';
 import environment from 'environment';
 import graphql from 'babel-plugin-relay/macro';
 
+import { setActiveProfileId } from 'redux/pageActions';
 
 const ProfilesQuery = graphql`
   query ProfileSelectorQuery {
@@ -31,26 +33,21 @@ const SetActiveProfileMutation = graphql`
 `;
 
 function SetActiveProfile(id) {
-  return commitMutation(
-    environment,
-    {
-      mutation: SetActiveProfileMutation,
-      variables: {
-        id,
-      },
-      updater: (store) => {
-        //  replace record manually
-        const activeProfile = store.getRoot().getLinkedRecord('ActiveSellerProfile')
-        const response = store.getRootField('SetActiveSellerProfile');
-        activeProfile.copyFieldsFrom(response);
-      },
+  return commitMutation(environment, {
+    mutation: SetActiveProfileMutation,
+    variables: {
+      id
     },
-  );
+    updater: store => {
+      //  replace record manually
+      const activeProfile = store.getRoot().getLinkedRecord('ActiveSellerProfile');
+      const response = store.getRootField('SetActiveSellerProfile');
+      activeProfile.copyFieldsFrom(response);
+    }
+  });
 }
 
-export default ({
-  handleActiveProfileChange,
-}) => (
+const ProfileSelector = ({ handleActiveProfileChange }) => (
   <QueryRenderer
     environment={environment}
     query={ProfilesQuery}
@@ -65,12 +62,12 @@ export default ({
       }
       console.log('UserSellerProfiles', props);
       const { SellerProfiles, ActiveSellerProfile } = props;
-      console.log('Got Active Seller Profile', ActiveSellerProfile.id)
+      console.log('Got Active Seller Profile', ActiveSellerProfile.id);
       const AvailableSellerProfile = SellerProfiles.filter(
-        profile => profile.id !== ActiveSellerProfile.id,
+        profile => profile.id !== ActiveSellerProfile.id
       );
 
-      const handleSelectProfile = (profile) => {
+      const handleSelectProfile = profile => {
         SetActiveProfile(profile.id);
         handleActiveProfileChange(profile.id);
       };
@@ -86,3 +83,12 @@ export default ({
     }}
   />
 );
+
+const mapDispatchToProps = dispatch => ({
+  handleActiveProfileChange: profileId => dispatch(setActiveProfileId(profileId))
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(ProfileSelector);

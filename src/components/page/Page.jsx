@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 
 import Navigation from './Navigation';
@@ -40,25 +41,28 @@ const Heading = styled.div`
   font-size: 42px;
   color: #0a558c;
   padding: 96px 0 0 165px;
+  filter: ${props => (props.loading ? 'blur(4px)' : 'none')};
 `;
 
-export const ActiveProfileIdContext = React.createContext();
+const mapStateToProps = state => ({
+  heading: state.pageName,
+  loading: state.pageIsLoading
+});
 
-export default ({ heading, children }) => {
-  const [activeProfileId, setActiveProfileId] = useState(null);
+const Page = ({ heading, loading, children }) => {
   return (
     <Container>
       <Navigation />
       <Column>
         <UserSettings>
-          <ProfileSelector handleActiveProfileChange={setActiveProfileId} />
+          <ProfileSelector />
           <AccountMenu />
         </UserSettings>
-        <Heading>{heading}</Heading>
-        <ActiveProfileIdContext.Provider value={activeProfileId}>
-          <Content>{children}</Content>
-        </ActiveProfileIdContext.Provider>
+        <Heading loading={loading}>{heading}</Heading>
+        <Content>{children}</Content>
       </Column>
     </Container>
   );
 };
+
+export default connect(mapStateToProps)(Page);
