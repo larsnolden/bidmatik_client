@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 003fb0b82e5bb5fa4f180da1dbda6759
+ * @relayHash d04ed830bb379eedb35ed20e2d58bed8
  */
 
 /* eslint-disable */
@@ -117,6 +117,26 @@ fragment CampaignRow_campaign on Campaign {
     spend
     revenue
   }
+  AdGroups {
+    name
+    id
+    AdGroupPerformanceReduced(from: $from, to: $to) {
+      acos
+      impressions
+      clicks
+      ctr
+      spend
+      revenue
+    }
+    AdGroupPerformanceDelta(from: $from, to: $to) {
+      acos
+      impressions
+      clicks
+      ctr
+      spend
+      revenue
+    }
+  }
 }
 */
 
@@ -216,7 +236,14 @@ v10 = {
   "args": null,
   "storageKey": null
 },
-v11 = [
+v11 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "name",
+  "args": null,
+  "storageKey": null
+},
+v12 = [
   (v4/*: any*/),
   (v10/*: any*/),
   (v6/*: any*/),
@@ -410,13 +437,7 @@ return {
             "concreteType": "Campaign",
             "plural": true,
             "selections": [
-              {
-                "kind": "ScalarField",
-                "alias": null,
-                "name": "name",
-                "args": null,
-                "storageKey": null
-              },
+              (v11/*: any*/),
               (v2/*: any*/),
               {
                 "kind": "LinkedField",
@@ -426,7 +447,7 @@ return {
                 "args": (v3/*: any*/),
                 "concreteType": "Performance",
                 "plural": false,
-                "selections": (v11/*: any*/)
+                "selections": (v12/*: any*/)
               },
               {
                 "kind": "LinkedField",
@@ -436,7 +457,40 @@ return {
                 "args": (v3/*: any*/),
                 "concreteType": "PerformancePercent",
                 "plural": false,
-                "selections": (v11/*: any*/)
+                "selections": (v12/*: any*/)
+              },
+              {
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "AdGroups",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "AdGroup",
+                "plural": true,
+                "selections": [
+                  (v11/*: any*/),
+                  (v2/*: any*/),
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "AdGroupPerformanceReduced",
+                    "storageKey": null,
+                    "args": (v3/*: any*/),
+                    "concreteType": "Performance",
+                    "plural": false,
+                    "selections": (v12/*: any*/)
+                  },
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "AdGroupPerformanceDelta",
+                    "storageKey": null,
+                    "args": (v3/*: any*/),
+                    "concreteType": "PerformancePercent",
+                    "plural": false,
+                    "selections": (v12/*: any*/)
+                  }
+                ]
               }
             ]
           }
@@ -448,7 +502,7 @@ return {
     "operationKind": "query",
     "name": "OverviewQuery",
     "id": null,
-    "text": "query OverviewQuery(\n  $profileId: ID\n  $from: Date\n  $to: Date\n) {\n  UserFilterDates {\n    ...DateSelection_userFilterDates\n    id\n  }\n  SellerProfile(id: $profileId) {\n    id\n    ProfilePerformanceReduced(from: $from, to: $to) {\n      ...MetricSelector_performanceReduced\n    }\n    ProfilePerformance(from: $from, to: $to) {\n      ...PerformancePanel_performance\n    }\n    Campaigns(from: $from, to: $to) {\n      ...CampaignsTable_campaigns\n      id\n    }\n  }\n}\n\nfragment DateSelection_userFilterDates on UserFilterDates {\n  id\n  from\n  to\n}\n\nfragment MetricSelector_performanceReduced on Performance {\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment PerformancePanel_performance on Performance {\n  date\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment CampaignsTable_campaigns on Campaign {\n  ...CampaignRow_campaign\n}\n\nfragment CampaignRow_campaign on Campaign {\n  name\n  id\n  CampaignPerformanceReduced(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n  CampaignPerformanceDelta(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n}\n",
+    "text": "query OverviewQuery(\n  $profileId: ID\n  $from: Date\n  $to: Date\n) {\n  UserFilterDates {\n    ...DateSelection_userFilterDates\n    id\n  }\n  SellerProfile(id: $profileId) {\n    id\n    ProfilePerformanceReduced(from: $from, to: $to) {\n      ...MetricSelector_performanceReduced\n    }\n    ProfilePerformance(from: $from, to: $to) {\n      ...PerformancePanel_performance\n    }\n    Campaigns(from: $from, to: $to) {\n      ...CampaignsTable_campaigns\n      id\n    }\n  }\n}\n\nfragment DateSelection_userFilterDates on UserFilterDates {\n  id\n  from\n  to\n}\n\nfragment MetricSelector_performanceReduced on Performance {\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment PerformancePanel_performance on Performance {\n  date\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment CampaignsTable_campaigns on Campaign {\n  ...CampaignRow_campaign\n}\n\nfragment CampaignRow_campaign on Campaign {\n  name\n  id\n  CampaignPerformanceReduced(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n  CampaignPerformanceDelta(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n  AdGroups {\n    name\n    id\n    AdGroupPerformanceReduced(from: $from, to: $to) {\n      acos\n      impressions\n      clicks\n      ctr\n      spend\n      revenue\n    }\n    AdGroupPerformanceDelta(from: $from, to: $to) {\n      acos\n      impressions\n      clicks\n      ctr\n      spend\n      revenue\n    }\n  }\n}\n",
     "metadata": {}
   }
 };

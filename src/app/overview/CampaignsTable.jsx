@@ -1,9 +1,9 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { createFragmentContainer } from 'react-relay';
+import graphql from 'babel-plugin-relay/macro';
 
 import Table from 'components/Table/Table';
-import graphql from 'babel-plugin-relay/macro';
 import {
   ACOS,
   CTR,
@@ -14,9 +14,9 @@ import {
 } from 'metricConstants';
 import CampaignRow from './CampaignRow';
 
+
 const campaignTableColumns = [ACOS, IMPRESSIONS, CLICKS, CTR, SPEND, REVENUE];
 const campaignTableColumnNames = campaignTableColumns.map(column => column.displayName);
-
 
 const CampaignRows = campaigns => campaigns.map((campaign, index) => {
   const isStriped = index % 2 === 0;

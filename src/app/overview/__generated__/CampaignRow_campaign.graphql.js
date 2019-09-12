@@ -30,6 +30,26 @@ export type CampaignRow_campaign = {|
     +spend: ?number,
     +revenue: ?number,
   |},
+  +AdGroups: $ReadOnlyArray<?{|
+    +name: string,
+    +id: string,
+    +AdGroupPerformanceReduced: ?{|
+      +acos: ?number,
+      +impressions: ?number,
+      +clicks: ?number,
+      +ctr: ?number,
+      +spend: ?number,
+      +revenue: ?number,
+    |},
+    +AdGroupPerformanceDelta: ?{|
+      +acos: ?number,
+      +impressions: ?number,
+      +clicks: ?number,
+      +ctr: ?number,
+      +spend: ?number,
+      +revenue: ?number,
+    |},
+  |}>,
   +$refType: CampaignRow_campaign$ref,
 |};
 export type CampaignRow_campaign$data = CampaignRow_campaign;
@@ -41,7 +61,21 @@ export type CampaignRow_campaign$key = {
 
 
 const node/*: ReaderFragment*/ = (function(){
-var v0 = [
+var v0 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "name",
+  "args": null,
+  "storageKey": null
+},
+v1 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+},
+v2 = [
   {
     "kind": "Variable",
     "name": "from",
@@ -53,7 +87,7 @@ var v0 = [
     "variableName": "to"
   }
 ],
-v1 = [
+v3 = [
   {
     "kind": "ScalarField",
     "alias": null,
@@ -115,43 +149,64 @@ return {
     }
   ],
   "selections": [
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "name",
-      "args": null,
-      "storageKey": null
-    },
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "id",
-      "args": null,
-      "storageKey": null
-    },
+    (v0/*: any*/),
+    (v1/*: any*/),
     {
       "kind": "LinkedField",
       "alias": null,
       "name": "CampaignPerformanceReduced",
       "storageKey": null,
-      "args": (v0/*: any*/),
+      "args": (v2/*: any*/),
       "concreteType": "Performance",
       "plural": false,
-      "selections": (v1/*: any*/)
+      "selections": (v3/*: any*/)
     },
     {
       "kind": "LinkedField",
       "alias": null,
       "name": "CampaignPerformanceDelta",
       "storageKey": null,
-      "args": (v0/*: any*/),
+      "args": (v2/*: any*/),
       "concreteType": "PerformancePercent",
       "plural": false,
-      "selections": (v1/*: any*/)
+      "selections": (v3/*: any*/)
+    },
+    {
+      "kind": "LinkedField",
+      "alias": null,
+      "name": "AdGroups",
+      "storageKey": null,
+      "args": null,
+      "concreteType": "AdGroup",
+      "plural": true,
+      "selections": [
+        (v0/*: any*/),
+        (v1/*: any*/),
+        {
+          "kind": "LinkedField",
+          "alias": null,
+          "name": "AdGroupPerformanceReduced",
+          "storageKey": null,
+          "args": (v2/*: any*/),
+          "concreteType": "Performance",
+          "plural": false,
+          "selections": (v3/*: any*/)
+        },
+        {
+          "kind": "LinkedField",
+          "alias": null,
+          "name": "AdGroupPerformanceDelta",
+          "storageKey": null,
+          "args": (v2/*: any*/),
+          "concreteType": "PerformancePercent",
+          "plural": false,
+          "selections": (v3/*: any*/)
+        }
+      ]
     }
   ]
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'b5b94f324b1f4127092211ae062159a0';
+(node/*: any*/).hash = '0c3f2b400ea59ec2939b7f8b9b25ae77';
 module.exports = node;

@@ -2,7 +2,7 @@ import React from 'react';
 import Page from 'components/page/Page';
 import PerformancePanel from 'components/performancePanel/PerformancePanel';
 
-const Campaign = ({
+const AdGroup = ({
   match,
   from,
   to,
@@ -12,18 +12,18 @@ const Campaign = ({
   performanceTotal,
 }) => (
   <Page
-    heading={match.params.campaignId}
+    heading={match.params.adGroupId}
   >
-    <PerformancePanel
+    {/* <PerformancePanel
       from={from}
       to={to}
       handleDateRangeChange={handleDateRangeChange}
       loading={loading}
       performance={performance}
       performanceTotal={performanceTotal}
-      />
+    /> */}
       some
   </Page>
 );
 
-export default Campaign;
+export default AdGroup;

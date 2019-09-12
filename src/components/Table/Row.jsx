@@ -4,6 +4,9 @@ import styled from '@emotion/styled';
 import propTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+import Chevron from 'components/Chevron';
+import shortenString from 'helper/shortenString';
+
 
 const Container = styled.div`
   background: ${props => props.darkBg ? '#F9FBFC' : '#FFF'};
@@ -11,10 +14,10 @@ const Container = styled.div`
   flex-direction: row;
   height: 48px;
   align-items: center;
-  padding-left: 60px;
   justify-content: flex-start;
   flex-basis: 100%;
   padding: 5px 0 5x 60px;
+  cursor: pointer;
 `;
 
 const Column = styled.div`
@@ -24,18 +27,31 @@ const Column = styled.div`
   flex-basis: 20%;
 `;
 
+const ExpandButtonColumn = styled(Column)`
+  flex-basis: 40px;
+  padding: 0 20px 0 20px;
+`;
+
 const NameColumn = styled(Column)`
   flex-basis: 35%;
   padding-right: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
 const ViewColumn = styled(Column)`
   flex-basis: 5%;
+  padding-right: 33px;
 `;
 
 const Value = styled.div`
   font-size: 16px;
   color: #627D98;
+`;
+
+const ValueSmall = styled(Value)`
+  font-size: 10px;
 `;
 
 const Change = styled.div`
@@ -62,51 +78,71 @@ const ViewButton = styled(Link)`
   font-size: 14px;
   color: #186FAF;
   cursor: pointer;
-  padding-right: 33px;
   user-select: none;
+`;
+
+const ChevronRotateAble = styled(Chevron)`
+  transform: ${props => props.rotate ? 'rotate(180deg)' : 'rotate(0deg)'};
 `;
 
 const Row = ({
   name,
+  type,
   columns,
   striped,
   onViewClickPath,
+  isExpanded,
+  handleExpandClick,
   // childRows,
-}) => {
+}) => (
   //  first element is always the row items name
-  return (
-    <Container
-      darkBg={striped}
-    >
-      <NameColumn>
+  <Container
+    darkBg={striped}
+    onClick={handleExpandClick}
+  >
+    <ExpandButtonColumn>
+      {handleExpandClick && (
+        <ChevronRotateAble
+          rotate={isExpanded}
+          color="#aaa"
+          width={12}
+          height={12}
+        />
+      )}
+    </ExpandButtonColumn>
+    <NameColumn>
+      <ValueSmall>
+        {type}
+      </ValueSmall>
+      <Value>
+        {shortenString(name, 24)}
+      </Value>
+    </NameColumn>
+    {columns.map(column => (
+      <Column>
         <Value>
-          {name}
+          {column.value}
         </Value>
-      </NameColumn>
-      {columns.map(column => (
-        <Column>
-          <Value>
-            {column.value}
-          </Value>
-          {column.change && (
-            <Change isPositive={column.change >= 0}>
-              <ChangeSign>
-                {column.change >= 0 ? '+' : '-'}
-              </ChangeSign>
-              {String(column.change).replace('-', '')}
-              %
-            </Change>
-          )}
-        </Column>
-      ))}
-      <ViewColumn>
+        {column.change && (
+          <Change isPositive={column.change >= 0}>
+            <ChangeSign>
+              {column.change >= 0 ? '+' : '-'}
+            </ChangeSign>
+            {String(column.change).replace('-', '')}
+            %
+          </Change>
+        )}
+      </Column>
+    ))}
+    <ViewColumn>
+      {onViewClickPath && (
         <ViewButton to={onViewClickPath}>
           view
         </ViewButton>
-      </ViewColumn>
-    </Container>
-  );
-};
+      )}
+    </ViewColumn>
+  </Container>
+);
 
 export default Row;
 

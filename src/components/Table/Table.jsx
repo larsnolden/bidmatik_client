@@ -44,6 +44,7 @@ const ColumnsRow = styled.div`
   position: sticky;
   top: 0;
   background: #fff;
+  z-index: 1;
 `;
 
 const ColumnHeadings = styled.div`

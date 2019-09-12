@@ -1,5 +1,13 @@
 # source: http://localhost:4000
-# timestamp: Sat Aug 31 2019 12:27:30 GMT+0200 (Central European Summer Time)
+# timestamp: Thu Sep 12 2019 11:17:10 GMT+0200 (CEST)
+
+type AdGroup {
+  id: ID!
+  name: String!
+  Keywords(from: Date, to: Date, sortBy: KeywordSortBy): [Keyword]!
+  AdGroupPerformanceReduced(from: Date, to: Date): Performance
+  AdGroupPerformanceDelta(from: Date, to: Date): PerformancePercent
+}
 
 enum AdType {
   SP
@@ -13,16 +21,14 @@ type AuthToken {
 type Campaign {
   id: ID!
   name: String!
-  adType: AdType!
-  targeting: Targeting!
   budget: Float!
-  portfolio: String
 
   """Reduce all samples in requested time into one sample"""
   CampaignPerformanceReduced(from: Date, to: Date): Performance
 
   """Percent change of data compared to previous period"""
   CampaignPerformanceDelta(from: Date, to: Date): PerformancePercent
+  AdGroups(from: Date, to: Date): [AdGroup]!
 }
 
 enum CountryCode {
@@ -36,6 +42,24 @@ enum CountryCode {
 
 """Date custom scalar type"""
 scalar Date
+
+type Keyword {
+  id: ID!
+  term: String!
+
+  """
+  we want to display the current bid
+  and the average bid over the selected time period
+  (bid is not a reported value only, it will be modifiable)
+  """
+  bid: Float!
+  KeywordPerformanceDelta(from: Date, to: Date): PerformancePercent
+  KeywordPerformanceReduced(from: Date, to: Date): Performance
+}
+
+enum KeywordSortBy {
+  spend
+}
 
 type Mutation {
   _empty: String
@@ -78,6 +102,8 @@ type Query {
   SellerProfile(id: ID): SellerProfile!
   ActiveSellerProfile: SellerProfile!
   UserFilterDates: UserFilterDates
+  Keyword(id: ID!): Keyword
+  AdGroup(id: ID!): AdGroup
 }
 
 type SellerProfile {
