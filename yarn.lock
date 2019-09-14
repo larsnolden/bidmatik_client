@@ -9304,6 +9304,11 @@ react-scripts@3.0.1:
   optionalDependencies:
     fsevents "2.0.6"
 
+react-table@^7.0.0-beta.0:
+  version "7.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.0.0-beta.0.tgz#2ba60ce9faa8286c2c8ebe668efdd14308129ccf"
+  integrity sha512-ddPDtsGMAq1m4Mh/pIn1uUaGAUikS52YMAfOhduKQkz+3UuQVqcUU44C6e8/9S7GZrMB+Vp1MwqmHJwR5ciW/g==
+
 react-vis@^1.11.7:
   version "1.11.7"
   resolved "https://registry.yarnpkg.com/react-vis/-/react-vis-1.11.7.tgz#909902af00158895d14da1adfe1d0dc0045228ff"

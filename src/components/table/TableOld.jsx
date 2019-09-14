@@ -7,9 +7,8 @@ import Chevron from 'components/Chevron';
 import filterIconPath from 'assets/icons/filter.svg';
 import sortIconPath from 'assets/icons/sort.svg';
 
-
 const Container = styled.div`
-  background: #FFFFFF;
+  background: #ffffff;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 3px;
 `;
@@ -31,7 +30,7 @@ const Heading = styled.div`
   line-height: 20px;
   letter-spacing: 0.025em;
   text-transform: uppercase;
-  color: #627D98;
+  color: #627d98;
 `;
 
 const ColumnsRow = styled.div`
@@ -40,7 +39,7 @@ const ColumnsRow = styled.div`
   flex-direction: row;
   height: 45px;
   align-items: center;
-  border-bottom: 1px solid #BCCCDC;
+  border-bottom: 1px solid #bcccdc;
   position: sticky;
   top: 0;
   background: #fff;
@@ -59,7 +58,7 @@ const ColumnHeadings = styled.div`
 
 const ColumnHeading = styled.div`
   text-transform: uppercase;
-  color: #829AB1;
+  color: #829ab1;
   font-weight: 500;
   font-size: 13px;
   line-height: 12px;
@@ -96,13 +95,13 @@ const Footer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  border-top: 1px solid #BCCCDC;
+  border-top: 1px solid #bcccdc;
   user-select: none;
 `;
 
 const NextPageButton = styled.div`
   font-size: 14px;
-  color: #186FAF;
+  color: #186faf;
   cursor: pointer;
   padding-right: 24px;
   font-weight: 500;
@@ -125,36 +124,27 @@ const Table = ({
   // handleFilterChange,
   handleNextPageClick,
   children,
-  className,
+  className
 }) => (
   <Container className={className}>
     <HeadingWrapper>
-      <Heading>
-        {title}
-      </Heading>
+      <Heading>{title}</Heading>
       <HeadingHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
     </HeadingWrapper>
     <ColumnsRow>
       <FilterButton src={filterIconPath} />
       <ColumnHeadings>
-
         <NameHeadingWrapper onClick={() => handleSortChange('Name')}>
-          <ColumnHeading>
-            Name
-          </ColumnHeading>
+          <ColumnHeading>Name</ColumnHeading>
           <SortButton src={sortIconPath} />
         </NameHeadingWrapper>
 
-        {
-          columns.map(column => (
-            <ColumnHeadingWrapper onClick={() => handleSortChange(column)}>
-              <ColumnHeading>
-                {column}
-              </ColumnHeading>
-              <SortButton src={sortIconPath} />
-            </ColumnHeadingWrapper>
-          ))
-        }
+        {columns.map(column => (
+          <ColumnHeadingWrapper onClick={() => handleSortChange(column)}>
+            <ColumnHeading>{column}</ColumnHeading>
+            <SortButton src={sortIconPath} />
+          </ColumnHeadingWrapper>
+        ))}
         <ViewColumnSpacing />
       </ColumnHeadings>
     </ColumnsRow>
@@ -162,11 +152,7 @@ const Table = ({
     <Footer>
       <NextPageButton onClick={handleNextPageClick}>
         next
-        <NextPageChevron
-          color="#186FAF"
-          width={9}
-          height={9}
-        />
+        <NextPageChevron color="#186FAF" width={9} height={9} />
       </NextPageButton>
     </Footer>
   </Container>
@@ -179,8 +165,8 @@ Table.defaultProps = {
   columns: [''],
   handleSortChange: () => {},
   // handleFilterChange: () => {},
-  handleNextPageClick: () => { },
-  children: () => <span />,
+  handleNextPageClick: () => {},
+  children: () => <span />
 };
 
 Table.propTypes = {
@@ -189,5 +175,5 @@ Table.propTypes = {
   handleSortChange: propTypes.func,
   // handleFilterChange: propTypes.func,
   handleNextPageClick: propTypes.func,
-  children: propTypes.node,
+  children: propTypes.node
 };

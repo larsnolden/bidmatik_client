@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 import { createFragmentContainer } from 'react-relay';
 import graphql from 'babel-plugin-relay/macro';
 
-import Table from 'components/Table/Table';
+import Table from 'components/table/TableOld';
 import { ACOS, CTR, REVENUE, CLICKS, IMPRESSIONS, SPEND } from 'metricConstants';
 import CampaignRow from './CampaignRow';
 

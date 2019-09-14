@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import graphql from 'babel-plugin-relay/macro';
 import { createFragmentContainer } from 'react-relay';
-import Row from 'components/Table/Row';
+import Row from 'components/table/Row';
 
 import { ACOS, REVENUE, CLICKS, IMPRESSIONS, SPEND, CTR } from 'metricConstants';
 import { formatPercentage } from 'helper/format';

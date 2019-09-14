@@ -3,7 +3,7 @@
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": ["error"],
-    "react/jsx-fragments": [true, "element"]
+    "react/jsx-fragments": ["error", "element"]
   },
   "settings": {
     "import/resolver": {
