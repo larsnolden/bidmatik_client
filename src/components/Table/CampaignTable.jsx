@@ -8,10 +8,9 @@ import sortAscChevronIconPath from 'assets/icons/sortAsc.svg';
 import unsortedChevronIconPath from 'assets/icons/unsorted.svg';
 import filterIconPath from 'assets/icons/filter.svg';
 import { Link } from 'react-router-dom';
-
+import ChangePill from 'components/ChangePill';
 //  We can reuse the table compoent, and just replace the row compoent for each table type
 
-const formatChange = change => Number(change).toFixed(0);
 
 const Table = styled.table`
   width: 100%;
@@ -87,28 +86,6 @@ const ChildTr = styled.tr`
   height: 48px;
 `;
 
-const Change = styled.div`
-  background: ${props =>
-    props.isPositive ? 'rgba(14, 124, 134, 0.15)' : 'rgba(214, 69, 69, 0.2)'};
-  color: ${props => (props.isPositive ? '#2CB1BC' : '#E66A6A')};
-  font-weight: 500;
-  font-size: 13px;
-  margin-left: 4px;
-  display: flex;
-  flex-directionL row;
-  align-items: center;
-  border-radius: 20px;
-  box-sizing: border-box;
-  padding: 2px 7px;
-  margin-left: 10px;
-`;
-
-const ChangeSign = styled.div`
-  padding: 0 2px 0 0;
-  font-size: 15px;
-  font-weight: 600;
-`;
-
 const CellContent = styled.div`
   display: flex;
   align-items: center;
@@ -135,63 +112,6 @@ const SortButton = ({ active, showDesc }) => {
   if (!active) return <SortChevron src={unsortedChevronIconPath} />;
   if (showDesc) return <SortChevron src={sortDescChevronIconPath} />;
   return <SortChevron src={sortAscChevronIconPath} />;
-};
-
-const ChangePill = ({ change }) => {
-  const isPositive = change => 0;
-  return (
-    <Change isPositive={isPositive}>
-      <ChangeSign>{isPositive ? '+' : '-'}</ChangeSign>
-      {String(change).replace('-', '')}%
-    </Change>
-  );
-};
-
-const ChildRow = ({ columns, sample }) => (
-  <ChildTr>
-    <CenterTd>
-      <Link to={`adGroup/${sample.id}`}> view</Link>
-    </CenterTd>
-    {columns.map(col => (
-      <Td>
-        <CellContent>
-          {col.format ? col.format(sample[col.key]) : sample[col.key]}
-          {sample.change && sample.change[col.key] && <ChangePill change={formatChange(sample.change[col.key])} />}
-        </CellContent>
-      </Td>
-    ))}
-  </ChildTr>
-);
-
-const Row = ({ columns, sample, darkBg }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const toggleIsExpanded = () => setIsExpanded(!isExpanded);
-
-  const ParentRow = () => (
-    <ParentTr darkBg={darkBg} activeBg={isExpanded} onClick={toggleIsExpanded}>
-      <CenterTd>
-        <Chevron pointDown={!isExpanded} color="#aaa" width="15" height="15" />
-      </CenterTd>
-      {columns.map(col => (
-        <Td>
-          <CellContent>
-          {col.format ? col.format(sample[col.key]) : sample[col.key]}
-          {sample.change && sample.change[col.key] && <ChangePill change={formatChange(sample.change[col.key])} />}
-          </CellContent>
-        </Td>
-      ))}
-    </ParentTr>
-  );
-  if (!isExpanded) return <ParentRow />;
-
-  return (
-    <Fragment>
-      <ParentRow />
-      {sample.children.map(childSample => (
-        <ChildRow columns={columns} sample={childSample} />
-      ))}
-    </Fragment>
-  );
 };
 
 function TableComponent({ columns, data, handleSortQuery }) {

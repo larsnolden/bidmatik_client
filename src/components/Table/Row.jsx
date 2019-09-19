@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import propTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+
 import Chevron from 'components/Chevron';
 import shortenString from 'helper/shortenString';
 

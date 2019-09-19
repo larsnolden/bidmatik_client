@@ -6,10 +6,10 @@ import CampoaignsTable from '../src/components/Table/CampaignTable';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { keywords, campaigns } from './mockData/tableMock';
+import { formatPercentage,formatNumber} from 'helper/format';
 import Chevron from 'components/Chevron';
 import styled from '@emotion/styled';
 import shortenString from 'helper/shortenString';
-import { formatPercentage,formatNumber} from 'helper/format';
 
 // export const requirements = () => (
 //   <ul>

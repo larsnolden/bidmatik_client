@@ -3,21 +3,11 @@ import propTypes from 'prop-types';
 import { createFragmentContainer } from 'react-relay';
 import graphql from 'babel-plugin-relay/macro';
 
-import Table from 'components/Table/Table';
-import { ACOS, CTR, REVENUE, CLICKS, IMPRESSIONS, SPEND } from 'metricConstants';
+import Table from 'components/Table/CampaignsTable';
 import CampaignRow from './CampaignRow';
 
-const campaignTableColumns = [ACOS, IMPRESSIONS, CLICKS, CTR, SPEND, REVENUE];
-const campaignTableColumnNames = campaignTableColumns.map(column => column.displayName);
-
-const CampaignRows = campaigns =>
-  campaigns.map((campaign, index) => {
-    const isStriped = index % 2 > 0;
-    return <CampaignRow campaign={campaign} striped={isStriped} />;
-  });
-
 const CampaignsTable = ({ campaigns, loading, className }) => (
-  <Table className={className} title="Campaigns" columns={campaignTableColumnNames}>
+  <Table columns={campaignTableColumnNames}>
     {!loading && CampaignRows(campaigns)}
   </Table>
 );
