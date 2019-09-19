@@ -28,7 +28,26 @@ export default createFragmentContainer(KeywordTable, {
   keywords: graphql`
     #<ComponentFileName>_<propName>
     fragment KeywordTable_keywords on Keyword @relay(plural: true) {
-      ...KeywordRow_keyword
+      id
+      term
+      bid
+      matchType
+      KeywordPerformanceDelta(from: $from, to: $to) {
+        acos
+        impressions
+        clicks
+        ctr
+        spend
+        revenue
+      }
+      KeywordPerformanceReduced(from: $from, to: $to) {
+        acos
+        impressions
+        clicks
+        ctr
+        spend
+        revenue
+      }
     }
   `
 });

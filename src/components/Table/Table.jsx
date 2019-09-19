@@ -2,33 +2,41 @@ import React from 'react';
 import styled from '@emotion/styled';
 import * as R from 'ramda';
 
-const Styles = styled.div`
-  border: 0.5px solid gray;
-`
+const Table = styled.table`
+  border: 1px solid #aaa;
+  width: 100%;
+`;
 
-function Table({ columns, data }) {
+const Td = styled.td`
+  width: ${props => props.width};
+`;
+
+function TableComponent({ columns, data }) {
+  // const keys = columns.map(column => column.key);
+  const heads = columns.map(column => column.head);
+
   return (
-    <Styles>
-      <table>
-        <thead>
+    <Table>
+      <thead>
+        <tr>
+          {heads.map(head => (
+            <th>{head}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {data.map(sample => (
           <tr>
-            {columns.map(
-              column => <th>{column.head}</th>
-            )}
+            {columns.map(col => (
+              <Td width={col.width || 'auto'}>
+                {col.render ? <col.render {...sample} /> : sample[col.key]}
+              </Td>
+            ))}
           </tr>
-        </thead>
-        <tbody>
-          {
-            data.map(
-              sample => (
-                <tr>{columns.map(column => column.render(R.pick(column.keys, sample)))}</tr>
-              )
-            )
-          }
-        </tbody>
-      </table>
-    </Styles>
-  )
-};
+        ))}
+      </tbody>
+    </Table>
+  );
+}
 
-export default Table
+export default TableComponent;
