@@ -34,7 +34,7 @@ const DemoClick = styled.div`
 const columns = [
   {
     //   render has access to the rows data
-    render: ({ id }) => <Chevron color="#aaa" width="40" height="40" onClick={() => alert(id)} />,
+    render: ({ id }) => <Chevron color="#aaa" width="40" height="40" onClick={() => show(id)} />,
     head: '',
     width: '50px'
   },
