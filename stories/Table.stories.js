@@ -1,7 +1,11 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
 import Table from '../src/components/Table/Table';
-import { keywords } from './mockData/tableMock';
+// import TableKeywords from '../src/components/Table/TableKeywords';
+import TableCampaigns from '../src/components/Table/TableCampaigns';
+import { BrowserRouter as Router } from 'react-router-dom';
+
+import { keywords, campaigns } from './mockData/tableMock';
 import Chevron from 'components/Chevron';
 import styled from '@emotion/styled';
 
@@ -34,21 +38,33 @@ const DemoClick = styled.div`
 const columns = [
   {
     //   render has access to the rows data
-    render: ({ id }) => <Chevron color="#aaa" width="40" height="40" onClick={() => show(id)} />,
-    head: '',
+    render: ({ toggleIsExpanded, isExpanded }) => (
+      <Chevron
+        pointDown={!isExpanded}
+        color="#aaa"
+        width="15"
+        height="15"
+        onClick={toggleIsExpanded}
+      />
+    ),
+    childRender: ({ id }) => <a href={`campaign${id}`}>view</a>,
+    head: null,
     width: '50px'
   },
   {
     key: 'bid',
-    head: 'Bid'
+    head: 'Bid',
+    sortable: true
   },
   {
     key: 'term',
-    head: 'Query'
+    head: 'Query',
+    sortable: true
   },
   {
     key: 'matchType',
-    head: 'Match Type'
+    head: 'Match Type',
+    sortable: true
   }
 ];
 
@@ -57,3 +73,54 @@ export const table = () => <Table columns={columns} data={keywords} />;
 export default {
   title: 'Table'
 };
+
+const campaignColumns = [
+  {
+    key: 'name',
+    head: 'Name',
+    sortable: true,
+    type: String
+  },
+  {
+    key: 'acos',
+    head: 'Acos',
+    sortable: true,
+    type: String
+  },
+  {
+    key: 'revenue',
+    head: 'Revenue',
+    sortable: true
+  },
+  {
+    key: 'clicks',
+    head: 'Clicks',
+    sortable: true
+  },
+  {
+    key: 'impressions',
+    head: 'Impressions',
+    sortable: true
+  },
+  {
+    key: 'spend',
+    head: 'Spend',
+    sortable: true
+  }
+];
+
+const campaignsData = campaigns.map(campaign => ({
+  ...campaign,
+  ...campaign.CampaignPerformanceReduced,
+  change: campaign.CampaignPerformanceDelta,
+  children: campaign.AdGroups.map(adGroup => ({
+    ...adGroup,
+    ...adGroup.AdGroupPerformanceReduced
+  }))
+}));
+
+export const tableCampaign = () => (
+  <Router>
+    <TableCampaigns columns={campaignColumns} data={campaignsData} />
+  </Router>
+);
