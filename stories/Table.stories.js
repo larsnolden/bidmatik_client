@@ -2,12 +2,14 @@ import React from 'react';
 import { action } from '@storybook/addon-actions';
 import Table from '../src/components/Table/Table';
 // import TableKeywords from '../src/components/Table/TableKeywords';
-import TableCampaigns from '../src/components/Table/TableCampaigns';
+import CampoaignsTable from '../src/components/Table/CampaignTable';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { keywords, campaigns } from './mockData/tableMock';
 import Chevron from 'components/Chevron';
 import styled from '@emotion/styled';
+import shortenString from 'helper/shortenString';
+import { formatPercentage,formatNumber} from 'helper/format';
 
 // export const requirements = () => (
 //   <ul>
@@ -79,18 +81,21 @@ const campaignColumns = [
     key: 'name',
     head: 'Name',
     sortable: true,
-    type: String
+    type: String,
+    format: x => shortenString(x, 25),
   },
   {
     key: 'acos',
     head: 'Acos',
     sortable: true,
-    type: String
+    type: String,
+    format: formatPercentage,
   },
   {
     key: 'revenue',
     head: 'Revenue',
-    sortable: true
+    sortable: true,
+    format: formatNumber,
   },
   {
     key: 'clicks',
@@ -115,12 +120,15 @@ const campaignsData = campaigns.map(campaign => ({
   change: campaign.CampaignPerformanceDelta,
   children: campaign.AdGroups.map(adGroup => ({
     ...adGroup,
-    ...adGroup.AdGroupPerformanceReduced
+    ...adGroup.AdGroupPerformanceReduced,
+  change: adGroup.AdGroupPerformanceDelta,
   }))
 }));
 
+console.log(campaignsData)
+
 export const tableCampaign = () => (
   <Router>
-    <TableCampaigns columns={campaignColumns} data={campaignsData} />
+    <CampoaignsTable columns={campaignColumns} data={campaignsData} />
   </Router>
 );

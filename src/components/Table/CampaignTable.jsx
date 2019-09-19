@@ -75,6 +75,7 @@ const Tr = styled.tr`
   background: ${props =>
     props.activeBg ? 'rgba(220, 238, 251, 1)' : props.darkBg ? '#F9FBFC' : '#FFF'};
   height: 48px;
+  user-select: none; 
 `;
 
 const ParentTr = styled(Tr)`
@@ -99,12 +100,19 @@ const Change = styled.div`
   border-radius: 20px;
   box-sizing: border-box;
   padding: 2px 7px;
+  margin-left: 10px;
 `;
 
 const ChangeSign = styled.div`
   padding: 0 2px 0 0;
   font-size: 15px;
   font-weight: 600;
+`;
+
+const CellContent = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 18px;
 `;
 
 const Filter = ({ type, handleFilterSet }) => {
@@ -129,20 +137,6 @@ const SortButton = ({ active, showDesc }) => {
   return <SortChevron src={sortAscChevronIconPath} />;
 };
 
-const ChildRow = ({ columns, sample }) => (
-  <ChildTr>
-    <CenterTd>
-      <Link to={`adGroup/${sample.id}`}> view</Link>
-    </CenterTd>
-    {columns.map(col => (
-      <Td>
-        {sample[col.key]}
-        {sample.change[col.key] && <ChangePill change={formatChange(sample.change[col.key])} />}
-      </Td>
-    ))}
-  </ChildTr>
-);
-
 const ChangePill = ({ change }) => {
   const isPositive = change => 0;
   return (
@@ -152,6 +146,22 @@ const ChangePill = ({ change }) => {
     </Change>
   );
 };
+
+const ChildRow = ({ columns, sample }) => (
+  <ChildTr>
+    <CenterTd>
+      <Link to={`adGroup/${sample.id}`}> view</Link>
+    </CenterTd>
+    {columns.map(col => (
+      <Td>
+        <CellContent>
+          {col.format ? col.format(sample[col.key]) : sample[col.key]}
+          {sample.change && sample.change[col.key] && <ChangePill change={formatChange(sample.change[col.key])} />}
+        </CellContent>
+      </Td>
+    ))}
+  </ChildTr>
+);
 
 const Row = ({ columns, sample, darkBg }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -164,8 +174,10 @@ const Row = ({ columns, sample, darkBg }) => {
       </CenterTd>
       {columns.map(col => (
         <Td>
-          {sample[col.key]}
-          {sample.change[col.key] && <ChangePill change={formatChange(sample.change[col.key])} />}
+          <CellContent>
+          {col.format ? col.format(sample[col.key]) : sample[col.key]}
+          {sample.change && sample.change[col.key] && <ChangePill change={formatChange(sample.change[col.key])} />}
+          </CellContent>
         </Td>
       ))}
     </ParentTr>
@@ -182,10 +194,11 @@ const Row = ({ columns, sample, darkBg }) => {
   );
 };
 
-function TableComponent({ columns, data }) {
+function TableComponent({ columns, data, handleSortQuery }) {
   const [sortBy, setSortBy] = useState(null);
   const [sortDesc, setSortDesc] = useState(true);
   const [filterActive, setFilterActive] = useState(false);
+
 
   const handleSort = colKey => {
     if (sortBy === colKey && !sortDesc) {
@@ -196,6 +209,7 @@ function TableComponent({ columns, data }) {
       setSortBy(colKey);
       setSortDesc(true);
     }
+    handleSortQuery({sortBy, sortDesc});
   };
 
   return (
