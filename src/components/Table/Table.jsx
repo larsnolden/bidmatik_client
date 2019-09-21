@@ -61,6 +61,12 @@ const FilterIcon = styled.img`
   transform: rotate(${props => (props.faceDown ? '0deg' : '180deg')});
 `;
 
+const Tbody = styled.tbody`
+  height: ${props => (props.isLoading ? '500px' : 'auto')};
+  display: ${props => (props.isLoading ? 'block' : '')};
+  background: #fff;
+`;
+
 const Filter = ({ type, handleFilterSet }) => {
   if (type === Number)
     return (
@@ -83,7 +89,7 @@ const SortButton = ({ active, showDesc }) => {
   return <SortChevron src={sortAscChevronIconPath} />;
 };
 
-function TableComponent({ columns, handleSortQuery, children, ...props }) {
+function TableComponent({ columns, handleSortQuery, children, isLoading, ...props }) {
   const [sortBy, setSortBy] = useState(null);
   const [sortDesc, setSortDesc] = useState(true);
   const [filterActive, setFilterActive] = useState(false);
@@ -129,7 +135,7 @@ function TableComponent({ columns, handleSortQuery, children, ...props }) {
           </tr>
         )}
       </Thead>
-      <tbody>{children}</tbody>
+      <Tbody isLoading={isLoading}>{children}</Tbody>
     </Table>
   );
 }

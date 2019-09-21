@@ -7,7 +7,7 @@ import Row from './CampaignRow';
 import { formatPercentage, formatNumber } from 'helper/format';
 import shortenString from 'helper/shortenString';
 
-const CampaignTable = ({ campaigns, className }) => {
+const CampaignTable = ({ campaigns, className, isLoading }) => {
   const columns = [
     {
       key: 'name',
@@ -47,10 +47,11 @@ const CampaignTable = ({ campaigns, className }) => {
   ];
 
   return (
-    <Table columns={columns} handleSortQuery={() => {}} className={className}>
-      {campaigns.map((campaign, i) => (
-        <Row columns={columns} campaign={campaign} darkBg={i % 2 > 0} />
-      ))}
+    <Table columns={columns} handleSortQuery={() => {}} className={className} isLoading={isLoading}>
+      {!isLoading &&
+        campaigns.map((campaign, i) => (
+          <Row columns={columns} campaign={campaign} darkBg={i % 2 > 0} />
+        ))}
     </Table>
   );
 };

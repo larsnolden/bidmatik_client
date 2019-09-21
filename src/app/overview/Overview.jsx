@@ -65,7 +65,7 @@ const OverviewComponent = ({ activeProfileId, setPageContext }) => {
           return (
             <React.Fragment>
               <PerformancePanel loading={loading} />
-              {/* <CampaignTableSpaced loading={loading} /> */}
+              <CampaignTableStyled isLoading={true} />
             </React.Fragment>
           );
         }
@@ -88,7 +88,7 @@ const OverviewComponent = ({ activeProfileId, setPageContext }) => {
               performance={ProfilePerformance}
               performanceReduced={ProfilePerformanceReduced}
             />
-            <CampaignTableStyled loading={loading} campaigns={Campaigns} />
+            <CampaignTableStyled isLoading={loading} campaigns={Campaigns} />
           </React.Fragment>
         );
       }}
