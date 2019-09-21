@@ -53,6 +53,12 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
+  "resolutions": {
+    "graphql/core-js": "2.6.9",
+    "graphql/core-js/es6": "2.6.9",
+    "relay-compiler/core-js": "2.6.9",
+    "relay-compiler/core-js/es6": "2.6.9"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -82,6 +88,7 @@
     "eslint-plugin-react-hooks": "^1.7.0",
     "graphql": "^14.5.3",
     "prettier": "^1.18.2",
-    "relay-compiler": "^5.0.0"
+    "relay-compiler": "^5.0.0",
+    "core-js": "2.6.9"
   }
 }

@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import gql from 'graphql-tag';
 import Cookies from 'js-cookie';
 import { Redirect } from 'react-router-dom';
 import { commitMutation } from 'react-relay';
 import bidmatikLogoPath from 'assets/BidmatikLogo.png';
 import environment from 'environment';
-import graphql from "babel-plugin-relay/macro";
+import graphql from 'babel-plugin-relay/macro';
 
 const Container = styled.div`
-  background: #3A5F8A;
+  background: #3a5f8a;
   display: flex;
   flex-direction: row;
   flex-basis: 100%;
@@ -20,7 +19,7 @@ const ActionBar = styled.div`
   max-width: 297px;
   flex-grow: 1;
   height: 100vh;
-  background: #FFFFFF;
+  background: #ffffff;
 `;
 
 const Logo = styled.img`
@@ -49,7 +48,7 @@ const Button = styled.div`
 const HelpText = styled.div`
   font-size: 18px;
   letter-spacing: 0.04em;
-  color: #3A5F8A;
+  color: #3a5f8a;
   font-weight: 400;
   align-self: center;
   padding: 20px 20px;
@@ -64,14 +63,14 @@ const Authentication = styled.div`
 const AuthButton = styled.div`
   width: 188px;
   height: 39px;
-  background-image: url("https://images-na.ssl-images-amazon.com/images/G/01/lwa/btnLWA_gry_312x64.png");
+  background-image: url('https://images-na.ssl-images-amazon.com/images/G/01/lwa/btnLWA_gry_312x64.png');
   background-size: contain;
   align-self: center;
   margin-top: 20px;
   cursor: pointer;
 
   &:active {
-    background-image: url("https://images-na.ssl-images-amazon.com/images/G/01/lwa/btnLWA_gry_312x64_pressed.png");
+    background-image: url('https://images-na.ssl-images-amazon.com/images/G/01/lwa/btnLWA_gry_312x64_pressed.png');
   }
 `;
 
@@ -84,19 +83,16 @@ const authenticateUserMutation = graphql`
 `;
 
 function createSessionMutation({ authCode }, setIsNewCookieSet) {
-  return commitMutation(
-    environment,
-    {
-      mutation: authenticateUserMutation,
-      variables: {
-        authCode,
-      },
-      onCompleted: (data) => {
-        Cookies.set('authentication', data.createSession.token);
-        setIsNewCookieSet(true);
-      },
+  return commitMutation(environment, {
+    mutation: authenticateUserMutation,
+    variables: {
+      authCode
     },
-  );
+    onCompleted: data => {
+      Cookies.set('authentication', data.createSession.token);
+      setIsNewCookieSet(true);
+    }
+  });
 }
 
 const Authenticate = () => {
@@ -109,18 +105,25 @@ const Authenticate = () => {
     if (isProduction) {
       const options = {
         scope: 'profile cpc_advertising:campaign_management',
-        response_type: 'code',
+        response_type: 'code'
       };
       // eslint-disable-next-line
-      window.amazon.Login.authorize(options, async (res) => {
-        if (res.code) createSessionMutation({
-          authCode: res.code
-        }, setIsNewCookieSet);
+      window.amazon.Login.authorize(options, async res => {
+        if (res.code)
+          createSessionMutation(
+            {
+              authCode: res.code
+            },
+            setIsNewCookieSet
+          );
       });
     } else {
-      createSessionMutation({
-        authCode: '',
-      }, setIsNewCookieSet);
+      createSessionMutation(
+        {
+          authCode: ''
+        },
+        setIsNewCookieSet
+      );
     }
   };
 
@@ -138,21 +141,19 @@ const Authenticate = () => {
           </Button>
         </Buttons>
         <Authentication>
-          {
-            isLoginActive ? (
-              <HelpText>
-                Use your
-                <b> Seller Central </b>
-                account to login
-              </HelpText>
-            ) : (
-              <HelpText>
-                Use your
-                <b> Seller Central </b>
-                account to signup
-              </HelpText>
-            )
-          }
+          {isLoginActive ? (
+            <HelpText>
+              Use your
+              <b> Seller Central </b>
+              account to login
+            </HelpText>
+          ) : (
+            <HelpText>
+              Use your
+              <b> Seller Central </b>
+              account to signup
+            </HelpText>
+          )}
           <AuthButton onClick={handleAuthenticationClick} />
         </Authentication>
       </ActionBar>
@@ -162,10 +163,6 @@ const Authenticate = () => {
 
 export default Authenticate;
 
-Authenticate.defaultProps = {
+Authenticate.defaultProps = {};
 
-};
-
-Authenticate.propTypes = {
-
-};
+Authenticate.propTypes = {};

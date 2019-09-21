@@ -1,193 +1,137 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import propTypes from 'prop-types';
-
-import Hint from 'components/Hint';
-import Chevron from 'components/Chevron';
+import sortDescChevronIconPath from 'assets/icons/sortDesc.svg';
+import sortAscChevronIconPath from 'assets/icons/sortAsc.svg';
+import unsortedChevronIconPath from 'assets/icons/unsorted.svg';
 import filterIconPath from 'assets/icons/filter.svg';
-import sortIconPath from 'assets/icons/sort.svg';
+//  We can reuse the table compoent, and just replace the row component for each table type
 
-
-const Container = styled.div`
-  background: #FFFFFF;
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 3px;
 `;
 
-const HeadingWrapper = styled.div`
+const Thead = styled.thead``;
+
+const HeadTr = styled.tr`
+  border-bottom: 1px solid black;
+  user-select: none;
+`;
+
+const Th = styled.th`
+  box-shadow: 0px 1px 0px 0px #bcccdc;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
+  cursor: pointer;
+`;
+
+const FilterIconTh = styled(Th)`
+  width: 60px;
+`;
+
+const HeadingContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: baseline;
-  padding: 24px;
-`;
-
-const HeadingHint = styled(Hint)`
-  padding-left: 5px;
+  padding: 20px 0 20px;
 `;
 
 const Heading = styled.div`
   font-weight: 500;
-  font-size: 26px;
-  line-height: 20px;
+  font-size: 17px;
+  line-height: 13px;
   letter-spacing: 0.025em;
   text-transform: uppercase;
-  color: #627D98;
+  color: #627d98;
 `;
 
-const ColumnsRow = styled.div`
-  padding-left: 24px;
-  display: flex;
-  flex-direction: row;
-  height: 45px;
-  align-items: center;
-  border-bottom: 1px solid #BCCCDC;
-  position: sticky;
-  top: 0;
-  background: #fff;
-  z-index: 1;
-`;
-
-const ColumnHeadings = styled.div`
-  margin-left: 24px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  flex-basis: 100%;
-  user-select: none;
-`;
-
-const ColumnHeading = styled.div`
-  text-transform: uppercase;
-  color: #829AB1;
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 12px;
-`;
-
-const FilterButton = styled.img`
-  width: 11px;
-  height: 8px;
-  cursor: pointer;
-`;
-
-const SortButton = styled.img`
+const SortChevron = styled.img`
   width: 8px;
   height: 10px;
   margin-left: 2px;
 `;
 
-const ColumnHeadingWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-basis: 20%;
-  cursor: pointer;
-  align-items: flex-end;
+const FilterIcon = styled.img`
+  transform: rotate(${props => (props.faceDown ? '0deg' : '180deg')});
 `;
 
-const NameHeadingWrapper = styled(ColumnHeadingWrapper)`
-  flex-basis: 35%;
-  padding-right: 40px;
-`;
-
-const Footer = styled.div`
-  height: 48px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-  border-top: 1px solid #BCCCDC;
-  user-select: none;
-`;
-
-const NextPageButton = styled.div`
-  font-size: 14px;
-  color: #186FAF;
-  cursor: pointer;
-  padding-right: 24px;
-  font-weight: 500;
-`;
-
-const NextPageChevron = styled(Chevron)`
-  transform: rotate(-90deg);
-  margin-left: 2px;
-`;
-
-const ViewColumnSpacing = styled(ColumnHeadingWrapper)`
-  flex-basis: 50px;
-  padding-right: 33px;
-`;
-
-const Table = ({
-  title,
-  columns,
-  handleSortChange,
-  // handleFilterChange,
-  handleNextPageClick,
-  children,
-  className,
-}) => (
-  <Container className={className}>
-    <HeadingWrapper>
-      <Heading>
-        {title}
-      </Heading>
-      <HeadingHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
-    </HeadingWrapper>
-    <ColumnsRow>
-      <FilterButton src={filterIconPath} />
-      <ColumnHeadings>
-
-        <NameHeadingWrapper onClick={() => handleSortChange('Name')}>
-          <ColumnHeading>
-            Name
-          </ColumnHeading>
-          <SortButton src={sortIconPath} />
-        </NameHeadingWrapper>
-
-        {
-          columns.map(column => (
-            <ColumnHeadingWrapper onClick={() => handleSortChange(column)}>
-              <ColumnHeading>
-                {column}
-              </ColumnHeading>
-              <SortButton src={sortIconPath} />
-            </ColumnHeadingWrapper>
-          ))
-        }
-        <ViewColumnSpacing />
-      </ColumnHeadings>
-    </ColumnsRow>
-    {children}
-    <Footer>
-      <NextPageButton onClick={handleNextPageClick}>
-        next
-        <NextPageChevron
-          color="#186FAF"
-          width={9}
-          height={9}
-        />
-      </NextPageButton>
-    </Footer>
-  </Container>
-);
-
-export default Table;
-
-Table.defaultProps = {
-  title: '',
-  columns: [''],
-  handleSortChange: () => {},
-  // handleFilterChange: () => {},
-  handleNextPageClick: () => { },
-  children: () => <span />,
+const Filter = ({ type, handleFilterSet }) => {
+  if (type === Number)
+    return (
+      <th>
+        is
+        <select>
+          <option value="=">=</option>
+          <option value="<">&gt;</option>
+          <option value=">">&lt;</option>
+        </select>
+        <input />
+      </th>
+    );
+  return <div />;
 };
 
-Table.propTypes = {
-  title: propTypes.string,
-  columns: propTypes.arrayOf(propTypes.string),
-  handleSortChange: propTypes.func,
-  // handleFilterChange: propTypes.func,
-  handleNextPageClick: propTypes.func,
-  children: propTypes.node,
+const SortButton = ({ active, showDesc }) => {
+  if (!active) return <SortChevron src={unsortedChevronIconPath} />;
+  if (showDesc) return <SortChevron src={sortDescChevronIconPath} />;
+  return <SortChevron src={sortAscChevronIconPath} />;
 };
+
+function TableComponent({ columns, handleSortQuery, children, ...props }) {
+  const [sortBy, setSortBy] = useState(null);
+  const [sortDesc, setSortDesc] = useState(true);
+  const [filterActive, setFilterActive] = useState(false);
+
+  const handleSort = colKey => {
+    if (sortBy === colKey && !sortDesc) {
+      setSortBy(null);
+      setSortDesc(true);
+    } else if (sortBy === colKey) setSortDesc(!sortDesc);
+    else {
+      setSortBy(colKey);
+      setSortDesc(true);
+    }
+    handleSortQuery({ sortBy, sortDesc });
+  };
+
+  return (
+    <Table {...props}>
+      <Thead>
+        <HeadTr>
+          <FilterIconTh>
+            <FilterIcon
+              src={filterIconPath}
+              faceDown={!filterActive}
+              onClick={() => setFilterActive(!filterActive)}
+            />
+          </FilterIconTh>
+          {columns.map(col => (
+            <Th onClick={() => handleSort(col.key)}>
+              <HeadingContainer>
+                <Heading>{col.head}</Heading>
+                {col.sortable && <SortButton active={col.key === sortBy} showDesc={sortDesc} />}
+              </HeadingContainer>
+            </Th>
+          ))}
+        </HeadTr>
+        {filterActive && (
+          <tr>
+            <th />
+            {columns.map(col => (
+              <Filter type={col.type} />
+            ))}
+          </tr>
+        )}
+      </Thead>
+      <tbody>{children}</tbody>
+    </Table>
+  );
+}
+
+export default TableComponent;

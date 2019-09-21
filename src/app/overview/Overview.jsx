@@ -11,7 +11,7 @@ import Page from 'components/page/Page';
 import PerformancePanel from 'components/performancePanel/PerformancePanel';
 import CampaignTable from './CampaignTable';
 
-const CampaignTableSpaced = styled(CampaignTable)`
+const CampaignTableStyled = styled(CampaignTable)`
   margin-top: 60px;
 `;
 
@@ -65,7 +65,7 @@ const OverviewComponent = ({ activeProfileId, setPageContext }) => {
           return (
             <React.Fragment>
               <PerformancePanel loading={loading} />
-              <CampaignTableSpaced loading={loading} />
+              {/* <CampaignTableSpaced loading={loading} /> */}
             </React.Fragment>
           );
         }
@@ -88,7 +88,7 @@ const OverviewComponent = ({ activeProfileId, setPageContext }) => {
               performance={ProfilePerformance}
               performanceReduced={ProfilePerformanceReduced}
             />
-            <CampaignTableSpaced loading={loading} campaigns={Campaigns} />
+            <CampaignTableStyled loading={loading} campaigns={Campaigns} />
           </React.Fragment>
         );
       }}

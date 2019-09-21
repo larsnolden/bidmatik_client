@@ -4,13 +4,11 @@ import styled from '@emotion/styled';
 import propTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-
 import Chevron from 'components/Chevron';
 import shortenString from 'helper/shortenString';
 
-
 const Container = styled.div`
-  background: ${props => props.darkBg ? '#F9FBFC' : '#FFF'};
+  background: ${props => (props.darkBg ? '#F2F7FA' : '#FFF')};
   display: flex;
   flex-direction: row;
   height: 48px;
@@ -48,7 +46,7 @@ const ViewColumn = styled(Column)`
 
 const Value = styled.div`
   font-size: 16px;
-  color: #627D98;
+  color: #627d98;
 `;
 
 const ValueSmall = styled(Value)`
@@ -56,8 +54,9 @@ const ValueSmall = styled(Value)`
 `;
 
 const Change = styled.div`
-  background: ${props => props.isPositive ? 'rgba(14, 124, 134, 0.15)' : 'rgba(214, 69, 69, 0.2)'};
-  color: ${props => props.isPositive ? '#2CB1BC' : '#E66A6A'};
+  background: ${props =>
+    props.isPositive ? 'rgba(14, 124, 134, 0.15)' : 'rgba(214, 69, 69, 0.2)'};
+  color: ${props => (props.isPositive ? '#2CB1BC' : '#E66A6A')};
   font-weight: 500;
   font-size: 13px;
   margin-left: 4px;
@@ -77,13 +76,13 @@ const ChangeSign = styled.div`
 
 const ViewButton = styled(Link)`
   font-size: 14px;
-  color: #186FAF;
+  color: #186faf;
   cursor: pointer;
   user-select: none;
 `;
 
 const ChevronRotateAble = styled(Chevron)`
-  transform: ${props => props.rotate ? 'rotate(180deg)' : 'rotate(0deg)'};
+  transform: ${props => (props.rotate ? 'rotate(180deg)' : 'rotate(0deg)')};
 `;
 
 const Row = ({
@@ -93,68 +92,47 @@ const Row = ({
   striped,
   onViewClickPath,
   isExpanded,
-  handleExpandClick,
+  handleExpandClick
   // childRows,
 }) => (
   //  first element is always the row items name
-  <Container
-    darkBg={striped}
-    onClick={handleExpandClick}
-  >
+  <Container darkBg={striped} onClick={handleExpandClick}>
     <ExpandButtonColumn>
       {handleExpandClick && (
-        <ChevronRotateAble
-          rotate={isExpanded}
-          color="#aaa"
-          width={12}
-          height={12}
-        />
+        <ChevronRotateAble rotate={isExpanded} color="#aaa" width={12} height={12} />
       )}
     </ExpandButtonColumn>
     <NameColumn>
-      <ValueSmall>
-        {type}
-      </ValueSmall>
-      <Value>
-        {shortenString(name, 24)}
-      </Value>
+      <ValueSmall>{type}</ValueSmall>
+      <Value>{shortenString(name, 24)}</Value>
     </NameColumn>
     {columns.map(column => (
       <Column>
-        <Value>
-          {column.value}
-        </Value>
+        <Value>{column.value}</Value>
         {column.change && (
           <Change isPositive={column.change >= 0}>
-            <ChangeSign>
-              {column.change >= 0 ? '+' : '-'}
-            </ChangeSign>
-            {String(column.change).replace('-', '')}
-            %
+            <ChangeSign>{column.change >= 0 ? '+' : '-'}</ChangeSign>
+            {String(column.change).replace('-', '')}%
           </Change>
         )}
       </Column>
     ))}
-    <ViewColumn>
-      {onViewClickPath && (
-        <ViewButton to={onViewClickPath}>
-          view
-        </ViewButton>
-      )}
-    </ViewColumn>
+    <ViewColumn>{onViewClickPath && <ViewButton to={onViewClickPath}>view</ViewButton>}</ViewColumn>
   </Container>
 );
 
 export default Row;
 
 Row.defaultProps = {
-  striped: false,
+  striped: false
 };
 
 Row.propTypes = {
-  columns: propTypes.arrayOf(propTypes.shape({
-    value: propTypes.string,
-    change: propTypes.string,
-  })).isRequired,
-  striped: propTypes.bool,
+  columns: propTypes.arrayOf(
+    propTypes.shape({
+      value: propTypes.string,
+      change: propTypes.string
+    })
+  ).isRequired,
+  striped: propTypes.bool
 };

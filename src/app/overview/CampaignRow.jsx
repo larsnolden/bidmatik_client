@@ -3,11 +3,8 @@ import graphql from 'babel-plugin-relay/macro';
 import styled from '@emotion/styled';
 import { createFragmentContainer } from 'react-relay';
 import { Link } from 'react-router-dom';
-import { formatPercentage,formatNumber} from 'helper/format';
 import Chevron from 'components/Chevron';
 import ChangePill from 'components/ChangePill';
-
-const Td = styled.td``;
 
 const CenterTd = styled.td`
   text-align: center;
@@ -15,9 +12,9 @@ const CenterTd = styled.td`
 
 const Tr = styled.tr`
   background: ${props =>
-    props.activeBg ? 'rgba(220, 238, 251, 1)' : props.darkBg ? '#F9FBFC' : '#FFF'};
+    props.activeBg ? 'rgba(220, 238, 251, 1)' : props.darkBg ? '#F2F7FA' : '#FFF'};
   height: 48px;
-  user-select: none; 
+  user-select: none;
 `;
 
 const ParentTr = styled(Tr)`
@@ -33,6 +30,7 @@ const CellContent = styled.div`
   display: flex;
   align-items: center;
   font-size: 18px;
+  color: #627d98;
 `;
 
 const deleteFloats = change => Number(change).toFixed(0);
@@ -43,19 +41,32 @@ const ChildRow = ({ columns, sample }) => (
       <Link to={`adGroup/${sample.id}`}> view</Link>
     </CenterTd>
     {columns.map(col => (
-      <Td>
+      <td>
         <CellContent>
           {col.format ? col.format(sample[col.key]) : sample[col.key]}
-          {sample.change && sample.change[col.key] && <ChangePill change={deleteFloats(sample.change[col.key])} />}
+          {sample.change && sample.change[col.key] && (
+            <ChangePill change={deleteFloats(sample.change[col.key])} />
+          )}
         </CellContent>
-      </Td>
+      </td>
     ))}
   </ChildTr>
 );
 
-const Row = ({ columns, sample, darkBg }) => {
+const CampaignRow = ({ campaign, columns, darkBg }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const toggleIsExpanded = () => setIsExpanded(!isExpanded);
+
+  const sample = {
+    ...campaign,
+    ...campaign.CampaignPerformanceReduced,
+    change: campaign.CampaignPerformanceDelta,
+    children: campaign.AdGroups.map(adGroup => ({
+      ...adGroup,
+      ...adGroup.AdGroupPerformanceReduced,
+      change: adGroup.AdGroupPerformanceDelta
+    }))
+  };
 
   const ParentRow = () => (
     <ParentTr darkBg={darkBg} activeBg={isExpanded} onClick={toggleIsExpanded}>
@@ -63,12 +74,14 @@ const Row = ({ columns, sample, darkBg }) => {
         <Chevron pointDown={!isExpanded} color="#aaa" width="15" height="15" />
       </CenterTd>
       {columns.map(col => (
-        <Td>
+        <td>
           <CellContent>
-          {col.format ? col.format(sample[col.key]) : sample[col.key]}
-          {sample.change && sample.change[col.key] && <ChangePill change={deleteFloats(sample.change[col.key])} />}
+            {col.format ? col.format(sample[col.key]) : sample[col.key]}
+            {sample.change && sample.change[col.key] && (
+              <ChangePill change={deleteFloats(sample.change[col.key])} />
+            )}
           </CellContent>
-        </Td>
+        </td>
       ))}
     </ParentTr>
   );
@@ -84,20 +97,7 @@ const Row = ({ columns, sample, darkBg }) => {
   );
 };
 
-const prepareRowData = (component) => (campaign) => {
-  const data = { 
-    change: campaign.CampaignPerformanceDelta,
-    children: campaign.AdGroups.map(adGroup => ({
-      ...adGroup,
-      ...adGroup.AdGroupPerformanceReduced,
-      change: adGroup.AdGroupPerformanceDelta,
-    }))
-  } 
-  return component(data);
-}
-
-
-export default createFragmentContainer(prepareRowData(Row), {
+export default createFragmentContainer(CampaignRow, {
   campaign: graphql`
     #<ComponentFileName>_<propName>
     fragment CampaignRow_campaign on Campaign {
