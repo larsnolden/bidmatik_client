@@ -1,5 +1,5 @@
 import React from 'react';
-import { createFragmentContainer } from 'react-relay';
+import { createRefetchContainer } from 'react-relay';
 import graphql from 'babel-plugin-relay/macro';
 
 import Table from 'components/Table/Table';
@@ -56,7 +56,7 @@ const CampaignTable = ({ campaigns, className, isLoading }) => {
   );
 };
 
-export default createFragmentContainer(CampaignTable, {
+export default createRefetchContainer(CampaignTable, {
   campaigns: graphql`
     #<ComponentFileName>_<propName>
     fragment CampaignTable_campaigns on Campaign @relay(plural: true) {
