@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import sortDescChevronIconPath from 'assets/icons/sortDesc.svg';
 import sortAscChevronIconPath from 'assets/icons/sortAsc.svg';
@@ -90,7 +90,7 @@ const SortButton = ({ active, showDesc }) => {
 };
 
 function TableComponent({ columns, handleSortQuery, children, isLoading, ...props }) {
-  const [sortBy, setSortBy] = useState(null);
+  const [sortBy, setSortBy] = useState('');
   const [sortDesc, setSortDesc] = useState(true);
   const [filterActive, setFilterActive] = useState(false);
 
@@ -98,13 +98,17 @@ function TableComponent({ columns, handleSortQuery, children, isLoading, ...prop
     if (sortBy === colKey && !sortDesc) {
       setSortBy(null);
       setSortDesc(true);
-    } else if (sortBy === colKey) setSortDesc(!sortDesc);
-    else {
+    } else if (sortBy === colKey) {
+      setSortDesc(false);
+    } else {
       setSortBy(colKey);
       setSortDesc(true);
     }
-    handleSortQuery({ sortBy, sortDesc });
   };
+
+  useEffect(() => {
+    handleSortQuery({ sortBy, sortDesc });
+  }, [sortBy, sortDesc, handleSortQuery]);
 
   return (
     <Table {...props}>
