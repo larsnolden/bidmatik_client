@@ -2,7 +2,6 @@ import React from 'react';
 import { action } from '@storybook/addon-actions';
 import Table from '../src/components/Table/Table';
 // import TableKeywords from '../src/components/Table/TableKeywords';
-import CampoaignsTable from '../src/components/Table/CampaignTable';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { keywords, campaigns } from './mockData/tableMock';
@@ -10,6 +9,7 @@ import { formatPercentage,formatNumber} from 'helper/format';
 import Chevron from 'components/Chevron';
 import styled from '@emotion/styled';
 import shortenString from 'helper/shortenString';
+import { KeywordRow } from '../src/app/adGroup/KeywordRow';
 
 // export const requirements = () => (
 //   <ul>
@@ -129,6 +129,72 @@ console.log(campaignsData)
 
 export const tableCampaign = () => (
   <Router>
-    <CampoaignsTable columns={campaignColumns} data={campaignsData} />
+    {/* <CampaignsTaCampaignsTable columns={campaignColumns} data={campaignsData} /> */}
   </Router>
 );
+
+// ######################## Keywords Table #################
+const keywordColumns = [
+  {
+    key: 'term',
+    head: 'Query',
+    sortable: true,
+    type: String,
+    format: x => shortenString(x, 25),
+  },
+  {
+    key: 'matchType',
+    head: 'Match Type',
+    sortable: true,
+    type: String,
+    format: x => x,
+  },
+  {
+    key: 'acos',
+    head: 'Acos',
+    sortable: true,
+    type: String,
+    format: formatPercentage,
+  },
+  {
+    key: 'revenue',
+    head: 'Revenue',
+    sortable: true,
+    format: formatNumber,
+  },
+  {
+    key: 'clicks',
+    head: 'Clicks',
+    sortable: true
+  },
+  {
+    key: 'impressions',
+    head: 'Impressions',
+    sortable: true
+  },
+  {
+    key: 'spend',
+    head: 'Spend',
+    sortable: true
+  },
+  {
+    key: 'bid',
+    head: 'Bid',
+    sortable: true,
+    format: formatNumber,
+  },
+];
+
+//  i am lifting the level of data
+//  the same i am doing on the backend
+//  this should be sufficient proof that this is the right way 
+
+const isLoading = false;
+
+export const tableKeyword = () => 
+  <Table columns={keywordColumns} handleSortQuery={() => null} className={'className'} isLoading={isLoading}>
+    {!isLoading &&
+      keywords.map((keyword, i) => 
+        <KeywordRow columns={keywordColumns} keyword={keyword} darkBg={i % 2 > 0} />
+      )}
+  </Table>
