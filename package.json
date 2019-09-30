@@ -51,7 +51,9 @@
     "eject": "react-scripts eject",
     "relay": "graphql get-schema && relay-compiler --src ./src --schema ./src/schema.graphql --extensions=js --extensions=jsx",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "deploy": "REACT_APP_STAGE=production react-scripts build && aws s3 sync build/ s3://app.bidmatik.com/",
+    "postdeploy": "aws cloudfront create-invalidation --distribution-id E2M9F2ORKKW97P --paths '/*'"
   },
   "resolutions": {
     "graphql/core-js": "2.6.9",

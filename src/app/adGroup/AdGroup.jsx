@@ -7,6 +7,7 @@ import environment from 'environment';
 import graphql from 'babel-plugin-relay/macro';
 import { setPageContext } from 'redux/pageActions';
 
+import Settings from './Settings';
 import KeywordTable from './KeywordTable';
 
 const adGroupQuery = graphql`
@@ -65,6 +66,8 @@ const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
           );
         }
 
+        console.log('props', props);
+
         const {
           AdGroup: { name, AdGroupPerformance, AdGroupPerformanceReduced, Keywords },
           UserFilterDates
@@ -84,6 +87,7 @@ const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
               performance={AdGroupPerformance}
               performanceReduced={AdGroupPerformanceReduced}
             />
+            <Settings />
             <KeywordTable keywords={Keywords} />
           </React.Fragment>
         );
