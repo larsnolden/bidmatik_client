@@ -4,25 +4,73 @@ import graphql from 'babel-plugin-relay/macro';
 
 import Table from 'components/Table/Table';
 import KeywordRow from './KeywordRow';
-import { QUERY, ACOS, IMPRESSIONS, CLICKS, CTR, SPEND, REVENUE } from 'metricConstants';
+import shortenString from 'helper/shortenString';
+import { formatPercentage, formatNumber } from 'helper/format';
 
-const keywordsTableColumns = [QUERY, ACOS, IMPRESSIONS, CLICKS, CTR, SPEND, REVENUE];
-const keywordTableColumnNames = keywordsTableColumns.map(column => column.displayName);
+const keywordColumns = [
+  {
+    key: 'term',
+    head: 'Query',
+    sortable: true,
+    type: String,
+    format: x => shortenString(x, 25)
+  },
+  {
+    key: 'matchType',
+    head: 'Match Type',
+    sortable: true,
+    type: String,
+    format: x => x
+  },
+  {
+    key: 'acos',
+    head: 'Acos',
+    sortable: true,
+    type: String,
+    format: formatPercentage
+  },
+  {
+    key: 'revenue',
+    head: 'Revenue',
+    sortable: true,
+    format: formatNumber
+  },
+  {
+    key: 'clicks',
+    head: 'Clicks',
+    sortable: true
+  },
+  {
+    key: 'impressions',
+    head: 'Impressions',
+    sortable: true
+  },
+  {
+    key: 'spend',
+    head: 'Spend',
+    sortable: true
+  },
+  {
+    key: 'bid',
+    head: 'Bid',
+    sortable: true,
+    format: formatNumber
+  }
+];
 
-const KeywordRows = keywords =>
-  keywords.map((keyword, index) => {
-    const isStriped = index % 2 > 0;
-    return <KeywordRow keyword={keyword} striped={isStriped} />;
-  });
-
-const KeywordTable = ({ keywords, loading, className }) => {
-  console.log('keywords', keywords);
-  return (
-    <Table className={className} title="Keywords" columns={keywordTableColumnNames}>
-      {!loading && KeywordRows(keywords)}
-    </Table>
-  );
-};
+const KeywordTable = ({ keywords, isLoading, className }) => (
+  <Table
+    columns={keywordColumns}
+    handleSortQuery={() => null}
+    className={className}
+    isLoading={isLoading}
+  >
+    {!isLoading &&
+      keywords.map((keyword, i) => (
+        <KeywordRow columns={keywordColumns} keyword={keyword} darkBg={i % 2 > 0} />
+      ))}
+  </Table>
+);
 
 export default createFragmentContainer(KeywordTable, {
   keywords: graphql`

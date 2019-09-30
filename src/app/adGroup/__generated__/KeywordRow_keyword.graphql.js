@@ -8,6 +8,7 @@
 
 /*::
 import type { ReaderFragment } from 'relay-runtime';
+export type KeywordState = "archived" | "enabled" | "paused" | "%future added value";
 export type MatchType = "broad" | "exact" | "phrase" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type KeywordRow_keyword$ref: FragmentReference;
@@ -17,6 +18,7 @@ export type KeywordRow_keyword = {|
   +term: string,
   +bid: number,
   +matchType: MatchType,
+  +state: KeywordState,
   +KeywordPerformanceDelta: ?{|
     +acos: ?number,
     +impressions: ?number,
@@ -147,6 +149,13 @@ return {
       "storageKey": null
     },
     {
+      "kind": "ScalarField",
+      "alias": null,
+      "name": "state",
+      "args": null,
+      "storageKey": null
+    },
+    {
       "kind": "LinkedField",
       "alias": null,
       "name": "KeywordPerformanceDelta",
@@ -170,5 +179,5 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '9ed83a14d34186ba8e47847bf02c509f';
+(node/*: any*/).hash = 'f404860fce9fb2d92e4d02f8f0cffaad';
 module.exports = node;

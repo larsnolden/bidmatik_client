@@ -6,9 +6,14 @@ import { QueryRenderer } from 'react-relay';
 import environment from 'environment';
 import graphql from 'babel-plugin-relay/macro';
 import { setPageContext } from 'redux/pageActions';
+import styled from '@emotion/styled';
 
 import Settings from './Settings';
 import KeywordTable from './KeywordTable';
+
+const KeywordTableStyled = styled(KeywordTable)`
+  margin-top: 60px;
+`;
 
 const adGroupQuery = graphql`
   query AdGroupQuery($from: Date, $to: Date, $id: ID!) {
@@ -60,8 +65,9 @@ const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
         const loading = !props;
         if (loading) {
           return (
-            <React.Fragment heading="Overview">
+            <React.Fragment>
               <PerformancePanel loading={loading} />
+              <KeywordTableStyled keyword={null} isLoading={loading} />
             </React.Fragment>
           );
         }
@@ -88,7 +94,7 @@ const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
               performanceReduced={AdGroupPerformanceReduced}
             />
             <Settings />
-            <KeywordTable keywords={Keywords} />
+            <KeywordTableStyled keywords={Keywords} isLoading={loading} />
           </React.Fragment>
         );
       }}
