@@ -8,14 +8,18 @@ import Toggle from 'components/Toggle';
 import Button from 'components/Button';
 
 const SettingsButton = styled.div`
-  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  font-size: 16px;
   line-height: 20px;
   letter-spacing: 0.025em;
   text-transform: capitalize;
   color: #186faf;
   cursor: pointer;
 `;
-const GearIcon = styled.img``;
+const GearIcon = styled.img`
+  margin-left: 4px;
+`;
 
 const Modal = styled.div`
   background: #ffffff;
@@ -24,10 +28,11 @@ const Modal = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -%50%);
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   padding: 15px 30px 15px 30px;
+  z-index: 5;
 `;
 
 const Close = styled.div`
@@ -83,6 +88,16 @@ const SaveButton = styled(Button)`
   margin-top: 15px;
 `;
 
+const Background = styled.div`
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 4;
+  left: 0;
+  top: 0;
+`;
+
 const AttributeHint = styled(Hint)``;
 
 const initialState = { count: 0 };
@@ -104,81 +119,86 @@ function reducer(state, action) {
   }
 }
 
-const Settings = ({ handleSave }) => {
+const Settings = ({ handleSave, className }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <React.Fragment>
-      <SettingsButton onClick={() => setIsModalOpen(true)}>
+      <SettingsButton className={className} onClick={() => setIsModalOpen(true)}>
         Settings
         <GearIcon src={GearIconPath} />
       </SettingsButton>
       {isModalOpen && (
-        <Modal>
-          <Close onClick={() => setIsModalOpen(false)}>close</Close>
-          <SettingsContainer>
-            <Attributes>
-              <Attribute>
-                Daily Budget
-                <AttributeHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
-              </Attribute>
-              <Attribute>
-                Optimise Bids
-                <AttributeHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
-              </Attribute>
-              <Attribute>
-                Target ACOS
-                <AttributeHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
-              </Attribute>
-              <Attribute>
-                Add keywords
-                <AttributeHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
-              </Attribute>
-              <Attribute>
-                Remove keywords
-                <AttributeHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
-              </Attribute>
-            </Attributes>
-            <Setters>
-              <Setter>
-                <Input
-                  sign="$"
-                  value={state.dailyBudget}
-                  onChange={dailyBudget =>
-                    dispatch({ type: 'setDailyBudget', payload: dailyBudget })
-                  }
-                />
-              </Setter>
-              <Setter>
-                <Toggle
-                  on={state.optimiseBids}
-                  onClick={() => dispatch({ type: 'toggleOptimiseBids' })}
-                />
-              </Setter>
-              <Setter>
-                <Input
-                  sign="%"
-                  value={state.targetAcos}
-                  onChange={targetAcos => dispatch({ type: 'setTargetAcos', payload: targetAcos })}
-                />
-              </Setter>
-              <Setter>
-                <Toggle
-                  on={state.addKeywords}
-                  onClick={() => dispatch({ type: 'toggleAddKeywords' })}
-                />
-              </Setter>
-              <Setter>
-                <Toggle
-                  on={state.removeKeywords}
-                  onClick={() => dispatch({ type: 'toggleRemoveKeywords' })}
-                />
-              </Setter>
-            </Setters>
-          </SettingsContainer>
-          <SaveButton onClick={handleSave}>Save</SaveButton>
-        </Modal>
+        <React.Fragment>
+          <Background />
+          <Modal>
+            <Close onClick={() => setIsModalOpen(false)}>close</Close>
+            <SettingsContainer>
+              <Attributes>
+                <Attribute>
+                  Daily Budget
+                  <AttributeHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
+                </Attribute>
+                <Attribute>
+                  Optimise Bids
+                  <AttributeHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
+                </Attribute>
+                <Attribute>
+                  Target ACOS
+                  <AttributeHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
+                </Attribute>
+                <Attribute>
+                  Add keywords
+                  <AttributeHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
+                </Attribute>
+                <Attribute>
+                  Remove keywords
+                  <AttributeHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
+                </Attribute>
+              </Attributes>
+              <Setters>
+                <Setter>
+                  <Input
+                    sign="$"
+                    value={state.dailyBudget}
+                    onChange={dailyBudget =>
+                      dispatch({ type: 'setDailyBudget', payload: dailyBudget })
+                    }
+                  />
+                </Setter>
+                <Setter>
+                  <Toggle
+                    on={state.optimiseBids}
+                    onClick={() => dispatch({ type: 'toggleOptimiseBids' })}
+                  />
+                </Setter>
+                <Setter>
+                  <Input
+                    sign="%"
+                    value={state.targetAcos}
+                    onChange={targetAcos =>
+                      dispatch({ type: 'setTargetAcos', payload: targetAcos })
+                    }
+                  />
+                </Setter>
+                <Setter>
+                  <Toggle
+                    on={state.addKeywords}
+                    onClick={() => dispatch({ type: 'toggleAddKeywords' })}
+                  />
+                </Setter>
+                <Setter>
+                  <Toggle
+                    on={state.removeKeywords}
+                    onClick={() => dispatch({ type: 'toggleRemoveKeywords' })}
+                  />
+                </Setter>
+              </Setters>
+            </SettingsContainer>
+            <SaveButton onClick={handleSave}>Save</SaveButton>
+          </Modal>
+        </React.Fragment>
       )}
     </React.Fragment>
   );

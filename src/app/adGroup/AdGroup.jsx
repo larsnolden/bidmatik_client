@@ -8,11 +8,16 @@ import graphql from 'babel-plugin-relay/macro';
 import { setPageContext } from 'redux/pageActions';
 import styled from '@emotion/styled';
 
-import Settings from './Settings';
-import KeywordTable from './KeywordTable';
+import SettingsComponent from './settings/AdGroupSettings';
+import KeywordTableComponent from './KeywordTable';
 
-const KeywordTableStyled = styled(KeywordTable)`
+const KeywordTable = styled(KeywordTableComponent)`
+  margin-top: 10px;
+`;
+
+const Settings = styled(SettingsComponent)`
   margin-top: 60px;
+  align-self: flex-end;
 `;
 
 const adGroupQuery = graphql`
@@ -67,12 +72,11 @@ const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
           return (
             <React.Fragment>
               <PerformancePanel loading={loading} />
-              <KeywordTableStyled keyword={null} isLoading={loading} />
+              <Settings />
+              <KeywordTable keyword={null} isLoading={loading} />
             </React.Fragment>
           );
         }
-
-        console.log('props', props);
 
         const {
           AdGroup: { name, AdGroupPerformance, AdGroupPerformanceReduced, Keywords },
@@ -94,7 +98,7 @@ const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
               performanceReduced={AdGroupPerformanceReduced}
             />
             <Settings />
-            <KeywordTableStyled keywords={Keywords} isLoading={loading} />
+            <KeywordTable keywords={Keywords} isLoading={loading} />
           </React.Fragment>
         );
       }}
