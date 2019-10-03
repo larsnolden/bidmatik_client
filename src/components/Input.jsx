@@ -23,14 +23,6 @@ const numericOnly = input =>
     .filter(char => !Number.isNaN(Number(char)) || char === '.')
     .join('');
 
-const percentOnly = numeric => {
-  // if (Number(numeric) > 100) return 100;
-  //contains no dot ? append .0
-  // contains two dots? remove last dot?
-  // has more than 2 floats ? remove others
-  return numeric;
-};
-
 export default ({ sign, value = '', onChange, ...props }) => {
   const [displayedValue, setDisplayedValue] = useState('');
 
@@ -41,18 +33,14 @@ export default ({ sign, value = '', onChange, ...props }) => {
       setDisplayedValue(`$ ${numericValue}`);
     }
     if (sign === '%') {
-      const percentValue = R.pipe(
-        numericOnly,
-        percentOnly
-      )(value);
-      console.log(value, percentValue, numericOnly(value), percentOnly(numericOnly(value)));
-      setDisplayedValue(`% ${percentValue}`);
+      const numericValue = numericOnly(value);
+      setDisplayedValue(`% ${numericValue}`);
     }
   };
 
   useEffect(() => {
     setSign();
-  }, [value, sign]);
+  });
 
   const handleChange = (event, sign) => {
     const rawValue = event.target.value;

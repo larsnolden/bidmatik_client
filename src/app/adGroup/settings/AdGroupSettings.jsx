@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import styled from '@emotion/styled';
-import GearIconPath from '../../assets/icons/gear.svg';
+
+import GearIconPath from '../../../assets/icons/gear.svg';
 import Hint from 'components/Hint';
 import Input from 'components/Input';
 import Toggle from 'components/Toggle';
+import Button from 'components/Button';
 
 const SettingsButton = styled.div`
   font-size: 14px;
@@ -25,20 +27,22 @@ const Modal = styled.div`
   transform: translate(-50%, -%50%);
   display: flex;
   flex-direction: column;
+  padding: 15px 30px 15px 30px;
 `;
 
 const Close = styled.div`
   font-size: 14px;
   line-height: 20px;
   color: #186faf;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-bottom: 15px;
 `;
 
 const SettingsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 3px;
-  border: 1px solid rgba(188, 204, 220, 0.5);
 `;
 
 const Attributes = styled.div`
@@ -55,26 +59,54 @@ const Attribute = styled.div`
   font-size: 14px;
   line-height: 20px;
   color: #486581;
-  margin: 13px 0 13px 0;
-  width: 100%;
   justify-content: space-between;
+  height: 20px;
+  margin: 13px 0 13px 0;
 `;
 
 const Setters = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100px;
   padding-left: 20px;
-  // border: 1px solid rgba(188, 204, 220, 0.5);
+  border: 1px solid rgba(188, 204, 220, 0.5);
 `;
 
 const Setter = styled.div`
-  padding: 9px 0 9px 0;
+  height: 20px;
+  margin: 13px 0 13px 0;
   max-width: 90px;
+`;
+
+const SaveButton = styled(Button)`
+  align-self: flex-start;
+  margin-top: 15px;
 `;
 
 const AttributeHint = styled(Hint)``;
 
-const Settings = () => {
+const initialState = { count: 0 };
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'setDailyBudget':
+      return { ...state, dailyBudget: action.payload };
+    case 'toggleOptimiseBids':
+      return { ...state, optimiseBids: !state.optimiseBids };
+    case 'setTargetAcos':
+      return { ...state, targetAcos: action.payload };
+    case 'toggleAddKeywords':
+      return { ...state, addKeywords: !state.addKeywords };
+    case 'toggleRemoveKeywords':
+      return { ...state, removeKeywords: !state.removeKeywords };
+    default:
+      throw new Error();
+  }
+}
+
+const Settings = ({ handleSave }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <React.Fragment>
@@ -84,7 +116,7 @@ const Settings = () => {
       </SettingsButton>
       {isModalOpen && (
         <Modal>
-          <Close>close</Close>
+          <Close onClick={() => setIsModalOpen(false)}>close</Close>
           <SettingsContainer>
             <Attributes>
               <Attribute>
@@ -110,22 +142,42 @@ const Settings = () => {
             </Attributes>
             <Setters>
               <Setter>
-                <Input sign="$" />
+                <Input
+                  sign="$"
+                  value={state.dailyBudget}
+                  onChange={dailyBudget =>
+                    dispatch({ type: 'setDailyBudget', payload: dailyBudget })
+                  }
+                />
               </Setter>
               <Setter>
-                <Toggle />
+                <Toggle
+                  on={state.optimiseBids}
+                  onClick={() => dispatch({ type: 'toggleOptimiseBids' })}
+                />
               </Setter>
               <Setter>
-                <Input sign="%" />
+                <Input
+                  sign="%"
+                  value={state.targetAcos}
+                  onChange={targetAcos => dispatch({ type: 'setTargetAcos', payload: targetAcos })}
+                />
               </Setter>
               <Setter>
-                <Toggle />
+                <Toggle
+                  on={state.addKeywords}
+                  onClick={() => dispatch({ type: 'toggleAddKeywords' })}
+                />
               </Setter>
               <Setter>
-                <Toggle />
+                <Toggle
+                  on={state.removeKeywords}
+                  onClick={() => dispatch({ type: 'toggleRemoveKeywords' })}
+                />
               </Setter>
             </Setters>
           </SettingsContainer>
+          <SaveButton onClick={handleSave}>Save</SaveButton>
         </Modal>
       )}
     </React.Fragment>

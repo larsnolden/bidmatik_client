@@ -3,11 +3,11 @@ import styled from '@emotion/styled';
 
 const Container = styled.div`
   width: 45px;
-  height: 20px;
+  height: 22px;
   border-radius: 20px;
   background: ${props => (props.on ? '#186FAF' : '#829AB1')};
   align-items: center;
-  padding: 0 4px 0 4px;
+  padding: 0 5px 0 5px;
   justify-content: space-between;
   box-sizing: border-box;
   cursor: pointer;
