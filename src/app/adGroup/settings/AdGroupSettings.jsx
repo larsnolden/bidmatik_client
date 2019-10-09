@@ -1,6 +1,9 @@
 import React, { useState, useReducer } from 'react';
 import styled from '@emotion/styled';
+import graphql from 'babel-plugin-relay/macro';
+import { createFragmentContainer } from 'react-relay';
 
+import setAdGroupSettings from './setAdGroupSettings';
 import GearIconPath from '../../../assets/icons/gear.svg';
 import Hint from 'components/Hint';
 import Input from 'components/Input';
@@ -107,21 +110,29 @@ function reducer(state, action) {
     case 'setDailyBudget':
       return { ...state, dailyBudget: action.payload };
     case 'toggleOptimiseBids':
-      return { ...state, optimiseBids: !state.optimiseBids };
+      return { ...state, updateBids: !state.updateBids };
     case 'setTargetAcos':
       return { ...state, targetAcos: action.payload };
     case 'toggleAddKeywords':
       return { ...state, addKeywords: !state.addKeywords };
-    case 'toggleRemoveKeywords':
-      return { ...state, removeKeywords: !state.removeKeywords };
+    case 'toggleAddNegativeKeywords':
+      return { ...state, addNegativeKeywords: !state.addNegativeKeywords };
     default:
       throw new Error();
   }
 }
 
-const Settings = ({ handleSave, className }) => {
+const SettingsComponent = ({ adGroupSettings: initialSettings, className, adGroupId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [state, dispatch] = useReducer(reducer, initialState);
+  console.log('initialSettings', initialSettings);
+  //  hydration fails
+  const [state, dispatch] = useReducer(reducer, initialSettings);
+
+  const handleSave = () =>
+    setAdGroupSettings({
+      adGroupId,
+      ...state
+    });
 
   return (
     <React.Fragment>
@@ -153,7 +164,7 @@ const Settings = ({ handleSave, className }) => {
                   <AttributeHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
                 </Attribute>
                 <Attribute>
-                  Remove keywords
+                  Add negative keywords
                   <AttributeHint message="This HTML file is a template.If you open it directly in the browser, you will see an empty page.You can add webfonts, meta tags, or analytics to this file.The build step will place the bundled scripts into the <body> tag.To begin the development, run `npm start` or `yarn start`.To create a production bundle, use `npm run build` or `yarn build`." />
                 </Attribute>
               </Attributes>
@@ -169,7 +180,7 @@ const Settings = ({ handleSave, className }) => {
                 </Setter>
                 <Setter>
                   <Toggle
-                    on={state.optimiseBids}
+                    on={state.updateBids}
                     onClick={() => dispatch({ type: 'toggleOptimiseBids' })}
                   />
                 </Setter>
@@ -190,8 +201,8 @@ const Settings = ({ handleSave, className }) => {
                 </Setter>
                 <Setter>
                   <Toggle
-                    on={state.removeKeywords}
-                    onClick={() => dispatch({ type: 'toggleRemoveKeywords' })}
+                    on={state.addNegativeKeywords}
+                    onClick={() => dispatch({ type: 'toggleAddNegativeKeywords' })}
                   />
                 </Setter>
               </Setters>
@@ -204,4 +215,15 @@ const Settings = ({ handleSave, className }) => {
   );
 };
 
-export default Settings;
+export default createFragmentContainer(SettingsComponent, {
+  adGroupSettings: graphql`
+    #<ComponentFileName>_<propName>
+    fragment AdGroupSettings_adGroupSettings on adGroupSettings {
+      dailyBudget
+      updateBids
+      targetAcos
+      addKeywords
+      addNegativeKeywords
+    }
+  `
+});

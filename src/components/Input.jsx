@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import * as R from 'ramda';
 
 const Input = styled.input`
   background: #fff;

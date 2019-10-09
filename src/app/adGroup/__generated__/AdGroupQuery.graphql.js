@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 9fb2cd657214a6a297ed00d7579eed9f
+ * @relayHash 5c1a166bc305072cb812d38fd55f2695
  */
 
 /* eslint-disable */
@@ -9,6 +9,7 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
+type AdGroupSettings_adGroupSettings$ref = any;
 type DateSelection_userFilterDates$ref = any;
 type KeywordTable_keywords$ref = any;
 type MetricSelector_performanceReduced$ref = any;
@@ -23,7 +24,11 @@ export type AdGroupQueryResponse = {|
     +$fragmentRefs: DateSelection_userFilterDates$ref
   |},
   +AdGroup: ?{|
+    +id: string,
     +name: string,
+    +adGroupSettings: {|
+      +$fragmentRefs: AdGroupSettings_adGroupSettings$ref
+    |},
     +AdGroupPerformanceReduced: ?{|
       +$fragmentRefs: MetricSelector_performanceReduced$ref
     |},
@@ -53,7 +58,11 @@ query AdGroupQuery(
     id
   }
   AdGroup(id: $id) {
+    id
     name
+    adGroupSettings {
+      ...AdGroupSettings_adGroupSettings
+    }
     AdGroupPerformanceReduced(from: $from, to: $to) {
       ...MetricSelector_performanceReduced
     }
@@ -64,7 +73,6 @@ query AdGroupQuery(
       ...KeywordTable_keywords
       id
     }
-    id
   }
 }
 
@@ -72,6 +80,14 @@ fragment DateSelection_userFilterDates on UserFilterDates {
   id
   from
   to
+}
+
+fragment AdGroupSettings_adGroupSettings on adGroupSettings {
+  dailyBudget
+  updateBids
+  targetAcos
+  addKeywords
+  addNegativeKeywords
 }
 
 fragment MetricSelector_performanceReduced on Performance {
@@ -150,11 +166,18 @@ v1 = [
 v2 = {
   "kind": "ScalarField",
   "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+},
+v3 = {
+  "kind": "ScalarField",
+  "alias": null,
   "name": "name",
   "args": null,
   "storageKey": null
 },
-v3 = [
+v4 = [
   {
     "kind": "Variable",
     "name": "from",
@@ -166,13 +189,6 @@ v3 = [
     "variableName": "to"
   }
 ],
-v4 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "id",
-  "args": null,
-  "storageKey": null
-},
 v5 = {
   "kind": "ScalarField",
   "alias": null,
@@ -271,12 +287,29 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
+          {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "adGroupSettings",
+            "storageKey": null,
+            "args": null,
+            "concreteType": "adGroupSettings",
+            "plural": false,
+            "selections": [
+              {
+                "kind": "FragmentSpread",
+                "name": "AdGroupSettings_adGroupSettings",
+                "args": null
+              }
+            ]
+          },
           {
             "kind": "LinkedField",
             "alias": null,
             "name": "AdGroupPerformanceReduced",
             "storageKey": null,
-            "args": (v3/*: any*/),
+            "args": (v4/*: any*/),
             "concreteType": "Performance",
             "plural": false,
             "selections": [
@@ -292,7 +325,7 @@ return {
             "alias": null,
             "name": "AdGroupPerformance",
             "storageKey": null,
-            "args": (v3/*: any*/),
+            "args": (v4/*: any*/),
             "concreteType": "Performance",
             "plural": true,
             "selections": [
@@ -308,7 +341,7 @@ return {
             "alias": null,
             "name": "Keywords",
             "storageKey": null,
-            "args": (v3/*: any*/),
+            "args": (v4/*: any*/),
             "concreteType": "Keyword",
             "plural": true,
             "selections": [
@@ -337,7 +370,7 @@ return {
         "concreteType": "UserFilterDates",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v2/*: any*/),
           {
             "kind": "ScalarField",
             "alias": null,
@@ -364,12 +397,59 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
+          {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "adGroupSettings",
+            "storageKey": null,
+            "args": null,
+            "concreteType": "adGroupSettings",
+            "plural": false,
+            "selections": [
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "dailyBudget",
+                "args": null,
+                "storageKey": null
+              },
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "updateBids",
+                "args": null,
+                "storageKey": null
+              },
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "targetAcos",
+                "args": null,
+                "storageKey": null
+              },
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "addKeywords",
+                "args": null,
+                "storageKey": null
+              },
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "addNegativeKeywords",
+                "args": null,
+                "storageKey": null
+              }
+            ]
+          },
           {
             "kind": "LinkedField",
             "alias": null,
             "name": "AdGroupPerformanceReduced",
             "storageKey": null,
-            "args": (v3/*: any*/),
+            "args": (v4/*: any*/),
             "concreteType": "Performance",
             "plural": false,
             "selections": [
@@ -387,7 +467,7 @@ return {
             "alias": null,
             "name": "AdGroupPerformance",
             "storageKey": null,
-            "args": (v3/*: any*/),
+            "args": (v4/*: any*/),
             "concreteType": "Performance",
             "plural": true,
             "selections": [
@@ -412,11 +492,11 @@ return {
             "alias": null,
             "name": "Keywords",
             "storageKey": null,
-            "args": (v3/*: any*/),
+            "args": (v4/*: any*/),
             "concreteType": "Keyword",
             "plural": true,
             "selections": [
-              (v4/*: any*/),
+              (v2/*: any*/),
               {
                 "kind": "ScalarField",
                 "alias": null,
@@ -443,7 +523,7 @@ return {
                 "alias": null,
                 "name": "KeywordPerformanceDelta",
                 "storageKey": null,
-                "args": (v3/*: any*/),
+                "args": (v4/*: any*/),
                 "concreteType": "PerformancePercent",
                 "plural": false,
                 "selections": (v12/*: any*/)
@@ -453,14 +533,13 @@ return {
                 "alias": null,
                 "name": "KeywordPerformanceReduced",
                 "storageKey": null,
-                "args": (v3/*: any*/),
+                "args": (v4/*: any*/),
                 "concreteType": "Performance",
                 "plural": false,
                 "selections": (v12/*: any*/)
               }
             ]
-          },
-          (v4/*: any*/)
+          }
         ]
       }
     ]
@@ -469,11 +548,11 @@ return {
     "operationKind": "query",
     "name": "AdGroupQuery",
     "id": null,
-    "text": "query AdGroupQuery(\n  $from: Date\n  $to: Date\n  $id: ID!\n) {\n  UserFilterDates {\n    ...DateSelection_userFilterDates\n    id\n  }\n  AdGroup(id: $id) {\n    name\n    AdGroupPerformanceReduced(from: $from, to: $to) {\n      ...MetricSelector_performanceReduced\n    }\n    AdGroupPerformance(from: $from, to: $to) {\n      ...PerformancePanel_performance\n    }\n    Keywords(from: $from, to: $to) {\n      ...KeywordTable_keywords\n      id\n    }\n    id\n  }\n}\n\nfragment DateSelection_userFilterDates on UserFilterDates {\n  id\n  from\n  to\n}\n\nfragment MetricSelector_performanceReduced on Performance {\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment PerformancePanel_performance on Performance {\n  date\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment KeywordTable_keywords on Keyword {\n  id\n  term\n  bid\n  matchType\n  KeywordPerformanceDelta(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n  KeywordPerformanceReduced(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n}\n",
+    "text": "query AdGroupQuery(\n  $from: Date\n  $to: Date\n  $id: ID!\n) {\n  UserFilterDates {\n    ...DateSelection_userFilterDates\n    id\n  }\n  AdGroup(id: $id) {\n    id\n    name\n    adGroupSettings {\n      ...AdGroupSettings_adGroupSettings\n    }\n    AdGroupPerformanceReduced(from: $from, to: $to) {\n      ...MetricSelector_performanceReduced\n    }\n    AdGroupPerformance(from: $from, to: $to) {\n      ...PerformancePanel_performance\n    }\n    Keywords(from: $from, to: $to) {\n      ...KeywordTable_keywords\n      id\n    }\n  }\n}\n\nfragment DateSelection_userFilterDates on UserFilterDates {\n  id\n  from\n  to\n}\n\nfragment AdGroupSettings_adGroupSettings on adGroupSettings {\n  dailyBudget\n  updateBids\n  targetAcos\n  addKeywords\n  addNegativeKeywords\n}\n\nfragment MetricSelector_performanceReduced on Performance {\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment PerformancePanel_performance on Performance {\n  date\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment KeywordTable_keywords on Keyword {\n  id\n  term\n  bid\n  matchType\n  KeywordPerformanceDelta(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n  KeywordPerformanceReduced(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n}\n",
     "metadata": {}
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '7f4a0bdea146f7a1ddb636ddb892d207';
+(node/*: any*/).hash = '9116b211c7cbd4a68ab107f4f91b83c7';
 module.exports = node;

@@ -26,7 +26,11 @@ const adGroupQuery = graphql`
       ...DateSelection_userFilterDates
     }
     AdGroup(id: $id) {
+      id
       name
+      adGroupSettings {
+        ...AdGroupSettings_adGroupSettings
+      }
       AdGroupPerformanceReduced(from: $from, to: $to) {
         ...MetricSelector_performanceReduced
       }
@@ -72,16 +76,31 @@ const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
           return (
             <React.Fragment>
               <PerformancePanel loading={loading} />
-              <Settings />
+              <Settings loading={loading} />
               <KeywordTable keyword={null} isLoading={loading} />
             </React.Fragment>
           );
         }
 
         const {
-          AdGroup: { name, AdGroupPerformance, AdGroupPerformanceReduced, Keywords },
+          AdGroup: {
+            id,
+            name,
+            adGroupSettings,
+            AdGroupPerformance,
+            AdGroupPerformanceReduced,
+            Keywords
+          },
           UserFilterDates
         } = props;
+
+        // const adGroupSettings = {
+        //   dailyBudget,
+        //   updateBids,
+        //   targetAcos,
+        //   addKeywords,
+        //   addNegativeKeywords
+        // };
 
         setPageContext({
           pageName: name,
@@ -97,7 +116,7 @@ const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
               performance={AdGroupPerformance}
               performanceReduced={AdGroupPerformanceReduced}
             />
-            <Settings />
+            <Settings adGroupSettings={adGroupSettings} />
             <KeywordTable keywords={Keywords} isLoading={loading} />
           </React.Fragment>
         );
