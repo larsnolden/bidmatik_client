@@ -103,8 +103,6 @@ const Background = styled.div`
 
 const AttributeHint = styled(Hint)``;
 
-const initialState = { count: 0 };
-
 function reducer(state, action) {
   switch (action.type) {
     case 'setDailyBudget':
@@ -124,15 +122,16 @@ function reducer(state, action) {
 
 const SettingsComponent = ({ adGroupSettings: initialSettings, className, adGroupId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log('initialSettings', initialSettings);
   //  hydration fails
   const [state, dispatch] = useReducer(reducer, initialSettings);
-
-  const handleSave = () =>
+  const handleSave = () => {
     setAdGroupSettings({
       adGroupId,
       ...state
     });
+    //  TODO: add snack bar notification
+    setIsModalOpen(false);
+  };
 
   return (
     <React.Fragment>

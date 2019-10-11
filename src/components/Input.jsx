@@ -16,12 +16,12 @@ const Input = styled.input`
   max-width: 100%;
 `;
 
-const numericOnly = input =>
-  input
+const numericOnly = input => {
+  return String(input)
     .split('')
     .filter(char => !Number.isNaN(Number(char)) || char === '.')
     .join('');
-
+};
 export default ({ sign, value = '', onChange, ...props }) => {
   const [displayedValue, setDisplayedValue] = useState('');
 

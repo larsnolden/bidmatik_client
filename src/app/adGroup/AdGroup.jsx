@@ -76,7 +76,6 @@ const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
           return (
             <React.Fragment>
               <PerformancePanel loading={loading} />
-              <Settings loading={loading} />
               <KeywordTable keyword={null} isLoading={loading} />
             </React.Fragment>
           );
@@ -94,14 +93,6 @@ const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
           UserFilterDates
         } = props;
 
-        // const adGroupSettings = {
-        //   dailyBudget,
-        //   updateBids,
-        //   targetAcos,
-        //   addKeywords,
-        //   addNegativeKeywords
-        // };
-
         setPageContext({
           pageName: name,
           isLoading: false
@@ -116,7 +107,7 @@ const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
               performance={AdGroupPerformance}
               performanceReduced={AdGroupPerformanceReduced}
             />
-            <Settings adGroupSettings={adGroupSettings} />
+            <Settings adGroupSettings={adGroupSettings} adGroupId={id} />
             <KeywordTable keywords={Keywords} isLoading={loading} />
           </React.Fragment>
         );
