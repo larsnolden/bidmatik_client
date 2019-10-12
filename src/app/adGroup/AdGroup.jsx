@@ -75,7 +75,12 @@ const AdGroupComponent = ({ adGroupId, activeProfileId, setPageContext }) => {
         if (loading) {
           return (
             <React.Fragment>
-              <PerformancePanel loading={loading} />
+              <PerformancePanel
+                userFilterDates={null}
+                loading={loading}
+                performance={null}
+                performanceReduced={null}
+              />
               <KeywordTable keyword={null} isLoading={loading} />
             </React.Fragment>
           );
