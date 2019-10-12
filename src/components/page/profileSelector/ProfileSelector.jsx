@@ -58,7 +58,7 @@ const ProfileSelector = ({ handleActiveProfileChange }) => (
       }
       const loading = !props;
       if (loading) {
-        return <ProfileSelectorComponent loading={true} />;
+        return <ProfileSelectorComponent loading={loading} />;
       }
       console.log('UserSellerProfiles', props);
       const { SellerProfiles, ActiveSellerProfile } = props;

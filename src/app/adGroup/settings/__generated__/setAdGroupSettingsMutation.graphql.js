@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash fd60394132d2ba4fd2866be6f9bfd360
+ * @relayHash 761696a52be57bfcb44729c0618efb7e
  */
 
 /* eslint-disable */
@@ -10,6 +10,7 @@
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
 export type AdGroupSettingsInput = {|
+  id: string,
   dailyBudget?: ?number,
   updateBids: boolean,
   targetAcos?: ?number,

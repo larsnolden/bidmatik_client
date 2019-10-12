@@ -64,7 +64,12 @@ const OverviewComponent = ({ activeProfileId, setPageContext }) => {
         if (loading) {
           return (
             <React.Fragment>
-              <PerformancePanel loading={loading} />
+              <PerformancePanel
+                userFilterDates={null}
+                loading={loading}
+                performance={null}
+                performanceReduced={null}
+              />
               <CampaignTableStyled isLoading={true} />
             </React.Fragment>
           );

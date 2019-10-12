@@ -67,7 +67,12 @@ const KeywordTable = ({ keywords, isLoading, className }) => (
   >
     {!isLoading &&
       keywords.map((keyword, i) => (
-        <KeywordRow columns={keywordColumns} keyword={keyword} darkBg={i % 2 > 0} />
+        <KeywordRow
+          key={keyword.id}
+          columns={keywordColumns}
+          keyword={keyword}
+          darkBg={i % 2 > 0}
+        />
       ))}
   </Table>
 );
@@ -77,25 +82,7 @@ export default createFragmentContainer(KeywordTable, {
     #<ComponentFileName>_<propName>
     fragment KeywordTable_keywords on Keyword @relay(plural: true) {
       id
-      term
-      bid
-      matchType
-      KeywordPerformanceDelta(from: $from, to: $to) {
-        acos
-        impressions
-        clicks
-        ctr
-        spend
-        revenue
-      }
-      KeywordPerformanceReduced(from: $from, to: $to) {
-        acos
-        impressions
-        clicks
-        ctr
-        spend
-        revenue
-      }
+      ...KeywordRow_keyword
     }
   `
 });

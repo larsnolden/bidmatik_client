@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 5c1a166bc305072cb812d38fd55f2695
+ * @relayHash 0260641ff46738ee809195961238e436
  */
 
 /* eslint-disable */
@@ -113,9 +113,15 @@ fragment PerformancePanel_performance on Performance {
 
 fragment KeywordTable_keywords on Keyword {
   id
+  ...KeywordRow_keyword
+}
+
+fragment KeywordRow_keyword on Keyword {
+  id
   term
   bid
   matchType
+  state
   KeywordPerformanceDelta(from: $from, to: $to) {
     acos
     impressions
@@ -519,6 +525,13 @@ return {
                 "storageKey": null
               },
               {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "state",
+                "args": null,
+                "storageKey": null
+              },
+              {
                 "kind": "LinkedField",
                 "alias": null,
                 "name": "KeywordPerformanceDelta",
@@ -548,7 +561,7 @@ return {
     "operationKind": "query",
     "name": "AdGroupQuery",
     "id": null,
-    "text": "query AdGroupQuery(\n  $from: Date\n  $to: Date\n  $id: ID!\n) {\n  UserFilterDates {\n    ...DateSelection_userFilterDates\n    id\n  }\n  AdGroup(id: $id) {\n    id\n    name\n    adGroupSettings {\n      ...AdGroupSettings_adGroupSettings\n    }\n    AdGroupPerformanceReduced(from: $from, to: $to) {\n      ...MetricSelector_performanceReduced\n    }\n    AdGroupPerformance(from: $from, to: $to) {\n      ...PerformancePanel_performance\n    }\n    Keywords(from: $from, to: $to) {\n      ...KeywordTable_keywords\n      id\n    }\n  }\n}\n\nfragment DateSelection_userFilterDates on UserFilterDates {\n  id\n  from\n  to\n}\n\nfragment AdGroupSettings_adGroupSettings on adGroupSettings {\n  dailyBudget\n  updateBids\n  targetAcos\n  addKeywords\n  addNegativeKeywords\n}\n\nfragment MetricSelector_performanceReduced on Performance {\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment PerformancePanel_performance on Performance {\n  date\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment KeywordTable_keywords on Keyword {\n  id\n  term\n  bid\n  matchType\n  KeywordPerformanceDelta(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n  KeywordPerformanceReduced(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n}\n",
+    "text": "query AdGroupQuery(\n  $from: Date\n  $to: Date\n  $id: ID!\n) {\n  UserFilterDates {\n    ...DateSelection_userFilterDates\n    id\n  }\n  AdGroup(id: $id) {\n    id\n    name\n    adGroupSettings {\n      ...AdGroupSettings_adGroupSettings\n    }\n    AdGroupPerformanceReduced(from: $from, to: $to) {\n      ...MetricSelector_performanceReduced\n    }\n    AdGroupPerformance(from: $from, to: $to) {\n      ...PerformancePanel_performance\n    }\n    Keywords(from: $from, to: $to) {\n      ...KeywordTable_keywords\n      id\n    }\n  }\n}\n\nfragment DateSelection_userFilterDates on UserFilterDates {\n  id\n  from\n  to\n}\n\nfragment AdGroupSettings_adGroupSettings on adGroupSettings {\n  dailyBudget\n  updateBids\n  targetAcos\n  addKeywords\n  addNegativeKeywords\n}\n\nfragment MetricSelector_performanceReduced on Performance {\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment PerformancePanel_performance on Performance {\n  date\n  acos\n  revenue\n  clicks\n  spend\n  absoluteAcos\n  absoluteRevenue\n  impressions\n}\n\nfragment KeywordTable_keywords on Keyword {\n  id\n  ...KeywordRow_keyword\n}\n\nfragment KeywordRow_keyword on Keyword {\n  id\n  term\n  bid\n  matchType\n  state\n  KeywordPerformanceDelta(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n  KeywordPerformanceReduced(from: $from, to: $to) {\n    acos\n    impressions\n    clicks\n    ctr\n    spend\n    revenue\n  }\n}\n",
     "metadata": {}
   }
 };

@@ -68,7 +68,7 @@ export const KeywordRow = ({ keyword, columns, darkBg }) => {
       {columns
         .filter(k => k.key !== 'bid')
         .map(col => (
-          <td>
+          <td key={col.key}>
             <CellContent>
               {col.format ? col.format(sample[col.key]) : sample[col.key]}
               {sample.change && sample.change[col.key] && (

@@ -122,7 +122,7 @@ function TableComponent({ columns, handleSortQuery, children, isLoading, ...prop
             />
           </FilterIconTh>
           {columns.map(col => (
-            <Th onClick={() => handleSort(col.key)}>
+            <Th key={col.key} onClick={() => handleSort(col.key)}>
               <HeadingContainer>
                 <Heading>{col.head}</Heading>
                 {col.sortable && <SortButton active={col.key === sortBy} showDesc={sortDesc} />}
@@ -134,7 +134,7 @@ function TableComponent({ columns, handleSortQuery, children, isLoading, ...prop
           <tr>
             <th />
             {columns.map(col => (
-              <Filter type={col.type} />
+              <Filter key={col.key} type={col.type} />
             ))}
           </tr>
         )}
