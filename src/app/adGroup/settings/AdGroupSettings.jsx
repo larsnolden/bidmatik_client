@@ -25,13 +25,11 @@ const GearIcon = styled.img`
 `;
 
 const Modal = styled.div`
-  background: #ffffff;
+  background: #fff;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 3px;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  align-self: center;
   display: flex;
   flex-direction: column;
   padding: 15px 30px 15px 30px;
@@ -122,7 +120,6 @@ function reducer(state, action) {
 
 const SettingsComponent = ({ adGroupSettings: initialSettings, className, adGroupId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  //  hydration fails
   const [state, dispatch] = useReducer(reducer, initialSettings);
   const handleSave = () => {
     setAdGroupSettings({
