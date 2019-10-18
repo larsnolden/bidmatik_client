@@ -42,6 +42,7 @@ const DateSelector = styled.div`
 
 const ChevronStyled = styled(Chevron)`
   margin-right: 8px;
+  transform: ${props => (props.pointUp ? 'rotate(180deg)' : 'rotate(0deg)')};
 `;
 
 const To = styled.div`
@@ -88,12 +89,24 @@ const DateSelectionComponent = ({
   <Container>
     <Dates>
       <DateSelector id="date_selector" onClick={handleDateFromClick} loading={loading}>
-        <ChevronStyled id="date_selector" color="#BCCCDC" width={10} height={8} />
+        <ChevronStyled
+          id="date_selector"
+          pointUp={showCalendar}
+          color="#BCCCDC"
+          width={10}
+          height={8}
+        />
         <Date id="date_selector">{from.format('D MMM YYYY')}</Date>
       </DateSelector>
       <To>TO</To>
       <DateSelector id="date_selector" onClick={handleDateToClick} loading={loading}>
-        <ChevronStyled id="date_selector" color="#BCCCDC" width={10} height={8} />
+        <ChevronStyled
+          pointUp={showCalendar}
+          id="date_selector"
+          color="#BCCCDC"
+          width={10}
+          height={8}
+        />
         <Date id="date_selector">{to.format('D MMM YYYY')}</Date>
       </DateSelector>
     </Dates>
