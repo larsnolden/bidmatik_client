@@ -89,6 +89,7 @@ function createSessionMutation({ authCode }, setIsNewCookieSet) {
       authCode
     },
     onCompleted: data => {
+      console.log('created session, cookie set:', data.createSession.token);
       Cookies.set('authentication', data.createSession.token);
       setIsNewCookieSet(true);
     }
@@ -99,7 +100,8 @@ const Authenticate = () => {
   const [isLoginActive, setIsLoginActive] = useState(true);
   const [isNewCookieSet, setIsNewCookieSet] = useState(false);
 
-  const isProduction = process.env.REACT_APP_ENV === 'production';
+  const isProduction = process.env.REACT_APP_STAGE === 'production';
+  console.log('isProduction: ', isProduction);
 
   const handleAuthenticationClick = () => {
     if (isProduction) {
@@ -109,13 +111,15 @@ const Authenticate = () => {
       };
       // eslint-disable-next-line
       window.amazon.Login.authorize(options, async res => {
-        if (res.code)
+        if (res.code) {
+          console.log('Amazon Authorization succesfull', res.code);
           createSessionMutation(
             {
               authCode: res.code
             },
             setIsNewCookieSet
           );
+        }
       });
     } else {
       createSessionMutation(
